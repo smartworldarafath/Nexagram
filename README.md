@@ -218,6 +218,21 @@ Is Nexagram not in your language, or the translation is incorrect or incomplete?
 
 [![Crowdin](https://badges.crowdin.net/e/156df3a631d257cc6b57301566d545fb/localized.svg)](https://xtaolabs.crowdin.com/nexagram)
 
+## Contributors & Acknowledgements
+
+Special thanks to all the amazing contributors who helped build and maintain the core features:
+
+- 👤 **Zero by Arafath** ([@smartworldarafath](https://github.com/smartworldarafath)) - Maintainer of Nexagram
+- 👨‍💻 **omg-xtao** ([@omg-xtao](https://github.com/omg-xtao)) - Lead Maintainer & Developer of Nagram
+- ⚡ **NextAlone** ([@NextAlone](https://github.com/NextAlone)) - Original Nagram Founder
+- 🛠️ **rjriajul** ([@rjriajul](https://github.com/rjriajul)) - Contributor
+- 🛠️ **Parsa307** ([@Parsa307](https://github.com/Parsa307)) - Contributor
+- 🛠️ **mariodon** ([@mariodon](https://github.com/mariodon)) - Contributor
+- 🛠️ **zjns** ([@zjns](https://github.com/zjns)) - Contributor
+- 🛠️ **risin42** ([@risin42](https://github.com/risin42)) - NagramX Maintainer
+- 🎨 **MaitungTM** - Custom Icon Design
+- 💬 **blxueya** ([@blxueya](https://github.com/blxueya)) - Quick Reply Features
+
 ## Thanks
 
 - [NekoX](https://github.com/NekoX-Dev/NekoX)
@@ -226,4 +241,5 @@ Is Nexagram not in your language, or the translation is incorrect or incomplete?
 - [Nullgram](https://github.com/qwq233/Nullgram)
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
+
 
