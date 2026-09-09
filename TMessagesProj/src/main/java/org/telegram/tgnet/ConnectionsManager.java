@@ -23,7 +23,6 @@ import com.google.android.play.core.integrity.IntegrityManager;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
 import com.google.android.play.core.integrity.IntegrityTokenRequest;
 import com.google.android.play.core.integrity.IntegrityTokenResponse;
-//import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,7 +87,7 @@ import tw.nekomimi.nekogram.utils.DnsFactory;
 import tw.nekomimi.nekogram.ErrorDatabase;
 
 import tw.nekomimi.nekogram.utils.ProxyUtil;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ConnectionsManager extends BaseController {
 

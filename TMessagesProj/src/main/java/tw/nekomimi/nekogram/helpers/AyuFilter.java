@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class AyuFilter {
     public static ArrayList<FilterModel> getRegexFilters() {

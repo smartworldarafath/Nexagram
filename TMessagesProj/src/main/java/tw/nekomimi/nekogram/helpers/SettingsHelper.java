@@ -25,7 +25,7 @@ import tw.nekomimi.nekogram.settings.NekoExperimentalSettingsActivity;
 import tw.nekomimi.nekogram.settings.NekoGeneralSettingsActivity;
 import tw.nekomimi.nekogram.settings.NekoPasscodeSettingsActivity;
 import tw.nekomimi.nekogram.settings.NekoSettingsActivity;
-import xyz.nextalone.nexagram.network.NetworkLogActivity;
+import xyz.nextalone.nagram.network.NetworkLogActivity;
 
 public class SettingsHelper {
 

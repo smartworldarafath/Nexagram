@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import android.content.Context
 import android.util.Log
@@ -18,7 +18,7 @@ import org.telegram.messenger.UserConfig
 import org.telegram.tgnet.TLRPC.TL_messages_stickerSet
 import tw.nekomimi.nekogram.config.cell.ConfigCellAutoTextCheck
 import tw.nekomimi.nekogram.utils.AlertUtil
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 import java.io.File
 
 object ExternalStickerCacheHelper {

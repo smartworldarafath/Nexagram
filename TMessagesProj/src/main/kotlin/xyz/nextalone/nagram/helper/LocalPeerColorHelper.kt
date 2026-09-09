@@ -1,8 +1,8 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import com.google.gson.Gson
 import org.telegram.tgnet.TLRPC
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 
 
 data class LocalQuoteColorData (

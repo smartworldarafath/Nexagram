@@ -507,13 +507,13 @@ public class CacheControlActivity extends BaseFragment implements NotificationCe
             fillDialogsEntitiesRecursive(FileLoader.checkDirectory(FileLoader.MEDIA_DIR_DOCUMENT), TYPE_DOCUMENTS, dilogsFilesEntities, cacheModel);
             fillDialogsEntitiesRecursive(FileLoader.checkDirectory(FileLoader.MEDIA_DIR_FILES), TYPE_DOCUMENTS, dilogsFilesEntities, cacheModel);
 
-            // ----- Nexagram Hook start -----
+            // ----- Nagram Hook start -----
             if (targetDialogId != -1) {
                 DialogFileEntities entities = dilogsFilesEntities.get(targetDialogId, null);
                 if (entities != null) AndroidUtilities.runOnUIThread(() -> showClearCacheDialog(entities), 100);
                 targetDialogId = -1;
             }
-            // ----- Nexagram Hook end -----
+            // ----- Nagram Hook end -----
 
             ArrayList<DialogFileEntities> entities = new ArrayList<>();
             ArrayList<Long> unknownUsers = new ArrayList<>();

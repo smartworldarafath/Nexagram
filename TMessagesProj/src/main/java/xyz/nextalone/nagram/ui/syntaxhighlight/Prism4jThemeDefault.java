@@ -17,7 +17,7 @@
  * <https://www.gnu.org/licenses/>
  */
 
-package xyz.nextalone.nexagram.ui.syntaxhighlight;
+package xyz.nextalone.nagram.ui.syntaxhighlight;
 
 import android.text.Spannable;
 import android.text.Spanned;

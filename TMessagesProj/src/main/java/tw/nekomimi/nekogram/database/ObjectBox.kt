@@ -6,7 +6,7 @@ import io.objectbox.BoxStoreBuilder
 import org.telegram.messenger.ApplicationLoader
 import tw.nekomimi.nekogram.transtale.TranslateDb
 import tw.nekomimi.nekogram.utils.FileUtil
-import xyz.nextalone.nexagram.network.NetworkLogDb
+import xyz.nextalone.nagram.network.NetworkLogDb
 import java.io.File
 
 

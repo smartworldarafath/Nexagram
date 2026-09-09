@@ -54,7 +54,7 @@ def render_test_caption(
 ) -> str:
     normalized_message = commit_message.replace("\r", "").strip()
     header = (
-        f"🧪 <b>Nexagram</b> <code>{escape(version_name)}</code> "
+        f"🧪 <b>Nagram</b> <code>{escape(version_name)}</code> "
         f"<i>({escape(version_code)})</i> · <b>Test Version</b>"
     )
     if is_changelog_ignored(normalized_message):

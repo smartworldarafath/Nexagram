@@ -17,8 +17,8 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.tgnet.tl.TL_account;
 
 import tw.nekomimi.nekogram.helpers.remote.PeerColorHelper;
-import xyz.nextalone.nexagram.helper.MessageHelper;
-import xyz.nextalone.nexagram.helper.LocalPeerColorHelper;
+import xyz.nextalone.nagram.helper.MessageHelper;
+import xyz.nextalone.nagram.helper.LocalPeerColorHelper;
 
 public class UserObject {
 
