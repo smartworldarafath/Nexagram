@@ -35,7 +35,7 @@
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_nexagram_animated</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_nagram_animated</item>
     </style>
 
     <style name="Theme.TMessages" parent="Theme.AppCompat.Light">

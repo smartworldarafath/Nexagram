@@ -45,6 +45,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -153,11 +154,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
     @Override
     public View createView(Context context) {
-        logoDrawable = context.getResources().getDrawable(R.drawable.nexagram_logo).mutate();
-        logoDrawable.setBounds(0, dp(8.666f), dp(115), dp(35));
-        SpannableStringBuilder ssb = new SpannableStringBuilder(LocaleController.getString(R.string.NekoX));
-        ssb.setSpan(new ImageSpan(logoDrawable), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        titles[0] = ssb;
+        titles[0] = LocaleController.getString(R.string.NekoX);
 
 
         actionBar.setAddToContainer(false);
@@ -248,6 +245,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
         frameContainerView.addView(frameLayout2, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP, 0, 78, 0, 0));
 
         TextureView textureView = new TextureView(context);
+        textureView.setAlpha(0f);
         frameLayout2.addView(textureView, LayoutHelper.createFrame(ICON_WIDTH_DP, ICON_HEIGHT_DP, Gravity.CENTER));
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -308,6 +306,12 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 }
                 float offset = (position * width + positionOffsetPixels - currentViewPagerPage * width) / width;
                 Intro.setScrollOffset(offset);
+
+                if (position == 0) {
+                    textureView.setAlpha(positionOffset);
+                } else {
+                    textureView.setAlpha(1.0f);
+                }
             }
 
             @Override
@@ -452,24 +456,13 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             }
             justCreated = false;
         }
-        if (!AndroidUtilities.isTablet()) {
-            Activity activity = getParentActivity();
-            if (activity != null) {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        }
+        AndroidUtilities.lockOrientation(getParentActivity(), ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        if (!AndroidUtilities.isTablet()) {
-            Activity activity = getParentActivity();
-            if (activity != null) {
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-            }
-        }
+        AndroidUtilities.unlockOrientation(getParentActivity());
     }
 
     @Override
@@ -581,11 +574,28 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             TextView messageTextView = new TextView(container.getContext());
             messageTextView.setTag(pagerMessageTag);
 
+            final ImageView logoImageView;
+            if (position == 0) {
+                logoImageView = new ImageView(container.getContext());
+                logoImageView.setImageResource(R.drawable.nexagram_intro_logo);
+                logoImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
+                logoImageView = null;
+            }
+
             FrameLayout frameLayout = new FrameLayout(container.getContext()) {
                 @Override
                 protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
                     int oneFourth = (bottom - top) / 4;
                     int y = (oneFourth * 3 - dp(275)) / 2;
+
+                    if (logoImageView != null) {
+                        int logoSize = dp(135);
+                        int logoX = (getMeasuredWidth() - logoSize) / 2;
+                        int logoY = y + (dp(ICON_HEIGHT_DP) - logoSize) / 2;
+                        logoImageView.layout(logoX, logoY, logoX + logoSize, logoY + logoSize);
+                    }
+
                     y += dp(ICON_HEIGHT_DP);
                     y += dp(16 + 9);
                     int x = dp(18);
@@ -597,6 +607,10 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                     messageTextView.layout(x, y, x + messageTextView.getMeasuredWidth(), y + messageTextView.getMeasuredHeight());
                 }
             };
+
+            if (logoImageView != null) {
+                frameLayout.addView(logoImageView, LayoutHelper.createFrame(135, 135, Gravity.TOP | Gravity.CENTER_HORIZONTAL));
+            }
 
             headerTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
             headerTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 26);
@@ -973,7 +987,9 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
     private void updateColors(boolean fromTheme) {
         startMessagingButtonBackground.setColors(new int[]{getThemedColor(Theme.key_featuredStickers_addButton), getThemedColor(Theme.key_featuredStickers_addButton2)});
-        logoDrawable.setColorFilter(Theme.multAlpha(getThemedColor(Theme.key_actionBarDefaultTitle), 0.9f), PorterDuff.Mode.MULTIPLY);
+        if (logoDrawable != null) {
+            logoDrawable.setColorFilter(Theme.multAlpha(getThemedColor(Theme.key_actionBarDefaultTitle), 0.9f), PorterDuff.Mode.MULTIPLY);
+        }
         fragmentView.setBackgroundColor(Theme.getColor(Theme.key_windowBackgroundWhite));
         switchLanguageTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlueText4));
         startMessagingButton.setTextColor(Theme.getColor(Theme.key_featuredStickers_buttonText));

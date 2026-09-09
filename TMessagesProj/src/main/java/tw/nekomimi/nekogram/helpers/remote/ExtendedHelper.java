@@ -11,7 +11,7 @@ import org.telegram.messenger.Utilities;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ExtendedHelper extends BaseRemoteHelper {
     private static final String EXTENDED_TAG = "extended";

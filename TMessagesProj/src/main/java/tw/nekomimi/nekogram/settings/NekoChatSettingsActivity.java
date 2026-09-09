@@ -58,8 +58,8 @@ import tw.nekomimi.nekogram.config.cell.ConfigCellTextDetail;
 import tw.nekomimi.nekogram.config.cell.ConfigCellTextInput;
 import tw.nekomimi.nekogram.helpers.remote.EmojiHelper;
 import tw.nekomimi.nekogram.ui.PopupBuilder;
-import xyz.nextalone.nexagram.NaConfig;
-import xyz.nextalone.nexagram.helper.DoubleTap;
+import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.DoubleTap;
 
 @SuppressLint("RtlHardcoded")
 public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implements NotificationCenter.NotificationCenterDelegate, EmojiHelper.EmojiPacksLoadedListener {
@@ -112,6 +112,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     }));
     private final AbstractConfigCell customGreatRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomGreat(), LocaleController.getString(R.string.CustomGreatHint), null,(input) -> input.isEmpty() ? (String) NaConfig.INSTANCE.getCustomGreat().defaultValue : input));
     private final AbstractConfigCell customPoorRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomPoor(), LocaleController.getString(R.string.CustomPoorHint), null,(input) -> input.isEmpty() ? (String) NaConfig.INSTANCE.getCustomPoor().defaultValue : input));
+    private final AbstractConfigCell showEditedIconRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowEditedIcon()));
     private final AbstractConfigCell customEditedMessageRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomEditedMessage(), "", null));
     private final AbstractConfigCell showServicesTime = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowServicesTime()));
 //    private final AbstractConfigCell combineMessageRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getCombineMessage(), new String[]{
@@ -749,7 +750,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                                    java.util.function.Consumer<Boolean> showSetter,
                                    int[] options) {
         // 1. 检查该选项是否允许compact（图标）模式
-        boolean compactAllowed = xyz.nextalone.nexagram.helper.MessageMenuCompact.isAllowed(options[0]);
+        boolean compactAllowed = xyz.nextalone.nagram.helper.MessageMenuCompact.isAllowed(options[0]);
 
         // 2. enabled数组控制三个段按钮的可用性
         // [HIDE按钮, TEXT按钮, ICON按钮]
@@ -760,7 +761,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
             // 如果不显示，返回HIDE模式
             if (!showGetter.getAsBoolean()) return MODE_HIDE;
             // 否则检查是否compact模式
-            return xyz.nextalone.nexagram.helper.MessageMenuCompact.isCompact(options[0])
+            return xyz.nextalone.nagram.helper.MessageMenuCompact.isCompact(options[0])
                     ? MODE_ICON : MODE_TEXT;
         };
 
@@ -773,7 +774,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                 // 切换到TEXT或ICON模式时，如果当前是隐藏的，则开启显示
                 if (!showGetter.getAsBoolean()) showSetter.accept(true);
                 // 设置compact模式（true=ICON, false=TEXT）
-                xyz.nextalone.nexagram.helper.MessageMenuCompact.setCompact(options, mode == MODE_ICON);
+                xyz.nextalone.nagram.helper.MessageMenuCompact.setCompact(options, mode == MODE_ICON);
             }
         };
 
@@ -796,25 +797,25 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     /** HIDE / TEXT only (no ICON segment) for items where compact mode isn't safe. */
     private void addHideTextRow(LinearLayout parent, String label, int[] options) {
         boolean[] enabled = new boolean[]{true, true, false};
-        java.util.function.IntSupplier getter = () -> xyz.nextalone.nexagram.helper.MessageMenuCompact.isHidden(options[0]) ? MODE_HIDE : MODE_TEXT;
-        java.util.function.IntConsumer setter = mode -> xyz.nextalone.nexagram.helper.MessageMenuCompact.setHidden(options, mode == MODE_HIDE);
+        java.util.function.IntSupplier getter = () -> xyz.nextalone.nagram.helper.MessageMenuCompact.isHidden(options[0]) ? MODE_HIDE : MODE_TEXT;
+        java.util.function.IntConsumer setter = mode -> xyz.nextalone.nagram.helper.MessageMenuCompact.setHidden(options, mode == MODE_HIDE);
         addThreeStateRow(parent, label, getter, setter, enabled);
     }
 
     private void addHideCompactRow(LinearLayout parent, String label, int[] options) {
-        boolean compactAllowed = xyz.nextalone.nexagram.helper.MessageMenuCompact.isAllowed(options[0]);
+        boolean compactAllowed = xyz.nextalone.nagram.helper.MessageMenuCompact.isAllowed(options[0]);
         boolean[] enabled = new boolean[]{true, true, compactAllowed};
         java.util.function.IntSupplier getter = () -> {
-            if (xyz.nextalone.nexagram.helper.MessageMenuCompact.isHidden(options[0])) return MODE_HIDE;
-            return xyz.nextalone.nexagram.helper.MessageMenuCompact.isCompact(options[0]) ? MODE_ICON : MODE_TEXT;
+            if (xyz.nextalone.nagram.helper.MessageMenuCompact.isHidden(options[0])) return MODE_HIDE;
+            return xyz.nextalone.nagram.helper.MessageMenuCompact.isCompact(options[0]) ? MODE_ICON : MODE_TEXT;
         };
         java.util.function.IntConsumer setter = mode -> {
             if (mode == MODE_HIDE) {
-                xyz.nextalone.nexagram.helper.MessageMenuCompact.setHidden(options, true);
-                xyz.nextalone.nexagram.helper.MessageMenuCompact.setCompact(options, false);
+                xyz.nextalone.nagram.helper.MessageMenuCompact.setHidden(options, true);
+                xyz.nextalone.nagram.helper.MessageMenuCompact.setCompact(options, false);
             } else {
-                xyz.nextalone.nexagram.helper.MessageMenuCompact.setHidden(options, false);
-                xyz.nextalone.nexagram.helper.MessageMenuCompact.setCompact(options, mode == MODE_ICON);
+                xyz.nextalone.nagram.helper.MessageMenuCompact.setHidden(options, false);
+                xyz.nextalone.nagram.helper.MessageMenuCompact.setCompact(options, mode == MODE_ICON);
             }
         };
         addThreeStateRow(parent, label, getter, setter, enabled);
@@ -845,7 +846,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                 LocaleController.getString(R.string.SegText),
                 LocaleController.getString(R.string.SegIcon),
         };
-        xyz.nextalone.nexagram.ui.SegmentedThreeStateView seg = new xyz.nextalone.nexagram.ui.SegmentedThreeStateView(ctx, segLabels, enabled);
+        xyz.nextalone.nagram.ui.SegmentedThreeStateView seg = new xyz.nextalone.nagram.ui.SegmentedThreeStateView(ctx, segLabels, enabled);
         seg.setSelection(getMode.getAsInt(), false);
         seg.setOnChange(setMode);
         row.addView(seg, LayoutHelper.createLinear(180, LayoutHelper.WRAP_CONTENT, Gravity.CENTER_VERTICAL));

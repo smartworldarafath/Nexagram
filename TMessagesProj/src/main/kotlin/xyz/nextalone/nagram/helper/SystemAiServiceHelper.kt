@@ -1,10 +1,10 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import android.content.Context
 import android.net.Uri
 import android.view.View
 import android.widget.EditText
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 
 object SystemAiServiceHelper {
     fun isSystemAiAvailable(context: Context): Boolean {

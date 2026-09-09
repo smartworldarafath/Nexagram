@@ -14,8 +14,8 @@ import tw.nekomimi.nekogram.utils.AlertUtil
 import tw.nekomimi.nekogram.utils.UIUtil
 import tw.nekomimi.nekogram.utils.uDismiss
 import tw.nekomimi.nekogram.utils.uUpdate
-import xyz.nextalone.nexagram.NaConfig
-import xyz.nextalone.nexagram.helper.MessageHelper
+import xyz.nextalone.nagram.NaConfig
+import xyz.nextalone.nagram.helper.MessageHelper
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -29,9 +29,12 @@ private fun translationContext(message: MessageObject, timeline: List<MessageObj
 
     return timeline.asSequence()
         .drop(index + 1)
-        .filter { it.messageOwner.id != 0 && !it.isDateObject && !it.isSponsored }
+        .filter {
+            it.messageOwner.id != 0 && !it.isDateObject && !it.isSponsored &&
+                MessageHelper.isMessageObjectAutoTranslatable(it)
+        }
         .take(5)
-        .mapNotNull { MessageHelper.getMessagePlainText(it).takeIf(String::isNotBlank) }
+        .mapNotNull { MessageHelper.getMessagePlainText(it)?.takeIf { text -> text.isNotBlank() } }
         .toList()
         .asReversed()
 }

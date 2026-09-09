@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper;
+package xyz.nextalone.nagram.helper;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -13,7 +13,7 @@ import org.telegram.ui.Components.URLSpanReplacement;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class EntitiesHelper {
     private static final String URL_REGEX = "https?://[^\\s\\)]+";

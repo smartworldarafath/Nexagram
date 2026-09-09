@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 /**
  * This is a utility class to add swipe to dismiss and drag & drop support to RecyclerView.

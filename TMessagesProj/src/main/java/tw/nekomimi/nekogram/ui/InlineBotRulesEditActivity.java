@@ -1,5 +1,5 @@
 /*
- * Nexagram - Inline Bot Rules edit / view activity.
+ * Nagram - Inline Bot Rules edit / view activity.
  *
  * 列表式编辑页：继承 BaseNekoSettingsActivity，复用其 BlurContentView /
  * BlurredRecyclerView / BaseListAdapter 等基础设施。

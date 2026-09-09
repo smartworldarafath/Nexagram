@@ -1,8 +1,8 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import org.telegram.messenger.LocaleController
 import org.telegram.ui.ChatActivity
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 
 /**
  * Manages the per-option "render as icon-only in a compact bar" preference for

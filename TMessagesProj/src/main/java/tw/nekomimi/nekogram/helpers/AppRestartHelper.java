@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class AppRestartHelper extends Activity {
-    private static final String KEY_RESTART_INTENTS = "nexagram_restart_intents";
-    private static final String KEY_MAIN_PROCESS_PID = "nexagram_main_process_pid";
+    private static final String KEY_RESTART_INTENTS = "nagram_restart_intents";
+    private static final String KEY_MAIN_PROCESS_PID = "nagram_main_process_pid";
 
     public static void triggerRebirth() {
         Context context = ApplicationLoader.applicationContext;

@@ -40,7 +40,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import tw.nekomimi.nekogram.helpers.remote.WallpaperHelper;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ChatThemeController extends BaseController {
 

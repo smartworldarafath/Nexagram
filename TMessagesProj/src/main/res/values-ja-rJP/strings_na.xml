@@ -222,6 +222,8 @@
     <string name="NavigationAnimationSpring">ナビゲーションスプリングアニメーション</string>
     <string name="ForceEdgeToEdge">エッジを強制する</string>
     <string name="ForceEdgeToEdgeDesc">ページレイアウトの不規則性、コンテンツの重複、クリックアクションの失敗を引き起こす可能性があります。</string>
+    <string name="UseSystemPhotoPicker">システム写真ピッカーの互換性</string>
+    <string name="UseSystemPhotoPickerDesc">Android 13以降では、完全な写真とビデオアクセスを要求せずに、ギャラリーの添付ファイルにシステムフォトピッカーを使用します。</string>
     <string name="TabStyle">Tab Style</string>
     <string name="TabStylePure">純粋な</string>
     <string name="TabStylePills">ピル数</string>
@@ -344,4 +346,15 @@
     <string name="TabletModeSmall">小さいタブレット</string>
     <string name="TabletModeBig">大きなタブレット</string>
     <string name="ShowRecentForwardTab">転送時に最近のチャットタブを表示する</string>
+    <string name="ProviderVolcengineTranslate">Volcengine翻訳</string>
+    <string name="DisableAiEditor">Ai エディターを無効にする</string>
+    <string name="DisableGlareEffects">グレア効果を無効にする</string>
+    <string name="ShowEditedIcon">「編集」の代わりにアイコンを表示する</string>
+    <string name="DeleteCloudBackup">クラウドデータをクリア</string>
+    <string name="DeleteCloudBackupFailed">クラウドデータの消去に失敗しました</string>
+    <string name="DeleteCloudBackupSuccess">クラウドデータを消去しました</string>
+    <string name="CloudConfigNoBackupToDelete">クリアするデータがありません</string>
+    <string name="LiquidGlassAngle">液体ガラスの角度</string>
+    <string name="LiquidGlassIntensity">液体ガラスの強度</string>
+    <string name="DisableGooeyAvatarAnimation">「Gooey」アバターアニメーションを無効にする</string>
 </resources>
