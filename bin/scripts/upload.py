@@ -32,7 +32,7 @@ def find_apk(abi: str) -> Path:
 
 
 def get_thumb() -> str:
-    return "TMessagesProj/src/main/" + "ic_launcher_nexagram_round_blue-playstore.png"
+    return "TMessagesProj/src/main/" + "ic_launcher_nagram_round_blue-playstore.png"
 
 
 def get_caption() -> str:

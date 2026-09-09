@@ -17,7 +17,7 @@
  * <https://www.gnu.org/licenses/>
  */
 
-package xyz.nextalone.nexagram.ui.syntaxhighlight;
+package xyz.nextalone.nagram.ui.syntaxhighlight;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,33 +28,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import xyz.nextalone.nexagram.prism4j.GrammarLocator;
-import xyz.nextalone.nexagram.prism4j.Prism4j;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_brainfuck;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_c;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_clike;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_clojure;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_cpp;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_csharp;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_css;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_css_extras;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_dart;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_git;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_go;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_groovy;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_java;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_javascript;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_json;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_kotlin;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_latex;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_makefile;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_markdown;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_markup;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_python;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_scala;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_sql;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_swift;
-import xyz.nextalone.nexagram.prism4j.languages.Prism_yaml;
+import xyz.nextalone.nagram.prism4j.GrammarLocator;
+import xyz.nextalone.nagram.prism4j.Prism4j;
+import xyz.nextalone.nagram.prism4j.languages.Prism_brainfuck;
+import xyz.nextalone.nagram.prism4j.languages.Prism_c;
+import xyz.nextalone.nagram.prism4j.languages.Prism_clike;
+import xyz.nextalone.nagram.prism4j.languages.Prism_clojure;
+import xyz.nextalone.nagram.prism4j.languages.Prism_cpp;
+import xyz.nextalone.nagram.prism4j.languages.Prism_csharp;
+import xyz.nextalone.nagram.prism4j.languages.Prism_css;
+import xyz.nextalone.nagram.prism4j.languages.Prism_css_extras;
+import xyz.nextalone.nagram.prism4j.languages.Prism_dart;
+import xyz.nextalone.nagram.prism4j.languages.Prism_git;
+import xyz.nextalone.nagram.prism4j.languages.Prism_go;
+import xyz.nextalone.nagram.prism4j.languages.Prism_groovy;
+import xyz.nextalone.nagram.prism4j.languages.Prism_java;
+import xyz.nextalone.nagram.prism4j.languages.Prism_javascript;
+import xyz.nextalone.nagram.prism4j.languages.Prism_json;
+import xyz.nextalone.nagram.prism4j.languages.Prism_kotlin;
+import xyz.nextalone.nagram.prism4j.languages.Prism_latex;
+import xyz.nextalone.nagram.prism4j.languages.Prism_makefile;
+import xyz.nextalone.nagram.prism4j.languages.Prism_markdown;
+import xyz.nextalone.nagram.prism4j.languages.Prism_markup;
+import xyz.nextalone.nagram.prism4j.languages.Prism_python;
+import xyz.nextalone.nagram.prism4j.languages.Prism_scala;
+import xyz.nextalone.nagram.prism4j.languages.Prism_sql;
+import xyz.nextalone.nagram.prism4j.languages.Prism_swift;
+import xyz.nextalone.nagram.prism4j.languages.Prism_yaml;
 
 public class Prism4jGrammarLocator implements GrammarLocator {
 

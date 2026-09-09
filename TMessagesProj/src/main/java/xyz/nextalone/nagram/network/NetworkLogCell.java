@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.network;
+package xyz.nextalone.nagram.network;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

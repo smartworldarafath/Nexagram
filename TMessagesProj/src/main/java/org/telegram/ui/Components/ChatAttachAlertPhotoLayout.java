@@ -103,7 +103,6 @@ import org.telegram.messenger.Utilities;
 import org.telegram.messenger.VideoEditedInfo;
 import org.telegram.messenger.camera.CameraController;
 import org.telegram.messenger.camera.CameraView;
-import org.telegram.messenger.utils.DrawableUtils;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
@@ -138,7 +137,7 @@ import androidx.core.graphics.ColorUtils;
 
 import tw.nekomimi.nekogram.NekoXConfig;
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 @SuppressLint("ViewConstructor")
 public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayout implements NotificationCenter.NotificationCenterDelegate {
@@ -210,6 +209,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
     private boolean mediaEnabled;
     private boolean videoEnabled;
     private boolean photoEnabled;
+    private boolean includeVideosInGallery;
     private boolean documentsEnabled;
 
     private float pinchStartDistance;
@@ -1534,6 +1534,9 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
 
     private void requestGalleryPermission() {
+        if (NaConfig.INSTANCE.getUseSystemPhotoPicker().Bool() && openSystemPhotoPicker()) {
+            return;
+        }
         try {
             if (Build.VERSION.SDK_INT >= 33) {
                 parentAlert.baseFragment.getParentActivity().requestPermissions(new String[]{Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES}, BasePermissionsActivity.REQUEST_CODE_EXTERNAL_STORAGE);
@@ -1541,6 +1544,45 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                 parentAlert.baseFragment.getParentActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, BasePermissionsActivity.REQUEST_CODE_EXTERNAL_STORAGE);
             }
         } catch (Exception ignore) {}
+    }
+
+    boolean openSystemPhotoPicker() {
+        if (Build.VERSION.SDK_INT < 33 || !photoEnabled && !videoEnabled) {
+            return false;
+        }
+        BaseFragment fragment = parentAlert.baseFragment;
+        if (!isSystemPhotoPickerContext(fragment)) {
+            return false;
+        }
+        Activity activity = fragment != null ? fragment.getParentActivity() : null;
+        if (!canUseSystemPhotoPicker(activity)) {
+            return false;
+        }
+        try {
+            Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+            if (photoEnabled != videoEnabled) {
+                intent.setType(photoEnabled ? "image/*" : "video/*");
+            }
+            if (parentAlert.maxSelectedPhotos != 1) {
+                int systemLimit = MediaStore.getPickImagesMaxLimit();
+                int max = parentAlert.maxSelectedPhotos > 1 ? Math.min(parentAlert.maxSelectedPhotos, systemLimit) : systemLimit;
+                intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, max);
+            }
+            fragment.startActivityForResult(intent, ChatActivity.REQUEST_CODE_SYSTEM_PHOTO_PICKER);
+            parentAlert.dismiss(true);
+            return true;
+        } catch (Exception e) {
+            FileLog.e(e);
+            return false;
+        }
+    }
+
+    private boolean canUseSystemPhotoPicker(Activity activity) {
+        return Build.VERSION.SDK_INT >= 33 && activity != null && new Intent(MediaStore.ACTION_PICK_IMAGES).resolveActivity(activity.getPackageManager()) != null;
+    }
+
+    private boolean isSystemPhotoPickerContext(BaseFragment fragment) {
+        return fragment instanceof ChatActivity && parentAlert.avatarPicker == 0 && !parentAlert.isPhotoPicker && !parentAlert.isStickerMode && !parentAlert.isPollAttach && !parentAlert.storyMediaPicker;
     }
 
     private void openCameraWithPermissionCheck() {
@@ -1777,7 +1819,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
     private int maxCount() {
         if (parentAlert.baseFragment instanceof ChatActivity && ((ChatActivity) parentAlert.baseFragment).getChatMode() == ChatActivity.MODE_QUICK_REPLIES) {
-            return parentAlert.baseFragment.getMessagesController().quickReplyMessagesLimit - ((ChatActivity) parentAlert.baseFragment).messages.size();
+            return parentAlert.baseFragment.getMessagesController().config.quickReplyMessagesLimit.get() - ((ChatActivity) parentAlert.baseFragment).messages.size();
         }
         return Integer.MAX_VALUE;
     }
@@ -2608,8 +2650,12 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
         }
     }
 
+    public void setIncludeVideosInGallery(boolean includeVideosInGallery) {
+        this.includeVideosInGallery = includeVideosInGallery;
+    }
+
     private boolean shouldLoadAllMedia() {
-        return !parentAlert.isPhotoPicker && (parentAlert.baseFragment instanceof ChatActivity || parentAlert.storyMediaPicker || parentAlert.avatarPicker == 2);
+        return includeVideosInGallery || !parentAlert.isPhotoPicker && (parentAlert.baseFragment instanceof ChatActivity || parentAlert.storyMediaPicker || parentAlert.avatarPicker == 2);
     }
 
     public void showCamera() {
@@ -2758,7 +2804,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     if (lastBitmap != bitmap) {
                         bitmap.recycle();
                     }
-                    Utilities.blurBitmap(lastBitmap, 7, 1, lastBitmap.getWidth(), lastBitmap.getHeight(), lastBitmap.getRowBytes());
+                    Utilities.blurBitmap(lastBitmap, 7);
                     File file = new File(ApplicationLoader.getFilesDirFixed(), "cthumb.jpg");
                     FileOutputStream stream = new FileOutputStream(file);
                     lastBitmap.compress(Bitmap.CompressFormat.JPEG, 87, stream);
@@ -3234,8 +3280,11 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
     private boolean isNoGalleryPermissions() {
         Activity activity = AndroidUtilities.findActivity(getContext());
-        if (activity == null) {
+        if (activity == null && parentAlert.baseFragment != null) {
             activity = parentAlert.baseFragment.getParentActivity();
+        }
+        if (NaConfig.INSTANCE.getUseSystemPhotoPicker().Bool() && isSystemPhotoPickerContext(parentAlert.baseFragment) && canUseSystemPhotoPicker(activity)) {
+            return true;
         }
         return Build.VERSION.SDK_INT >= 23 && (
             activity == null ||
@@ -3416,8 +3465,11 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                 parentAlert.getPhotoPreviewLayout().invalidateGroupsView();
             }
         } else if (id == open_in) {
+            if (NaConfig.INSTANCE.getUseSystemPhotoPicker().Bool() && openSystemPhotoPicker()) {
+                return;
+            }
             try {
-                if (parentAlert.baseFragment instanceof ChatActivity || parentAlert.avatarPicker == 2) {
+                if (shouldLoadAllMedia()) {
                     Intent videoPickerIntent = new Intent();
                     videoPickerIntent.setType("video/*");
                     videoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
@@ -3896,7 +3948,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
     }
 
     public void setCheckCameraWhenShown(boolean checkCameraWhenShown) {
-        this.checkCameraWhenShown = checkCameraWhenShown;
+        this.checkCameraWhenShown = checkCameraWhenShown && !NekoConfig.disableInstantCamera.Bool();
     }
 
     @Override
@@ -4112,7 +4164,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
 
     @Override
     public void onOpenAnimationEnd() {
-        checkCamera(parentAlert != null && parentAlert.baseFragment instanceof ChatActivity);
+        checkCamera(parentAlert != null && parentAlert.baseFragment instanceof ChatActivity && !NekoConfig.disableInstantCamera.Bool());
     }
 
     @Override
@@ -4401,7 +4453,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     return;
                 }
                 if (selectedPhotos.size() + 1 > maxCount()) {
-                    BulletinFactory.of(parentAlert.sizeNotifierFrameLayout, resourcesProvider).createErrorBulletin(AndroidUtilities.replaceTags(LocaleController.formatPluralString("BusinessRepliesToastLimit", parentAlert.baseFragment.getMessagesController().quickReplyMessagesLimit))).show();
+                    BulletinFactory.of(parentAlert.sizeNotifierFrameLayout, resourcesProvider).createErrorBulletin(AndroidUtilities.replaceTags(LocaleController.formatPluralString("BusinessRepliesToastLimit", parentAlert.baseFragment.getMessagesController().config.quickReplyMessagesLimit.get()))).show();
                     return;
                 }
                 boolean added = !selectedPhotos.containsKey(photoEntry.imageId);
@@ -4572,6 +4624,9 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     emptyView.setLayoutParams(new RecyclerView.LayoutParams(LayoutHelper.MATCH_PARENT, dp(400)));
                     emptyView.setGravity(Gravity.CENTER);
                     emptyView.isClickable();
+                    if (NaConfig.INSTANCE.getUseSystemPhotoPicker().Bool() && isSystemPhotoPickerContext(parentAlert.baseFragment) && canUseSystemPhotoPicker(AndroidUtilities.findActivity(getContext()))) {
+                        emptyView.setGalleryAccessButtonText(getString(videoEnabled ? R.string.ChoosePhotoOrVideo : R.string.ChoosePhoto));
+                    }
                     emptyView.doOnCameraAccess(ChatAttachAlertPhotoLayout.this::openCameraWithPermissionCheck);
                     emptyView.doOnGalleryAccessClick(ChatAttachAlertPhotoLayout.this::requestGalleryPermission);
                     emptyView.doOnEmojiButton(d -> {

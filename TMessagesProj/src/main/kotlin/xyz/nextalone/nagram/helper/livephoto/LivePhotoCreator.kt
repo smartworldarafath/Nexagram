@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper.livephoto
+package xyz.nextalone.nagram.helper.livephoto
 
 /**
  * Interface for Live Photo creators for different device manufacturers.

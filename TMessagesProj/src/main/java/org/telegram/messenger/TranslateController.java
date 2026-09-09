@@ -53,8 +53,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import tw.nekomimi.nekogram.transtale.popupwrapper.LanguageDetector;
-import xyz.nextalone.nexagram.NaConfig;
-import xyz.nextalone.nexagram.SummarizeTextButtonStatus;
+import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.SummarizeTextButtonStatus;
 
 public class TranslateController extends BaseController {
 

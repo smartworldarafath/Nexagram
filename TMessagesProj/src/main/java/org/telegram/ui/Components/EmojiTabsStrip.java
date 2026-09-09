@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class EmojiTabsStrip extends ScrollableHorizontalScrollView {
 
@@ -1394,7 +1394,7 @@ public class EmojiTabsStrip extends ScrollableHorizontalScrollView {
             if (currentType == SelectAnimatedEmojiDialog.TYPE_SET_REPLY_ICON || currentType == SelectAnimatedEmojiDialog.TYPE_SET_REPLY_ICON_BOTTOM) {
                 color = accentColor;
             }
-            PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY);
+            PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
             if (imageView != null && !isAnimatedEmoji) {
                 imageView.setColorFilter(colorFilter);
                 imageView.invalidate();

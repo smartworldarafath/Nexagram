@@ -48,8 +48,8 @@ import tw.nekomimi.nekogram.utils.EnvUtil;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.GsonUtil;
 import tw.nekomimi.nekogram.utils.ShareUtil;
-import xyz.nextalone.nexagram.NkmrConfig;
-import xyz.nextalone.nexagram.network.NetworkLogActivity;
+import xyz.nextalone.nagram.NkmrConfig;
+import xyz.nextalone.nagram.network.NetworkLogActivity;
 
 public class NekoSettingsActivity extends BaseNekoSettingsActivity {
 
@@ -114,7 +114,7 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
         } else if (position == sourceCodeRow) {
             Browser.openUrl(getParentActivity(), "https://github.com/smartworldarafath/Nexagram");
         } else if (position == translationRow) {
-            Browser.openUrl(getParentActivity(), "https://xtaolabs.crowdin.com/nexagram");
+            Browser.openUrl(getParentActivity(), "https://xtaolabs.crowdin.com/nagram");
         } else if (position == datacenterRow) {
             presentFragment(new DatacenterActivity(0));
         } else if (position == networkLogRow) {
