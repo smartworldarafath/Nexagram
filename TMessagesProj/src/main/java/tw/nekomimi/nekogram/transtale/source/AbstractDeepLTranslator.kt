@@ -5,7 +5,7 @@ import org.telegram.messenger.FileLog
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import tw.nekomimi.nekogram.transtale.Translator
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 import java.util.Locale
 
 /**

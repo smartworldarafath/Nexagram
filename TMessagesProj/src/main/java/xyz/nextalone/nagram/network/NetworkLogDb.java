@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.network;
+package xyz.nextalone.nagram.network;
 
 import static tw.nekomimi.nekogram.database.ObjectBoxKt.mkDatabase;
 

@@ -9,7 +9,7 @@ import org.json.JSONObject
 import org.telegram.messenger.FileLog
 import org.telegram.tgnet.ConnectionsManager
 import tw.nekomimi.nekogram.NekoConfig
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
@@ -225,7 +225,7 @@ object DnsFactory {
         }
     }
 
-    private fun makeDohJsonRequest(provider: String, name: String, type: String): xyz.nextalone.nexagram.network.NetworkResponse {
+    private fun makeDohJsonRequest(provider: String, name: String, type: String): xyz.nextalone.nagram.network.NetworkResponse {
         return NetworkRequestBuilder.get(provider) {
             header("accept", "application/dns-json")
             parameter("name", name)

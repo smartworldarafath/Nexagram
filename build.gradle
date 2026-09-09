@@ -14,31 +14,23 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:2.1.0"
 
         //noinspection GradleDependency
-        classpath "io.sentry:sentry-android-gradle-plugin:6.15.0"
+        classpath "io.sentry:sentry-android-gradle-plugin:6.19.0"
         // db
         classpath "io.objectbox:objectbox-gradle-plugin:5.4.2"
     }
 }
 
 static String detectNdkVersion() {
-
-    def version = "27.2.12479018"
-
-    def androidHome = System.getenv("ANDROID_HOME")
-
-    if (androidHome == null) return version
-    if (new File(androidHome, "ndk/$version").isDirectory()) return version
-
-    def versionFile = new File(androidHome, "ndk-bundle/source.properties")
-
-    if (!versionFile.isFile()) return version
-
-    def versionProperties = new Properties()
-
-    versionProperties.load(versionFile.newDataInputStream())
-
-    return versionProperties.getProperty("Pkg.Revision", version)
-
+    def version = "27.0.12077973"
+    def androidHome = System.getenv("ANDROID_HOME") ?: "C:/Users/HP Omnibook X Flip/AppData/Local/Android/Sdk"
+    def ndkDir = new File(androidHome, "ndk")
+    if (ndkDir.isDirectory()) {
+        def dirs = ndkDir.listFiles()
+        if (dirs != null && dirs.length > 0) {
+            return dirs[0].name
+        }
+    }
+    return version
 }
 
 ext {

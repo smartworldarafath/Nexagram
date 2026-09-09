@@ -125,7 +125,7 @@ import java.util.Objects;
 
 import me.vkryl.android.animator.BoolAnimator;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ProfileGiftsContainer extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
@@ -692,7 +692,7 @@ public class ProfileGiftsContainer extends FrameLayout implements NotificationCe
                         .setOnGiftUpdatedListener(() -> {
                             update(false);
                         })
-                        .setOnBoughtGift((boughtGift, dialogId) -> {
+                        .setOnBoughtGift((boughtGift, dialogId, fragmentsImmediately) -> {
                             list.gifts.remove(userGift);
                             update(true);
 

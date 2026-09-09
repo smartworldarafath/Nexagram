@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper.livephoto
+package xyz.nextalone.nagram.helper.livephoto
 
 import org.telegram.messenger.FileLog
 import java.io.BufferedInputStream

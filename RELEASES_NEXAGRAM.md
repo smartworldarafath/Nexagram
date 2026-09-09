@@ -4,7 +4,25 @@ Welcome to **Nexagram** (by **Zero by Arafath**). Below is the complete release 
 
 ---
 
-## 🚀 Nexagram v12.8.1 (Build 1240) - Latest Release
+## 🚀 Nexagram v2.0.3 - Latest Release
+
+**Release Date:** September 9, 2026  
+**Tag:** `v2.0.3`  
+**Full Changelog & Source:** [smartworldarafath/Nexagram Releases](https://github.com/smartworldarafath/Nexagram/releases)
+
+### 📦 APK Downloads
+- **Universal Fat APK:** `Nexagram-v2.0.3.apk` (Supports all devices: `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64`)
+
+### ✨ What's New in Nexagram v2.0.3
+- 🎨 **Brand Identity**: Complete transition from Nagram to Nexagram branding across all UI, settings, and 30+ locale translations.
+- 🚀 **New App Icon**: Custom high-resolution adaptive app icon and clean vector/bitmap assets across all densities.
+- 📱 **Intro Screen**: Dedicated Nexagram logo on app launch intro screen with smooth transition animations.
+- ⚡ **Universal Single APK**: Optimized release pipeline producing a single universal APK supporting both 64-bit and 32-bit devices.
+- 🔒 **Native Integrity**: Patched native integrity verification for secure custom builds.
+
+---
+
+## 🚀 Nexagram v12.8.1 (Build 1240)
 
 **Release Date:** July 16, 2026  
 **Tag:** `1240`  

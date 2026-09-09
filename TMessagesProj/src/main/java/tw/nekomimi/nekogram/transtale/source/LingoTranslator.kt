@@ -6,7 +6,7 @@ import org.json.JSONObject
 import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import tw.nekomimi.nekogram.transtale.Translator
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 
 object LingoTranslator : Translator {
 

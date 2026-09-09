@@ -68,6 +68,7 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.tgnet.Vector;
 import org.telegram.tgnet.tl.TL_account;
 import org.telegram.tgnet.tl.TL_bots;
+import org.telegram.tgnet.tl.TL_ephemeral;
 import org.telegram.tgnet.tl.TL_iv;
 import org.telegram.tgnet.tl.TL_update;
 import org.telegram.ui.ActionBar.BaseFragment;
@@ -116,8 +117,8 @@ import java.util.regex.Pattern;
 import tw.nekomimi.nekogram.DialogConfig;
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.ui.PinnedStickerHelper;
-import xyz.nextalone.nexagram.NaConfig;
-import xyz.nextalone.nexagram.helper.ExternalStickerCacheHelper;
+import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.ExternalStickerCacheHelper;
 
 @SuppressWarnings("unchecked")
 public class MediaDataController extends BaseController {
@@ -6620,9 +6621,9 @@ public class MediaDataController extends BaseController {
                             }
                         }
                         if (!ephemeralIds.isEmpty()) {
-                            ArrayList<TLRPC.EphemeralMessage> ephemeralMessages = getMessagesStorage().getEphemeralMessagesInternal(dialogId, ephemeralIds);
+                            ArrayList<TL_ephemeral.EphemeralMessage> ephemeralMessages = getMessagesStorage().getEphemeralMessagesInternal(dialogId, ephemeralIds);
                             if (ephemeralMessages != null) {
-                                for (TLRPC.EphemeralMessage ephemeralMessage : ephemeralMessages) {
+                                for (TL_ephemeral.EphemeralMessage ephemeralMessage : ephemeralMessages) {
                                     TLRPC.Message convetedEphemeralMessage = EphemeralMessagesHelper.convertEphemeralToFakeDefault(ephemeralMessage);
                                     MessagesStorage.addUsersAndChatsFromMessage(convetedEphemeralMessage, usersToLoad, chatsToLoad, null);
                                     result.add(convetedEphemeralMessage);
@@ -7256,7 +7257,7 @@ public class MediaDataController extends BaseController {
         boolean isPre = false;
         final String mono = "`";
         final String pre = "```";
-        while (!(xyz.nextalone.nexagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() || xyz.nextalone.nexagram.NaConfig.INSTANCE.getDisableMarkdown().Bool()) && parseMarkdown && (index = TextUtils.indexOf(message[0], !isPre ? mono : pre, lastIndex)) != -1) {
+        while (!(xyz.nextalone.nagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() || xyz.nextalone.nagram.NaConfig.INSTANCE.getDisableMarkdown().Bool()) && parseMarkdown && (index = TextUtils.indexOf(message[0], !isPre ? mono : pre, lastIndex)) != -1) {
             if (start == -1) {
                 isPre = message[0].length() - index > 2 && message[0].charAt(index + 1) == '`' && message[0].charAt(index + 2) == '`';
                 start = index;
@@ -7342,9 +7343,9 @@ public class MediaDataController extends BaseController {
             entities.add(entity);
         }
 
-        // Nexagram: call new markdown parser before processing Spanned
-        if (!xyz.nextalone.nexagram.NaConfig.INSTANCE.getDisableMarkdown().Bool() && xyz.nextalone.nexagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() && parseMarkdown) {
-            xyz.nextalone.nexagram.helper.EntitiesHelper.parseMarkdown(message, allowStrike);
+        // Nagram: call new markdown parser before processing Spanned
+        if (!xyz.nextalone.nagram.NaConfig.INSTANCE.getDisableMarkdown().Bool() && xyz.nextalone.nagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() && parseMarkdown) {
+            xyz.nextalone.nagram.helper.EntitiesHelper.parseMarkdown(message, allowStrike);
         }
 
         if (message[0] instanceof Spanned) {
@@ -7538,8 +7539,8 @@ public class MediaDataController extends BaseController {
         CharSequence cs = message[0];
         if (entities == null) entities = new ArrayList<>();
         if (parseMarkdown) {
-            // Nexagram: skip old regex parsing when using new parser or markdown disabled
-            if (xyz.nextalone.nexagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() || xyz.nextalone.nexagram.NaConfig.INSTANCE.getDisableMarkdown().Bool()) return entities;
+            // Nagram: skip old regex parsing when using new parser or markdown disabled
+            if (xyz.nextalone.nagram.NaConfig.INSTANCE.getNewMarkdownParser().Bool() || xyz.nextalone.nagram.NaConfig.INSTANCE.getDisableMarkdown().Bool()) return entities;
             cs = parsePattern(cs, BOLD_PATTERN, entities, obj -> new TLRPC.TL_messageEntityBold());
             cs = parsePattern(cs, ITALIC_PATTERN, entities, obj -> new TLRPC.TL_messageEntityItalic());
             cs = parsePattern(cs, SPOILER_PATTERN, entities, obj -> new TLRPC.TL_messageEntitySpoiler());
@@ -8439,7 +8440,7 @@ public class MediaDataController extends BaseController {
                 mid = cursor.intValue(0);
             }
             cursor.dispose();
-            if (mid >= message.id) {
+            if (mid >= message.id && !MessageObject.isEphemeralMessageId(mid) && !MessageObject.isEphemeralMessageId(message.id)) {
                 return;
             }
 
