@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram
+package xyz.nextalone.nagram
 
 import android.content.Context
 import android.content.SharedPreferences

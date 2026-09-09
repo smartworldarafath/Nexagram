@@ -249,12 +249,12 @@ public class BoostViaGiftsBottomSheet extends BottomSheetWithRecyclerListView im
         actionBtn = new ActionBtnCell(getContext(), resourcesProvider);
         actionBtn.setOnClickListener(v -> {
 
-            // ---- nexagram start ----
+            // ---- nagram start ----
             if (BuildVars.IS_BILLING_UNAVAILABLE) {
                 fragment.showDialog(new PremiumNotAvailableBottomSheet(fragment));
                 return;
             }
-            // ---- nexagram end ----
+            // ---- nagram end ----
 
             if (actionBtn.isLoading()) {
                 return;

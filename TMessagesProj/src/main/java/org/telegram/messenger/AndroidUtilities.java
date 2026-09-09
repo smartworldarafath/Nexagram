@@ -57,6 +57,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -131,8 +132,10 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.graphics.ColorUtils;
+import androidx.core.graphics.Insets;
 import androidx.core.math.MathUtils;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
@@ -245,7 +248,7 @@ import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.utils.EnvUtil;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
-import xyz.nextalone.nexagram.helper.ColorOsHelper;
+import xyz.nextalone.nagram.helper.ColorOsHelper;
 
 public class AndroidUtilities {
     public final static int REPLACING_TAG_TYPE_LINK = 0;
@@ -1464,19 +1467,10 @@ public class AndroidUtilities {
         if (context == null || (AndroidUtilities.statusBarHeight > 0 && !force)) {
             return;
         }
-        if (BuildVars.USE_LEGACY_SYSTEM_INSETS) {
-            AndroidUtilities.statusBarHeight = getStatusBarHeight(context);
-            AndroidUtilities.navigationBarHeight = getNavigationBarHeight(context);
-        }
     }
 
     public static int getStatusBarHeight(Context context) {
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return resourceId > 0 ? context.getResources().getDimensionPixelSize(resourceId) : 0;
-    }
-
-    private static int getNavigationBarHeight(Context context) {
-        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
         return resourceId > 0 ? context.getResources().getDimensionPixelSize(resourceId) : 0;
     }
 
@@ -1909,7 +1903,7 @@ public class AndroidUtilities {
 
     @SuppressLint("WrongConstant")
     public static void lockOrientation(Activity activity) {
-        if (activity == null || prevOrientation != -10) {
+        if (activity == null || prevOrientation != -10 || isTabletInternal()) {
             return;
         }
         try {
@@ -1953,7 +1947,7 @@ public class AndroidUtilities {
 
     @SuppressLint("WrongConstant")
     public static void lockOrientation(Activity activity, int orientation) {
-        if (activity == null) {
+        if (activity == null || isTabletInternal()) {
             return;
         }
         try {
@@ -2860,6 +2854,15 @@ public class AndroidUtilities {
         return layer & 0x0000ffff | (version << 16);
     }
 
+    public static void executeOnUIThread(Runnable runnable) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            AndroidUtilities.runOnUIThread(runnable);
+            return;
+        }
+
+        runnable.run();
+    }
+
     public static void runOnUIThread(Runnable runnable) {
         runOnUIThread(runnable, 0);
     }
@@ -2954,21 +2957,19 @@ public class AndroidUtilities {
 
     public static int getMinTabletSide() {
         if (!isSmallTablet()) {
-            int smallSide = Math.min(displaySize.x, displaySize.y);
-            int leftSide = smallSide * 35 / 100;
-            if (leftSide < dp(320)) {
-                leftSide = dp(320);
-            }
+            final int smallSide = Math.min(displaySize.x, displaySize.y);
+            final int leftSide = getTabletLeftFragmentSize(smallSide, 0, 0);
             return smallSide - leftSide;
         } else {
-            int smallSide = Math.min(displaySize.x, displaySize.y);
-            int maxSide = Math.max(displaySize.x, displaySize.y);
-            int leftSide = maxSide * 35 / 100;
-            if (leftSide < dp(320)) {
-                leftSide = dp(320);
-            }
+            final int smallSide = Math.min(displaySize.x, displaySize.y);
+            final int maxSide = Math.max(displaySize.x, displaySize.y);
+            final int leftSide = getTabletLeftFragmentSize(maxSide, 0, 0);
             return Math.min(smallSide, maxSide - leftSide);
         }
+    }
+
+    public static int getTabletLeftFragmentSize(final int fullWidth, final int insetLeft, final int insetRight) {
+        return insetLeft + Math.max(dp(320), (fullWidth - insetLeft - insetRight) * 35 / 100);
     }
 
     public static int getPhotoSize() {
@@ -3633,7 +3634,7 @@ public class AndroidUtilities {
         }
         File storageDir = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Nexagram");
+            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Nagram");
             if (!storageDir.mkdirs()) {
                 if (!storageDir.exists()) {
                     if (BuildVars.LOGS_ENABLED) {
@@ -4165,8 +4166,8 @@ public class AndroidUtilities {
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     Map<String, Integer> colorsReplacement = new HashMap<>();
-                    colorsReplacement.put("info1.**", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
-                    colorsReplacement.put("info2.**", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
+                    colorsReplacement.put("info1", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
+                    colorsReplacement.put("info2", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
                     builder.setTopAnimation(R.raw.not_available, AlertsCreator.NEW_DENY_DIALOG_TOP_ICON_SIZE, false, parentFragment.getThemedColor(Theme.key_dialogTopBackground), colorsReplacement);
                     builder.setTopAnimationIsNew(true);
                     builder.setMessage(getString(R.string.IncorrectTheme));
@@ -4215,8 +4216,8 @@ public class AndroidUtilities {
                     }
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     Map<String, Integer> colorsReplacement = new HashMap<>();
-                    colorsReplacement.put("info1.**", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
-                    colorsReplacement.put("info2.**", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
+                    colorsReplacement.put("info1", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
+                    colorsReplacement.put("info2", parentFragment.getThemedColor(Theme.key_dialogTopBackground));
                     builder.setTopAnimation(R.raw.not_available, AlertsCreator.NEW_DENY_DIALOG_TOP_ICON_SIZE, false, parentFragment.getThemedColor(Theme.key_dialogTopBackground), colorsReplacement);
                     builder.setTopAnimationIsNew(true);
                     builder.setPositiveButton(getString(R.string.OK), null);
@@ -6683,8 +6684,7 @@ public class AndroidUtilities {
     }
 
     public static String getBuildVersionInfo() {
-        String[] abi = Build.SUPPORTED_ABIS[0].toLowerCase(Locale.ROOT).split("-");
-        return "Nexagram v" + BuildConfig.VERSION_NAME + " (" + BuildConfig.BUILD_TIMESTAMP + ") " + abi[abi.length - 1];
+        return "Nexagram v" + BuildConfig.VERSION_NAME;
 //        try {
 //            PackageInfo pInfo = ApplicationLoader.applicationContext.getPackageManager().getPackageInfo(ApplicationLoader.applicationContext.getPackageName(), 0);
 //            int code = pInfo.versionCode / 10;
@@ -6852,6 +6852,47 @@ public class AndroidUtilities {
         if (Build.VERSION.SDK_INT >= 29) {
             window.setStatusBarContrastEnforced(false);
             window.setNavigationBarContrastEnforced(false);
+        }
+    }
+
+    public static void applyEdgeToEdgeLayoutParams(WindowManager.LayoutParams windowLayoutParams) {
+        if (Build.VERSION.SDK_INT >= 28) {
+            windowLayoutParams.layoutInDisplayCutoutMode = Build.VERSION.SDK_INT >= 30
+                    ? WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                    : WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+    }
+
+
+
+    public static Insets getDefaultWindowInsets(WindowInsetsCompat insets, boolean withIme) {
+        final int insetsType = WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout();
+        final Insets systemInsets = insets.getInsetsIgnoringVisibility(insetsType);
+
+        if (withIme) {
+            final Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+            return Insets.max(systemInsets, imeInsets);
+        }
+
+        return systemInsets;
+    }
+
+    public static void setViewLayoutMargins(View v, int l, int t, int r, int b) {
+        if (v == null) {
+            return;
+        }
+
+        final ViewGroup.LayoutParams lp = v.getLayoutParams();
+        if (lp instanceof ViewGroup.MarginLayoutParams) {
+            final ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) lp;
+
+            if (mlp.leftMargin != l || mlp.topMargin != t || mlp.rightMargin != r || mlp.bottomMargin != b) {
+                mlp.leftMargin = l;
+                mlp.topMargin = t;
+                mlp.rightMargin = r;
+                mlp.bottomMargin = b;
+                v.requestLayout();
+            }
         }
     }
 

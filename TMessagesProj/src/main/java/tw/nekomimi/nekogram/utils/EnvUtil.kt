@@ -40,7 +40,7 @@ object EnvUtil {
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-                add(Environment.getExternalStoragePublicDirectory("Nexagram"))
+                add(Environment.getExternalStoragePublicDirectory("Nagram"))
             }
 
         }.map { it.path }.toTypedArray()

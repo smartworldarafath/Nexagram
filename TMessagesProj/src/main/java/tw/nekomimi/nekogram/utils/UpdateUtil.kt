@@ -10,8 +10,8 @@ import org.telegram.ui.ActionBar.AlertDialog
 
 object UpdateUtil {
 
-    const val channelUsername = "nexagram_channel"
-    const val channelUsernameTips = "NexagramTips"
+    const val channelUsername = "nexagramcommunity"
+    const val channelUsernameTips = "nexagramcommunity"
     const val wikiUrl = "https://na-wiki.xtaolabs.com"
 
     @JvmStatic

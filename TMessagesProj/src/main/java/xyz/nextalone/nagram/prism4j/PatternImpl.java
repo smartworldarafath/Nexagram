@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.prism4j;
+package xyz.nextalone.nagram.prism4j;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

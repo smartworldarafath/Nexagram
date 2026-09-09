@@ -7,7 +7,7 @@ import org.telegram.messenger.R
 import tw.nekomimi.nekogram.NekoConfig
 import tw.nekomimi.nekogram.transtale.TransUtils
 import tw.nekomimi.nekogram.transtale.Translator
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 
 object GoogleAppTranslator : Translator {
 

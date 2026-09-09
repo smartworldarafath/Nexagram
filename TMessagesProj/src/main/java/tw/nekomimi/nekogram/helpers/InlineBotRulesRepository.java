@@ -1,5 +1,5 @@
 /*
- * Nexagram - Inline Bot Rules dual-track repository.
+ * Nagram - Inline Bot Rules dual-track repository.
  *
  * Bridges remote (read-only, from InlineBotRulesHelper) and
  * local (full CRUD, persisted via NaConfig) rule lists,
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import tw.nekomimi.nekogram.helpers.remote.InlineBotRulesHelper;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class InlineBotRulesRepository {
 

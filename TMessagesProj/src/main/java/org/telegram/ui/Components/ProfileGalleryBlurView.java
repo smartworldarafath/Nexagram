@@ -31,7 +31,7 @@ import org.telegram.messenger.SharedConfig;
 import org.telegram.messenger.Utilities;
 import org.telegram.ui.ProfileActivity;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ProfileGalleryBlurView extends View {
 

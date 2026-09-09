@@ -1,6 +1,6 @@
 @file:JvmName("ItemOptionsPatch")
 
-package xyz.nextalone.nexagram.ui
+package xyz.nextalone.nagram.ui
 
 import android.view.ViewGroup
 import android.widget.LinearLayout

@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.ui
+package xyz.nextalone.nagram.ui
 
 import android.annotation.SuppressLint
 import android.content.Context

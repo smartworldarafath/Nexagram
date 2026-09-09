@@ -7,8 +7,23 @@ apply plugin: "org.jetbrains.kotlin.plugin.serialization"
 apply plugin: "io.sentry.android.gradle"
 apply plugin: "io.objectbox"
 
+apply plugin: 'org.telegram.lottie-meta'
+apply plugin: 'idea'
+
+idea {
+    module {
+        excludeDirs += [
+                file('jni/third_party'),
+                file('jni/ffmpeg'),
+                file('jni/tlottie'),
+                file('jni/boringssl'),
+                file('jni/sqlite')
+        ]
+    }
+}
+
 def verName = APP_VERSION_NAME
-def verCode = 1242
+def verCode = 1246
 
 
 def officialVer = APP_VERSION_NAME
@@ -41,8 +56,7 @@ def keystorePwd = null
 def alias = null
 def pwd = null
 def sentry_token = System.getenv("SENTRY_AUTH_TOKEN")
-def nexagram_build_args = System.getenv("NAGRAM_BUILD_ARGS")
-def sentry_upload =  project.rootProject.file("sentry.properties").exists()
+def nagram_build_args = System.getenv("NAGRAM_BUILD_ARGS")
 def disableCMakeRelWithDebInfo = System.getenv("COMPILE_NATIVE") == null
 
 Properties properties
@@ -60,12 +74,14 @@ if (properties != null) {
     alias = properties.getProperty("ALIAS_NAME")
     pwd = properties.getProperty("ALIAS_PASS")
     sentry_token = properties.getProperty("SENTRY_AUTH_TOKEN", sentry_token)
-    nexagram_build_args = properties.getProperty("NAGRAM_BUILD_ARGS", nexagram_build_args)
+    nagram_build_args = properties.getProperty("NAGRAM_BUILD_ARGS", nagram_build_args)
 }
 
-keystorePwd = keystorePwd ?: System.getenv("KEYSTORE_PASS")
-alias = alias ?: System.getenv("ALIAS_NAME")
-pwd = pwd ?: System.getenv("ALIAS_PASS")
+keystorePwd = keystorePwd ?: System.getenv("KEYSTORE_PASS") ?: "nexagram"
+alias = alias ?: System.getenv("ALIAS_NAME") ?: "nexagram"
+pwd = pwd ?: System.getenv("ALIAS_PASS") ?: "nexagram"
+
+def sentry_upload = sentry_token != null && !sentry_token.isEmpty()
 
 def targetTask = ""
 if (!gradle.startParameter.taskNames.isEmpty()) {
@@ -82,7 +98,7 @@ android {
     buildToolsVersion '35.0.0'
     ndkVersion rootProject.ext.ndkVersion // 27.2.12479018
 
-    defaultConfig.applicationId = "xyz.nextalone.nexagram"
+    defaultConfig.applicationId = "com.nexagram.app"
 
     sourceSets {
 
@@ -109,13 +125,15 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path "jni/CMakeLists.txt"
-        }
-    }
+    // externalNativeBuild {
+    //     cmake {
+    //         path "jni/CMakeLists.txt"
+    //     }
+    // }
 
     lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
         disable 'BlockedPrivateApi'
@@ -131,19 +149,7 @@ android {
     splits {
 
         abi {
-            if (targetTask.contains("fdroid")) {
-                enable false
-                universalApk true
-            } else {
-                enable true
-                reset()
-                universalApk false
-                if (!nativeTarget.isBlank()) {
-                    include nativeTarget
-                } else {
-                    include 'armeabi-v7a', 'arm64-v8a'
-                }
-            }
+            enable false
         }
 
     }
@@ -173,11 +179,11 @@ android {
         buildConfigField "int", "APP_ID", appId
         buildConfigField "String", "APP_HASH", "\"" + appHash + "\""
 
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-21' //, '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
-            }
-        }
+        // externalNativeBuild {
+        //     cmake {
+        //         arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-21' //, '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
+        //     }
+        // }
     }
 
     bundle {
@@ -266,7 +272,7 @@ android {
             task.enabled = false
         } else if (task.name.endsWith("GoogleServices") && task.name.contains("NoGcm")) {
             task.enabled = false
-        } else if (task.name.contains("buildCMakeDebug") && nexagram_build_args != null && nexagram_build_args.contains("skip_buildCMakeDebug")) {
+        } else if (task.name.contains("buildCMakeDebug") && nagram_build_args != null && nagram_build_args.contains("skip_buildCMakeDebug")) {
             task.enabled = false
         }
     }
@@ -274,7 +280,7 @@ android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
             String gramName = "Nexagram"
-            String first = String.format("%s-v%s(%s)", gramName, versionName, versionCode)
+            String first = String.format("%s-v%s", gramName, versionName)
             String name = outputFileName.replace("TMessagesProj", first)
             name = name.replace("-release", "")
             outputFileName = name
@@ -303,9 +309,10 @@ dependencies {
     implementation ("androidx.mediarouter:mediarouter:1.7.0") {
         exclude group: 'androidx.recyclerview', module: "recyclerview"
     }
+    implementation 'com.google.zxing:core:3.5.4'
 
-    implementation 'androidx.car.app:app:1.4.0'
-    implementation 'androidx.car.app:app-projected:1.4.0'
+    implementation 'androidx.car.app:app:1.7.0'
+    implementation 'androidx.car.app:app-projected:1.7.0'
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
 
     compileOnly 'org.checkerframework:checker-qual:2.5.2'
@@ -339,7 +346,10 @@ dependencies {
     implementation "io.noties.markwon:ext-tables:4.6.2"
     implementation "io.noties.markwon:html:4.6.2"
     implementation "io.noties.markwon:inline-parser:4.6.2"
-    implementation "io.noties.markwon:ext-latex:4.6.2"
+    implementation("io.noties.markwon:ext-latex:4.6.2") {
+        exclude group: 'ru.noties', module: 'jlatexmath-android'
+    }
+    api project(':jlatexmath')
 
 //    implementation 'com.google.mlkit:translate:17.0.3'
 
@@ -404,10 +414,10 @@ sentry {
     debug = false
 
     // The slug of the Sentry organization to use for uploading proguard mappings/source contexts.
-    org = "pagermaid"
+    org = "teampgm"
 
     // The slug of the Sentry project to use for uploading proguard mappings/source contexts.
-    projectName = "nexagram"
+    projectName = "nagram"
 
     // The authentication token to use for uploading proguard mappings/source contexts.
     // WARNING: Do not expose this token in your build.gradle files, but rather set an environment
@@ -516,7 +526,7 @@ sentry {
         // as Gradle will resolve it to the latest version.
         //
         // Defaults to the latest published Sentry version.
-        sentryVersion = '8.49.0'
+        sentryVersion = '8.53.0'
     }
 
     // Disables or enables dependencies metadata reporting for Sentry.

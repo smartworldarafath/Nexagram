@@ -122,9 +122,9 @@ import java.util.regex.Pattern;
 
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
-import xyz.nextalone.nexagram.NaConfig;
-import xyz.nextalone.nexagram.helper.ExternalStickerCacheHelper;
-import xyz.nextalone.nexagram.helper.StickerSetHelper;
+import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.ExternalStickerCacheHelper;
+import xyz.nextalone.nagram.helper.StickerSetHelper;
 
 public class StickersAlert extends BottomSheet implements NotificationCenter.NotificationCenterDelegate {
 

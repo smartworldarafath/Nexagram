@@ -52,7 +52,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.helper.MessageHelper;
+import xyz.nextalone.nagram.helper.MessageHelper;
 
 import androidx.collection.LongSparseArray;
 

@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram
+package xyz.nextalone.nagram
 
 import android.content.SharedPreferences
 import android.net.Uri
@@ -14,7 +14,7 @@ import androidx.core.net.toUri
 
 object NaConfig {
     const val TAG =
-        "Zero by Arafath"
+        "NextAlone"
     val preferences: SharedPreferences =
         NkmrConfig.preferences
     val sync =
@@ -315,6 +315,12 @@ object NaConfig {
             "CustomEditedMessage",
             ConfigItem.configTypeString,
             ""
+        )
+    val showEditedIcon =
+        addConfig(
+            "ShowEditedIcon",
+            ConfigItem.configTypeBool,
+            false
         )
     val disableProxyWhenVpnEnabled =
         addConfig(
@@ -982,6 +988,12 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
+    val useSystemPhotoPicker =
+        addConfig(
+            "UseSystemPhotoPicker",
+            ConfigItem.configTypeBool,
+            false
+        )
     var tabStyle =
         addConfig(
             "TabStyle",
@@ -1306,6 +1318,36 @@ object NaConfig {
             "ExtendedFeatureUnlockedToken",
             ConfigItem.configTypeString,
             ""
+        )
+    val disableAiEditor =
+        addConfig(
+            "DisableAiEditor",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val disableGlareEffects =
+        addConfig(
+            "DisableGlareEffects",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val liquidGlassAngle =
+        addConfig(
+            "LiquidGlassAngle",
+            ConfigItem.configTypeInt,
+            0
+    )
+    val liquidGlassIntensity =
+        addConfig(
+            "LiquidGlassIntensity",
+            ConfigItem.configTypeInt,
+            75
+        )
+    val disableGooeyAvatarAnimation =
+        addConfig(
+            "DisableGooeyAvatarAnimation",
+            ConfigItem.configTypeBool,
+            false
         )
 
     private fun addConfig(

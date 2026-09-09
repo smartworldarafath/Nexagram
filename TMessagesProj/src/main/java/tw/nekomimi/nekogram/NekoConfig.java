@@ -18,7 +18,7 @@ import java.util.Set;
 
 import tw.nekomimi.nekogram.config.ConfigItem;
 import tw.nekomimi.nekogram.helpers.CloudSettingsHelper;
-import xyz.nextalone.nexagram.NkmrConfig;
+import xyz.nextalone.nagram.NkmrConfig;
 
 import static tw.nekomimi.nekogram.config.ConfigItem.*;
 
@@ -126,7 +126,7 @@ public class NekoConfig {
     public static ConfigItem showIdAndDc = addConfig("ShowIdAndDc", configTypeBool, false);
 
     public static ConfigItem cachePath = addConfig("cache_path", configTypeString, "");
-    public static ConfigItem customSavePath = addConfig("customSavePath", configTypeString, "Nexagram");
+    public static ConfigItem customSavePath = addConfig("customSavePath", configTypeString, "Nagram");
 
     public static ConfigItem translationProvider = addConfig("translationProvider", configTypeInt, 1);
     public static ConfigItem translateToLang = addConfig("TransToLang", configTypeString, ""); // "" -> translate to current language (MessageTrans.kt & Translator.kt)

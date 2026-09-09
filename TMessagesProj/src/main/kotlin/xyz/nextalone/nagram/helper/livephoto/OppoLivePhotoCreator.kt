@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper.livephoto
+package xyz.nextalone.nagram.helper.livephoto
 
 import androidx.exifinterface.media.ExifInterface
 import org.telegram.messenger.FileLog

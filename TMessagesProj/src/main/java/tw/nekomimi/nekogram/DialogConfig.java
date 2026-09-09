@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class DialogConfig {
     private static final SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("nekodialogconfig", Context.MODE_PRIVATE);

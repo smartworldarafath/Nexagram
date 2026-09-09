@@ -125,7 +125,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.helper.Dialogs;
+import xyz.nextalone.nagram.helper.Dialogs;
 
 public class ThemeActivity extends BaseFragment implements NotificationCenter.NotificationCenterDelegate {
 

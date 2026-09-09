@@ -3,8 +3,8 @@ package tw.nekomimi.nekogram.transtale.source
 import android.text.TextUtils
 import io.ktor.http.ContentType
 import org.json.JSONObject
-import xyz.nextalone.nexagram.NaConfig
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.NaConfig
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 
 /**
  * Translator implementation backed by a self-hosted DeepLX HTTP service.

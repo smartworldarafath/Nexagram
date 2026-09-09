@@ -1,10 +1,10 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import org.telegram.messenger.FileLoader
 import org.telegram.messenger.FileLog
 import org.telegram.messenger.MessageObject
 
-import xyz.nextalone.nexagram.helper.livephoto.MotionPhotoWriter
+import xyz.nextalone.nagram.helper.livephoto.MotionPhotoWriter
 
 import java.io.File
 

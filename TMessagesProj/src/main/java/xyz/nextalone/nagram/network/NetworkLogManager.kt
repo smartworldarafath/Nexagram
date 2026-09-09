@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.network
+package xyz.nextalone.nagram.network
 
 import io.ktor.client.request.delete
 import io.ktor.client.request.get

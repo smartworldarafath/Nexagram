@@ -1,5 +1,5 @@
 /*
- * Nexagram - Inline Bot Rules settings page.
+ * Nagram - Inline Bot Rules settings page.
  *
  * Hosts the dual-track rule list (remote read-only + local CRUD).
  * Inherits BaseNekoSettingsActivity to share the standard Nekogram settings

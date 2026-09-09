@@ -4,7 +4,7 @@ import android.text.TextUtils
 import io.ktor.http.ContentType
 import org.json.JSONArray
 import org.json.JSONObject
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 
 /**
  * Shared implementation for the two official DeepL endpoints:

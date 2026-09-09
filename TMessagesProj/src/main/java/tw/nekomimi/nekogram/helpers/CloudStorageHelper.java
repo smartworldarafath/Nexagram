@@ -16,7 +16,7 @@ public class CloudStorageHelper extends AccountInstance {
 
     private static final SparseArray<CloudStorageHelper> Instance = new SparseArray<>();
     private static final long WEBVIEW_BOT_ID = 1433866570L;
-    private static final String WEBVIEW_BOT = "Zero by ArafathBot";
+    private static final String WEBVIEW_BOT = "NextAloneBot";
 
     private final Gson gson = new Gson();
 

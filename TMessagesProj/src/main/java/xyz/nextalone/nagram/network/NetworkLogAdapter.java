@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.network;
+package xyz.nextalone.nagram.network;
 
 import android.content.Context;
 import android.view.ViewGroup;

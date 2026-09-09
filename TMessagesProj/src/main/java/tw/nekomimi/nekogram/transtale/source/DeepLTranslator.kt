@@ -1,6 +1,6 @@
 package tw.nekomimi.nekogram.transtale.source
 
-import xyz.nextalone.nexagram.NaConfig
+import xyz.nextalone.nagram.NaConfig
 
 /**
  * Official DeepL Pro API translator (https://api.deepl.com).

@@ -71,8 +71,7 @@ public class NekoDebugSettingsActivity extends BaseNekoXSettingsActivity {
 
     // 检查更新
     private final AbstractConfigCell checkUpdateRow = cellGroup.appendCell(new ConfigCellText("CheckUpdate", () -> {
-        if (getParentActivity() == null) return;
-        Browser.openUrl(getParentActivity(), "tg://update");
+        presentFragment(new xyz.nextalone.nagram.ui.NexagramUpdateActivity());
     }));
 
     // 自动更新通道

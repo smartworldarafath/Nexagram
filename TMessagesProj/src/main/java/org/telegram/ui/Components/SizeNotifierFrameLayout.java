@@ -59,7 +59,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class SizeNotifierFrameLayout extends FrameLayout implements Theme.Colorable {
 

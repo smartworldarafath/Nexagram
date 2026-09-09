@@ -24,7 +24,7 @@ import org.telegram.tgnet.TLObject;
 import org.telegram.tgnet.TLRPC;
 import org.telegram.ui.ActionBar.Theme;
 
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class SenderSelectView extends View {
     private final static float SPRING_MULTIPLIER = 100f;

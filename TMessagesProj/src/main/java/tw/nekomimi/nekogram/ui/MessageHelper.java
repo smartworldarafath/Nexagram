@@ -409,7 +409,7 @@ public class MessageHelper extends BaseController {
             path = FileLoader.getInstance(currentAccount).getPathToAttach(messageObject.getDocument(), true).toString();
         }
         if (!TextUtils.isEmpty(path)) {
-            xyz.nextalone.nexagram.helper.MessageHelper.INSTANCE.saveStickerToGalleryAsGif(context, path, messageObject.isVideoSticker(), messageObject.isAnimatedSticker(), onSaved);
+            xyz.nextalone.nagram.helper.MessageHelper.INSTANCE.saveStickerToGalleryAsGif(context, path, messageObject.isVideoSticker(), messageObject.isAnimatedSticker(), onSaved);
         }
     }
 
@@ -417,7 +417,7 @@ public class MessageHelper extends BaseController {
         String path = FileLoader.getInstance(currentAccount).getPathToAttach(document, true).toString();
 
         if (!TextUtils.isEmpty(path)) {
-            xyz.nextalone.nexagram.helper.MessageHelper.INSTANCE.saveStickerToGalleryAsGif(context, path, MessageObject.isVideoSticker(document), MessageObject.isAnimatedStickerDocument(document, true), onSaved);
+            xyz.nextalone.nagram.helper.MessageHelper.INSTANCE.saveStickerToGalleryAsGif(context, path, MessageObject.isVideoSticker(document), MessageObject.isAnimatedStickerDocument(document, true), onSaved);
         }
     }
 
@@ -432,7 +432,7 @@ public class MessageHelper extends BaseController {
         }
         File file = new File(path);
         if (file.exists()) {
-            xyz.nextalone.nexagram.helper.MessageHelper.INSTANCE.addFileToClipboard(file, callback);
+            xyz.nextalone.nagram.helper.MessageHelper.INSTANCE.addFileToClipboard(file, callback);
         }
     }
 
@@ -451,7 +451,7 @@ public class MessageHelper extends BaseController {
             FileOutputStream stream = new FileOutputStream(png);
             image.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.close();
-            xyz.nextalone.nexagram.helper.MessageHelper.INSTANCE.addFileToClipboard(png, callback);
+            xyz.nextalone.nagram.helper.MessageHelper.INSTANCE.addFileToClipboard(png, callback);
         } catch (Exception e) {
             FileLog.e(e);
         }

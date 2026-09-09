@@ -222,6 +222,8 @@
     <string name="NavigationAnimationSpring">Navigasjon fjæranimasjon</string>
     <string name="ForceEdgeToEdge">Tving kant til kant</string>
     <string name="ForceEdgeToEdgeDesc">Kan resultere i uregelmessigheter i sideoppsett, overlapping og svikt på handlinger.</string>
+    <string name="UseSystemPhotoPicker">System foto sin kompatibilitet</string>
+    <string name="UseSystemPhotoPickerDesc">På Android 13 og senere kan du bruke systembilde-velgeren for bildegalleriet vedlegg uten å be om full foto og videotilgang.</string>
     <string name="TabStyle">Tab Style</string>
     <string name="TabStylePure">Botemiddel</string>
     <string name="TabStylePills">Pølser</string>
@@ -344,4 +346,15 @@
     <string name="TabletModeSmall">Lite nettbrett</string>
     <string name="TabletModeBig">Stor nettbrett</string>
     <string name="ShowRecentForwardTab">Vis nylige sludringer fane ved videresending</string>
+    <string name="ProviderVolcengineTranslate">Volcengine Oversett</string>
+    <string name="DisableAiEditor">Deaktiver Ai Editor</string>
+    <string name="DisableGlareEffects">Deaktiver Gjenstandseffekter</string>
+    <string name="ShowEditedIcon">Vis ikon i stedet for \"redigert\"</string>
+    <string name="DeleteCloudBackup">Slett Cloud-data</string>
+    <string name="DeleteCloudBackupFailed">Kunne ikke slette sky-data</string>
+    <string name="DeleteCloudBackupSuccess">Data fra skyen er fjernet</string>
+    <string name="CloudConfigNoBackupToDelete">Ingen data å rydde</string>
+    <string name="LiquidGlassAngle">Vinkel i flytende glass</string>
+    <string name="LiquidGlassIntensity">Flytende Glassintensitet</string>
+    <string name="DisableGooeyAvatarAnimation">Deaktiver \"Gooey\" avatar animasjon</string>
 </resources>

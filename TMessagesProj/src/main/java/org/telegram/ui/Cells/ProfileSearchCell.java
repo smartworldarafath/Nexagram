@@ -72,8 +72,8 @@ import org.telegram.ui.community.CommunityUtils;
 
 import java.util.Locale;
 
-import xyz.nextalone.nexagram.NaConfig;
-import xyz.nextalone.nexagram.helper.MessageHelper;
+import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.MessageHelper;
 
 public class ProfileSearchCell extends BaseCell implements NotificationCenter.NotificationCenterDelegate, Theme.Colorable {
 

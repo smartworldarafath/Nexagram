@@ -17,13 +17,13 @@
  * <https://www.gnu.org/licenses/>
  */
 
-package xyz.nextalone.nexagram.ui.syntaxhighlight;
+package xyz.nextalone.nagram.ui.syntaxhighlight;
 
 import android.text.Spannable;
 
 import androidx.annotation.NonNull;
 
-import xyz.nextalone.nexagram.prism4j.Prism4j;
+import xyz.nextalone.nagram.prism4j.Prism4j;
 
 public class Prism4jSyntaxHighlight {
 

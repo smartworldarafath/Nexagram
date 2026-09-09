@@ -62,7 +62,7 @@ import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.EnvUtil;
 import tw.nekomimi.nekogram.utils.FileUtil;
 import tw.nekomimi.nekogram.utils.UIUtil;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 import java.util.List;
 import java.util.Locale;

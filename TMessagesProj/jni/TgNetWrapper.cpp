@@ -100,6 +100,9 @@ jlong getCurrentAuthKeyId(JNIEnv *env, jclass c, jint instanceNum) {
 }
 
 jint isTestBackend(JNIEnv *env, jclass c, jint instanceNum) {
+    if (instanceNum < 0) {
+        return 0;
+    }
     return ConnectionsManager::getInstance(instanceNum).isTestBackend() ? 1 : 0;
 }
 
@@ -583,8 +586,8 @@ void setJava(JNIEnv *env, jclass c, jboolean useJavaByteBuffers) {
 }
 
 void setJava1(JNIEnv *env, jclass c, jint instanceNum) {
-    if (instanceNum >= jniEnv.capacity()) {
-        jniEnv.resize(instanceNum + 10, nullptr);
+    if (instanceNum < 0 || instanceNum >= MAX_ACCOUNT_COUNT) {
+        return;
     }
     ConnectionsManager::getInstance(instanceNum).setDelegate(new Delegate());
 }

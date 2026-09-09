@@ -11,8 +11,8 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import tw.nekomimi.nekogram.transtale.Translator
-import xyz.nextalone.nexagram.NaConfig
-import xyz.nextalone.nexagram.network.NetworkRequestBuilder
+import xyz.nextalone.nagram.NaConfig
+import xyz.nextalone.nagram.network.NetworkRequestBuilder
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.pow

@@ -44,7 +44,7 @@ import org.telegram.ui.ProfileActivity;
 import java.util.ArrayList;
 
 import tw.nekomimi.nekogram.NekoConfig;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class ProfileGalleryView extends CircularViewPager implements NotificationCenter.NotificationCenterDelegate {
 

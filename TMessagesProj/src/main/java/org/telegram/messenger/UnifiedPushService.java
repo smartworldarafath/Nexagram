@@ -16,7 +16,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import it.belloworld.mercurygram.WebPushDecryptor;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 public class UnifiedPushService extends PushService {
 
@@ -36,7 +36,7 @@ public class UnifiedPushService extends PushService {
 
     private static synchronized void acquireWakeLock(PowerManager pm) {
         if (sWakeLock == null) {
-            sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "nexagram:wp");
+            sWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "nagram:wp");
             sWakeLock.setReferenceCounted(true);
         }
         sWakeLock.acquire(30_000);

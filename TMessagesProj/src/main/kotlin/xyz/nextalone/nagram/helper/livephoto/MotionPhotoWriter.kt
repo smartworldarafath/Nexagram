@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper.livephoto
+package xyz.nextalone.nagram.helper.livephoto
 
 import android.os.Build
 import java.io.File

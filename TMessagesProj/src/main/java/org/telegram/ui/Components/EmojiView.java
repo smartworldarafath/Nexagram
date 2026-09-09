@@ -84,7 +84,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
-import androidx.recyclerview.widget.LinearSmoothScrollerCustom;
+import org.telegram.ui.recyclerview.LinearSmoothScrollerCustom;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.viewpager.widget.PagerAdapter;
@@ -173,7 +173,7 @@ import me.vkryl.android.animator.FactorAnimator;
 
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.ui.PinnedStickerHelper;
-import xyz.nextalone.nexagram.NaConfig;
+import xyz.nextalone.nagram.NaConfig;
 
 @SuppressLint("ViewConstructor")
 public class EmojiView extends FrameLayout implements
@@ -3239,6 +3239,7 @@ public class EmojiView extends FrameLayout implements
                     drawable.draw(canvas, time, w, h, 1f);
                 }
                 canvas.restore();
+                invalidate();
             }
 
             for (int i = 0; i < lineDrawablesTmp.size(); i++) {

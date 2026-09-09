@@ -1079,7 +1079,7 @@ public class ChatUsersActivity extends BaseFragment implements NotificationCente
                     return;
                 } else if (position == antiSpamRow) {
                     final TextCell textCell = (TextCell) view;
-                    // nexagram: no this limit
+                    // nagram: no this limit
 //                    if (info != null && !info.antispam && getParticipantsCount() < getMessagesController().telegramAntispamGroupSizeMin) {
                     if (false) {
                         BulletinFactory.of(this).createSimpleBulletin(R.raw.msg_antispam, AndroidUtilities.replaceTags(LocaleController.formatPluralString("ChannelAntiSpamForbidden", getMessagesController().telegramAntispamGroupSizeMin))).show();

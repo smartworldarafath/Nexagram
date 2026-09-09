@@ -1,4 +1,4 @@
-package xyz.nextalone.nexagram.helper
+package xyz.nextalone.nagram.helper
 
 import android.app.Activity
 import android.content.ComponentName

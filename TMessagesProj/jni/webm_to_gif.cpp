@@ -15,7 +15,7 @@ extern "C" {
  * Extract frames from WebM video using FFmpeg and convert to Android Bitmaps
  */
 extern "C" JNIEXPORT jobjectArray JNICALL
-Java_xyz_nextalone_nexagram_helper_MessageHelper_extractFramesFromWebmNative(
+Java_xyz_nextalone_nagram_helper_MessageHelper_extractFramesFromWebmNative(
         JNIEnv *env, jclass /*clazz*/, jstring inputPath, jint maxFrames) {
 
     const char *input = env->GetStringUTFChars(inputPath, 0);
@@ -252,7 +252,7 @@ Java_xyz_nextalone_nexagram_helper_MessageHelper_extractFramesFromWebmNative(
  * Get frame rate from WebM video file
  */
 extern "C" JNIEXPORT jdouble JNICALL
-Java_xyz_nextalone_nexagram_helper_MessageHelper_getWebmFrameRateNative(
+Java_xyz_nextalone_nagram_helper_MessageHelper_getWebmFrameRateNative(
         JNIEnv *env, jclass /*clazz*/, jstring inputPath) {
 
     const char *input = env->GetStringUTFChars(inputPath, 0);

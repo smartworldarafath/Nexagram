@@ -222,6 +222,8 @@
     <string name="NavigationAnimationSpring">Animation für Navigationsfedern</string>
     <string name="ForceEdgeToEdge">Rand erzwingen</string>
     <string name="ForceEdgeToEdgeDesc">Kann zu Seitenlayout-Unregelmäßigkeiten, Inhaltsüberlappungen und Fehlern von Klick-Aktionen führen.</string>
+    <string name="UseSystemPhotoPicker">Systemfotoauswahl Kompatibilität</string>
+    <string name="UseSystemPhotoPickerDesc">Auf Android 13 und höher verwenden Sie die System-Fotoauswahl für Galerieanhänge, ohne vollen Foto- und Videozugriff zu verlangen.</string>
     <string name="TabStyle">Tab Style</string>
     <string name="TabStylePure">Reine</string>
     <string name="TabStylePills">Pillen</string>
@@ -344,4 +346,15 @@
     <string name="TabletModeSmall">Kleines Tablet</string>
     <string name="TabletModeBig">Großes Tablet</string>
     <string name="ShowRecentForwardTab">Zeige neuere Chats beim Weiterleiten</string>
+    <string name="ProviderVolcengineTranslate">Volcengine übersetzen</string>
+    <string name="DisableAiEditor">Ai Editor deaktivieren</string>
+    <string name="DisableGlareEffects">Glare Effekte deaktivieren</string>
+    <string name="ShowEditedIcon">Symbol statt \"bearbeitet\" anzeigen</string>
+    <string name="DeleteCloudBackup">Cloud-Daten löschen</string>
+    <string name="DeleteCloudBackupFailed">Fehler beim Löschen der Cloud-Daten</string>
+    <string name="DeleteCloudBackupSuccess">Cloud-Daten gelöscht</string>
+    <string name="CloudConfigNoBackupToDelete">Keine Daten zum Löschen</string>
+    <string name="LiquidGlassAngle">Flüssiger Glaswinkel</string>
+    <string name="LiquidGlassIntensity">Flüssige Glasintensität</string>
+    <string name="DisableGooeyAvatarAnimation">\"Gooey\"-Avatar-Animation deaktivieren</string>
 </resources>

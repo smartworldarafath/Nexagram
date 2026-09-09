@@ -1,9 +1,9 @@
-package xyz.nextalone.nexagram.prism4j.languages;
+package xyz.nextalone.nagram.prism4j.languages;
 
 import androidx.annotation.NonNull;
 
-import xyz.nextalone.nexagram.prism4j.GrammarUtils;
-import xyz.nextalone.nexagram.prism4j.Prism4j;
+import xyz.nextalone.nagram.prism4j.GrammarUtils;
+import xyz.nextalone.nagram.prism4j.Prism4j;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
