@@ -29,8 +29,8 @@ Welcome to **Nexagram** (by **Zero by Arafath**). Below is the complete release 
 **Full Changelog & Source:** [smartworldarafath/Nexagram Releases](https://github.com/smartworldarafath/Nexagram/releases)
 
 ### 📦 APK Downloads
-- **ARM64 (v8a):** [`Nexagram-v12.8.1.1240-arm64-v8a.apk`](file:///d:/Gemini%20Antigravity%20Project/Project%203/releases/Nexagram-v12.8.1.1240-arm64-v8a.apk) (62.8 MB)
-- **ARMv7 (v7a):** [`Nexagram-v12.8.1.1240-armeabi-v7a.apk`](file:///d:/Gemini%20Antigravity%20Project/Project%203/releases/Nexagram-v12.8.1.1240-armeabi-v7a.apk) (61.3 MB)
+- **ARM64 (v8a):** [`Nexagram-v12.8.1.1240-arm64-v8a.apk`](https://github.com/smartworldarafath/Nexagram/releases/download/1240/Nexagram-v12.8.1.1240-arm64-v8a.apk) (62.8 MB)
+- **ARMv7 (v7a):** [`Nexagram-v12.8.1.1240-armeabi-v7a.apk`](https://github.com/smartworldarafath/Nexagram/releases/download/1240/Nexagram-v12.8.1.1240-armeabi-v7a.apk) (61.3 MB)
 
 ### ✨ What's New in Nexagram v12.8.1
 - 🔠 Smartwatch Apps, Rich Text for Bots, AI Guardians for Groups, and Much More.
