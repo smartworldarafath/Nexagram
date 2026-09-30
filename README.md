@@ -303,14 +303,14 @@ Special thanks to all the amazing contributors who helped build and maintain the
         <img src="https://github.com/NekoX-Dev.png?size=100" width="80px;" alt="NekoX"/><br />
         <sub><b>NekoX</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Base Project</sub>
     </td>
     <td align="center" width="120px">
       <a href="https://gitlab.com/Nekogram/Nekogram">
         <img src="https://github.com/Nekogram.png?size=100" width="80px;" alt="Nekogram"/><br />
         <sub><b>Nekogram</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Upstream Project</sub>
     </td>
   </tr>
   <tr>
@@ -319,28 +319,28 @@ Special thanks to all the amazing contributors who helped build and maintain the
         <img src="https://github.com/JasonKhew96.png?size=100" width="80px;" alt="Pigeongram"/><br />
         <sub><b>Pigeongram</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Upstream Project</sub>
     </td>
     <td align="center" width="120px">
       <a href="https://github.com/qwq233/Nullgram">
         <img src="https://github.com/qwq233.png?size=100" width="80px;" alt="Nullgram"/><br />
         <sub><b>Nullgram</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Upstream Project</sub>
     </td>
     <td align="center" width="120px">
       <a href="https://github.com/TeleTux/TeleTux">
         <img src="https://github.com/TeleTux.png?size=100" width="80px;" alt="TeleTux"/><br />
         <sub><b>TeleTux</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Upstream Project</sub>
     </td>
     <td align="center" width="120px">
       <a href="https://github.com/OwlGramDev/OwlGram">
         <img src="https://github.com/OwlGramDev.png?size=100" width="80px;" alt="OwlGram"/><br />
         <sub><b>OwlGram</b></sub>
       </a><br />
-      <sub>Contributor</sub>
+      <sub>Upstream Project</sub>
     </td>
   </tr>
 </table>
