@@ -371,7 +371,6 @@ If you find **Nexagram** helpful and want to support ongoing development, mainte
 | **<img src="assets/icons/supportkori.png" alt="SupportKori" height="16" /> SupportKori** | [https://www.supportkori.com/arafathrahman](https://www.supportkori.com/arafathrahman) |
 | **<img src="assets/icons/nsave.png" alt="nsave" height="16" /> nsave** | Ntag: `@arafath_rahman9` • `Md Arafath Rahman` |
 | **<img src="assets/icons/redotpay.png" alt="RedotPay" height="16" /> RedotPay** | Account ID: `1965421414` |
-| **<img src="assets/icons/payoneer.png" alt="Payoneer" height="16" /> Payoneer** | Email: `arafathrahman710@gmail.com` • Customer ID: `70366820` |
 
 </div>
 
@@ -395,27 +394,24 @@ If you find **Nexagram** helpful and want to support ongoing development, mainte
 
 <table>
   <tr>
-    <td align="center" width="25%" valign="top">
+    <td align="center" width="33%" valign="top">
       <h4><img src="assets/icons/supportkori.png" alt="SupportKori" height="26" /> SupportKori</h4>
       <a href="https://www.supportkori.com/arafathrahman" target="_blank">
         <img src="assets/supportkori-qr.jpg" alt="SupportKori QR" width="190" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" />
       </a><br/>
       <sub>Cards / bKash / Nagad<br/><a href="https://www.supportkori.com/arafathrahman">supportkori.com/arafathrahman</a></sub>
     </td>
-    <td align="center" width="25%" valign="top">
+    <td align="center" width="33%" valign="top">
       <h4><img src="assets/icons/nsave.png" alt="nsave" height="26" /> nsave</h4>
       <img src="assets/nsave-qr.jpg" alt="nsave QR" width="190" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" /><br/>
       <sub>Ntag: <code>@arafath_rahman9</code></sub>
     </td>
-    <td align="center" width="25%" valign="top">
+    <td align="center" width="33%" valign="top">
       <h4><img src="assets/icons/redotpay.png" alt="RedotPay" height="26" /> RedotPay</h4>
       <img src="assets/redotpay-qr.jpg" alt="RedotPay QR" width="190" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" /><br/>
       <sub>Account ID: <code>1965421414</code></sub>
     </td>
-    <td align="center" width="25%" valign="top">
-      <h4><img src="assets/icons/payoneer.png" alt="Payoneer" height="26" /> Payoneer</h4>
-      <img src="assets/payoneer-info.jpg" alt="Payoneer info" width="190" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" /><br/>
-      <sub><code>arafathrahman710@gmail.com</code><br/>Customer ID: <code>70366820</code></sub>
+    <td align="center" width="33%" valign="top">
     </td>
   </tr>
 </table>
