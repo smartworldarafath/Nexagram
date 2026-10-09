@@ -25,11 +25,6 @@ Thanks for considering a contribution! Everything below goes directly to **Md Ar
       <img src="assets/redotpay-qr.jpg" alt="RedotPay QR" width="200" /><br/>
       <sub>Account ID: <code>1965421414</code></sub>
     </td>
-    <td align="center" width="25%" valign="top">
-      <h4><img src="assets/icons/payoneer.png" alt="Payoneer" height="26" /> Payoneer</h4>
-      <img src="assets/payoneer-info.jpg" alt="Payoneer info" width="200" /><br/>
-      <sub><code>arafathrahman710@gmail.com</code><br/>Customer ID: <code>70366820</code></sub>
-    </td>
   </tr>
 </table>
 
@@ -37,7 +32,7 @@ Thanks for considering a contribution! Everything below goes directly to **Md Ar
 
 ## 🌍 Outside Bangladesh? Buy a coffee online
 
-One tap, no account needed â€” cards, Apple Pay and Google Pay:
+One tap, no account needed: cards, Apple Pay and Google Pay:
 
 <a href="https://www.buymeacoffee.com/arafathrahman" target="_blank">
   <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-buymeacoffee.com%2Farafathrahman-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee" />
@@ -49,7 +44,6 @@ One tap, no account needed â€” cards, Apple Pay and Google Pay:
 
 | Method | Details |
 | :--- | :--- |
-| **<img src="assets/icons/supportkori.png" alt="SupportKori" height="16" /> SupportKori** | [supportkori.com/arafathrahman](https://www.supportkori.com/arafathrahman) â€” cards, bKash, Nagad |
+| **<img src="assets/icons/supportkori.png" alt="SupportKori" height="16" /> SupportKori** | [supportkori.com/arafathrahman](https://www.supportkori.com/arafathrahman) — cards, bKash, Nagad |
 | **<img src="assets/icons/nsave.png" alt="nsave" height="16" /> nsave** | Ntag: `@arafath_rahman9` |
 | **<img src="assets/icons/redotpay.png" alt="RedotPay" height="16" /> RedotPay** | Account ID: `1965421414` |
-| **<img src="assets/icons/payoneer.png" alt="Payoneer" height="16" /> Payoneer** | `arafathrahman710@gmail.com` (Customer ID: `70366820`) |

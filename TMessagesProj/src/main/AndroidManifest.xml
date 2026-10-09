@@ -815,7 +815,7 @@
         </service>
 
         <!-- NekoX Google Maps API Key -->
-        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAjS-41simO1sLTIEX4YYrCjINOyFEHSo4" />
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="REDACTED_GOOGLE_MAPS_KEY" />
         <uses-library android:name="com.google.android.maps" android:required="false"/>
 
         <meta-data
