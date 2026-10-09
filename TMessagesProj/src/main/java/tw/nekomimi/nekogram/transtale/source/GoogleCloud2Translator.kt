@@ -28,7 +28,7 @@ object GoogleCloud2Translator : Translator {
         }
 
         val response = NetworkRequestBuilder.post("https://translate-pa.googleapis.com/v1/translateHtml") {
-            header("X-Goog-Api-Key", "REDACTED_GOOGLE_API_KEY")
+            header("X-Goog-Api-Key", "REDACTED_API_KEY")
             contentType(ContentType.parse("application/json+protobuf"))
             setBody(jsonBody.toString())
         }.execute()
