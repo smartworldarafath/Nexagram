@@ -33,6 +33,7 @@ import org.telegram.ui.Components.AnimatedTextView;
 import org.telegram.ui.Components.CircularProgressDrawable;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
+import org.telegram.ui.Components.LiquidGlassDrawable;
 import org.telegram.ui.Components.Loadable;
 import org.telegram.ui.Components.LoadingDrawable;
 import org.telegram.ui.Components.ScaleStateListAnimator;
@@ -77,9 +78,51 @@ public class ButtonWithCounterView extends FrameLayout implements Loadable {
         return this;
     }
 
+    private boolean isLiquidGlass = false;
+    private LiquidGlassDrawable liquidGlassDrawable;
+
+    public ButtonWithCounterView setLiquidGlass(boolean liquidGlass) {
+        this.isLiquidGlass = liquidGlass;
+        if (liquidGlass) {
+            int bg = backgroundColor != 0 ? backgroundColor : Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider);
+            if (liquidGlassDrawable == null) {
+                liquidGlassDrawable = new LiquidGlassDrawable(radiusDp, bg);
+            } else {
+                liquidGlassDrawable.setCornerRadius(radiusDp);
+                liquidGlassDrawable.setTintColor(bg);
+            }
+            setBackground(liquidGlassDrawable);
+            text.setTypeface(AndroidUtilities.bold());
+        } else {
+            liquidGlassDrawable = null;
+            if (filled) {
+                setBackground(Theme.createRoundRectDrawable(dp(radiusDp), backgroundColor));
+            } else {
+                setBackground(null);
+            }
+        }
+        updateColors();
+        return this;
+    }
+
+    public boolean isLiquidGlass() {
+        return isLiquidGlass;
+    }
+
+    @Override
+    public void setPressed(boolean pressed) {
+        super.setPressed(pressed);
+        if (liquidGlassDrawable != null) {
+            liquidGlassDrawable.setPressed(pressed);
+        }
+    }
+
     public void setRoundRadius(int radiusDp) {
         this.radiusDp = radiusDp;
-        if (filled) {
+        if (isLiquidGlass && liquidGlassDrawable != null) {
+            liquidGlassDrawable.setCornerRadius(radiusDp);
+            setBackground(liquidGlassDrawable);
+        } else if (filled) {
             setBackground(Theme.createRoundRectDrawable(dp(radiusDp), backgroundColor));
         } else {
             setBackground(null);
@@ -90,7 +133,10 @@ public class ButtonWithCounterView extends FrameLayout implements Loadable {
     public void setFilled(boolean filled) {
         if (this.filled == filled) return;
         this.filled = filled;
-        if (filled) {
+        if (isLiquidGlass && liquidGlassDrawable != null) {
+            setBackground(liquidGlassDrawable);
+            text.setTypeface(AndroidUtilities.bold());
+        } else if (filled) {
             setBackground(Theme.createRoundRectDrawable(dp(radiusDp), backgroundColor));
             text.setTypeface(AndroidUtilities.bold());
         } else {
@@ -162,9 +208,17 @@ public class ButtonWithCounterView extends FrameLayout implements Loadable {
     }
 
     public void setColor(int color) {
-        if (filled) {
-            customBackgroundColor = true;
-            setBackground(Theme.createRoundRectDrawable(dp(radiusDp), backgroundColor = color));
+        backgroundColor = color;
+        customBackgroundColor = true;
+        if (isLiquidGlass) {
+            if (liquidGlassDrawable == null) {
+                liquidGlassDrawable = new LiquidGlassDrawable(radiusDp, backgroundColor);
+            } else {
+                liquidGlassDrawable.setTintColor(backgroundColor);
+            }
+            setBackground(liquidGlassDrawable);
+        } else if (filled) {
+            setBackground(Theme.createRoundRectDrawable(dp(radiusDp), backgroundColor));
         } else {
             text.setTextColor(color);
             rippleView.setBackground(Theme.createRadSelectorDrawable(Theme.multAlpha(color, .10f), radiusDp, radiusDp));
@@ -179,6 +233,18 @@ public class ButtonWithCounterView extends FrameLayout implements Loadable {
     public void updateColors() {
         if (!customBackgroundColor) {
             backgroundColor = Theme.getColor(neutral ? Theme.key_buttonNeutral : Theme.key_featuredStickers_addButton, resourcesProvider);
+        }
+        if (isLiquidGlass) {
+            if (liquidGlassDrawable != null) {
+                liquidGlassDrawable.setTintColor(backgroundColor);
+                setBackground(liquidGlassDrawable);
+            }
+            text.setTextColor(Color.WHITE);
+            subText.setTextColor(0xC8FFFFFF);
+            rippleView.setBackground(Theme.createRadSelectorDrawable(0x25FFFFFF, radiusDp, radiusDp));
+            paint.setColor(Color.WHITE);
+            countText.setTextColor(backgroundColor);
+            return;
         }
         text.setTextColor(Theme.getColor(filled ? (neutral ? Theme.key_buttonNeutralText : Theme.key_featuredStickers_buttonText) : Theme.key_featuredStickers_addButton, resourcesProvider));
         if (filled) {

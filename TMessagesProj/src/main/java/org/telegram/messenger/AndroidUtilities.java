@@ -2705,6 +2705,18 @@ public class AndroidUtilities {
                     display.getSize(displaySize);
                     screenRefreshRate = display.getRefreshRate();
                     screenMaxRefreshRate = screenRefreshRate;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        try {
+                            Display.Mode[] modes = display.getSupportedModes();
+                            if (modes != null) {
+                                for (Display.Mode mode : modes) {
+                                    if (mode.getRefreshRate() > screenMaxRefreshRate) {
+                                        screenMaxRefreshRate = mode.getRefreshRate();
+                                    }
+                                }
+                            }
+                        } catch (Throwable ignored) {}
+                    }
                     float[] rates = display.getSupportedRefreshRates();
                     if (rates != null) {
                         for (int i = 0; i < rates.length; ++i) {
@@ -2758,27 +2770,100 @@ public class AndroidUtilities {
 
     public static void setPreferredMaxRefreshRate(Window window, float rate) {
         if (window == null) return;
-        final WindowManager wm = window.getWindowManager();
-        if (wm == null) return;
         WindowManager.LayoutParams params = window.getAttributes();
-        params.preferredRefreshRate = rate;
-        try {
-            wm.updateViewLayout(window.getDecorView(), params);
-        } catch (Exception e) {
-            FileLog.e(e);
+        int bestModeId = 0;
+        float targetRate = rate > 0 ? rate : screenMaxRefreshRate;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                Display display = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    display = window.getContext().getDisplay();
+                }
+                if (display == null) {
+                    final WindowManager wm = window.getWindowManager();
+                    if (wm != null) {
+                        display = wm.getDefaultDisplay();
+                    }
+                }
+                if (display != null) {
+                    Display.Mode[] modes = display.getSupportedModes();
+                    Display.Mode bestMode = null;
+                    if (modes != null) {
+                        for (Display.Mode mode : modes) {
+                            if (bestMode == null || mode.getRefreshRate() > bestMode.getRefreshRate()) {
+                                bestMode = mode;
+                            }
+                        }
+                    }
+                    if (bestMode != null && bestMode.getRefreshRate() >= 80.0f) {
+                        bestModeId = bestMode.getModeId();
+                        targetRate = bestMode.getRefreshRate();
+                    }
+                }
+            } catch (Throwable e) {
+                FileLog.e(e);
+            }
+        }
+
+        boolean changed = false;
+        if (Math.abs(params.preferredRefreshRate - targetRate) > 0.1f) {
+            params.preferredRefreshRate = targetRate;
+            changed = true;
+        }
+        if (bestModeId != 0 && params.preferredDisplayModeId != bestModeId) {
+            params.preferredDisplayModeId = bestModeId;
+            changed = true;
+        }
+        if (Build.VERSION.SDK_INT >= 31) {
+            try {
+                java.lang.reflect.Field minField = WindowManager.LayoutParams.class.getField("preferredMinDisplayRefreshRate");
+                java.lang.reflect.Field maxField = WindowManager.LayoutParams.class.getField("preferredMaxDisplayRefreshRate");
+                float currentMin = minField.getFloat(params);
+                float currentMax = maxField.getFloat(params);
+                if (Math.abs(currentMin - targetRate) > 0.1f || Math.abs(currentMax - targetRate) > 0.1f) {
+                    minField.setFloat(params, targetRate);
+                    maxField.setFloat(params, targetRate);
+                    changed = true;
+                }
+            } catch (Throwable ignore) {
+            }
+        }
+
+        if (changed) {
+            try {
+                window.setAttributes(params);
+            } catch (Exception e) {
+                FileLog.e(e);
+            }
         }
     }
 
     public static void setPreferredMaxRefreshRate(WindowManager wm, View windowView, WindowManager.LayoutParams params) {
-        if (wm == null) return;
-        if (Math.abs(params.preferredRefreshRate - screenMaxRefreshRate) > 0.2) {
+        if (wm == null || params == null) return;
+        boolean changed = false;
+        if (Math.abs(params.preferredRefreshRate - screenMaxRefreshRate) > 0.2f) {
             params.preferredRefreshRate = screenMaxRefreshRate;
-            if (windowView.isAttachedToWindow()) {
-                try {
-                    wm.updateViewLayout(windowView, params);
-                } catch (Exception e) {
-                    FileLog.e(e);
+            changed = true;
+        }
+        if (Build.VERSION.SDK_INT >= 31) {
+            try {
+                java.lang.reflect.Field minField = WindowManager.LayoutParams.class.getField("preferredMinDisplayRefreshRate");
+                java.lang.reflect.Field maxField = WindowManager.LayoutParams.class.getField("preferredMaxDisplayRefreshRate");
+                float currentMin = minField.getFloat(params);
+                if (Math.abs(currentMin - screenMaxRefreshRate) > 0.2f) {
+                    minField.setFloat(params, screenMaxRefreshRate);
+                    maxField.setFloat(params, screenMaxRefreshRate);
+                    changed = true;
                 }
+            } catch (Throwable ignore) {
+            }
+        }
+        if (changed && windowView != null && windowView.isAttachedToWindow()) {
+            try {
+                wm.updateViewLayout(windowView, params);
+            } catch (Exception e) {
+                FileLog.e(e);
             }
         }
     }
@@ -3634,7 +3719,7 @@ public class AndroidUtilities {
         }
         File storageDir = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Nagram");
+            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Nexagram");
             if (!storageDir.mkdirs()) {
                 if (!storageDir.exists()) {
                     if (BuildVars.LOGS_ENABLED) {

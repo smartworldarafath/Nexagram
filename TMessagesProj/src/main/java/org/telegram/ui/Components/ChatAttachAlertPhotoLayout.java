@@ -4642,6 +4642,7 @@ public class ChatAttachAlertPhotoLayout extends ChatAttachAlert.AttachAlertLayou
                     ButtonWithCounterView button = new ButtonWithCounterView(mContext, resourcesProvider);
                     button.setUseWrapContent(true);
                     button.setRound();
+                    button.setLiquidGlass(true);
                     button.setPadding(dp(28), 0, dp(28), 0);
                     SpannableStringBuilder ssb = new SpannableStringBuilder("c");
                     ssb.setSpan(new ColoredImageSpan(R.drawable.camera), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
