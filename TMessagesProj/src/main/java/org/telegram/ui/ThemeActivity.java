@@ -58,6 +58,7 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLoader;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessagesController;
@@ -1328,30 +1329,23 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                 }
             } else if (position == sensitiveContentRow) {
                 if (!getMessagesController().showSensitiveContent()) {
-                    Runnable set = () -> {
-                        getMessagesController().setContentSettings(true);
+                    long userId = UserConfig.getInstance(currentAccount).getClientUserId();
+                    if (xyz.nextalone.nagram.ui.NexagramVerificationManager.isRevoked(userId)) {
+                        AlertDialog.Builder b = new AlertDialog.Builder(context, resourceProvider);
+                        b.setTitle("১৮+ অ্যাক্সেস বাতিল");
+                        b.setMessage("আপনার ১৮+ অ্যাক্সেস অ্যাডমিন কর্তৃক বাতিল (Revoked) করা হয়েছে। আপনি এই অপশনটি চালু করতে পারবেন না।");
+                        b.setPositiveButton("ঠিক আছে", null);
+                        showDialog(b.create());
+                        return;
+                    }
+                    presentFragment(new xyz.nextalone.nagram.ui.NexagramVerificationActivity(() -> {
                         if (view instanceof TextCheckCell) {
                             ((TextCheckCell) view).setChecked(getMessagesController().showSensitiveContent());
                         }
-                    };
-                    showDialog(
-                        new AlertDialog.Builder(context, resourceProvider)
-                            .setTitle(getString(R.string.ConfirmSensitiveContentTitle))
-                            .setMessage(getString(R.string.ConfirmSensitiveContentText))
-                            .setPositiveButton(getString(R.string.Confirm), (di, w) -> {
-                                verifyAge(getContext(), currentAccount, passed -> {
-                                    if (passed) {
-                                        set.run();
-                                    } else {
-                                        BulletinFactory.of(this)
-                                            .createSimpleBulletin(R.raw.error, getString(R.string.AgeVerificationFailedTitle), getString(R.string.AgeVerificationFailedText))
-                                            .show();
-                                    }
-                                }, getResourceProvider());
-                            })
-                            .setNegativeButton(getString(R.string.Cancel), null)
-                            .create()
-                    );
+                        if (listAdapter != null && sensitiveContentRow >= 0) {
+                            listAdapter.notifyItemChanged(sensitiveContentRow);
+                        }
+                    }));
                 } else {
                     getMessagesController().setContentSettings(false);
                     if (view instanceof TextCheckCell) {
@@ -1561,6 +1555,11 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
         if (listAdapter != null) {
             updateRows(true);
         }
+        xyz.nextalone.nagram.ui.NexagramVerificationManager.checkRevocations(currentAccount, () -> {
+            if (listAdapter != null && sensitiveContentRow >= 0) {
+                listAdapter.notifyItemChanged(sensitiveContentRow);
+            }
+        });
     }
 
     @Override

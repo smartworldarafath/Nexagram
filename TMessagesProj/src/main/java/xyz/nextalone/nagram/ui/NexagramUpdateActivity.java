@@ -234,14 +234,22 @@ public class NexagramUpdateActivity extends BaseFragment {
                     reader.close();
 
                     JSONArray releases = new JSONArray(sb.toString());
-                    if (releases.length() > 0) {
-                        JSONObject latest = releases.getJSONObject(0);
-                        String tagName = latest.optString("tag_name", "").replace("v", "").trim();
-                        String releaseNotes = latest.optString("body", "Bug fixes and improvements.");
-                        JSONArray assets = latest.optJSONArray("assets");
+                    String newestUrl = null;
+                    String newestVersion = null;
+                    String newestNotes = null;
+                    long newestSize = 0;
+
+                    for (int rIdx = 0; rIdx < releases.length(); rIdx++) {
+                        JSONObject rel = releases.optJSONObject(rIdx);
+                        if (rel == null) continue;
+                        String tagName = rel.optString("tag_name", "").replace("v", "").trim();
+                        if (!isStrictlyNewerThanBase(tagName) || !isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
+                            continue;
+                        }
+
+                        JSONArray assets = rel.optJSONArray("assets");
                         String apkUrl = null;
                         long apkSize = 0;
-
                         if (assets != null) {
                             for (int i = 0; i < assets.length(); i++) {
                                 JSONObject asset = assets.getJSONObject(i);
@@ -249,37 +257,39 @@ public class NexagramUpdateActivity extends BaseFragment {
                                 if (name.endsWith(".apk")) {
                                     apkUrl = asset.optString("browser_download_url", null);
                                     apkSize = asset.optLong("size", 0);
-                                    if (name.contains("arm64-v8a")) break; // prioritize user abi
+                                    if (name.contains("arm64-v8a")) break;
                                 }
                             }
                         }
 
-                        final String foundUrl = apkUrl;
-                        final String foundVersion = tagName;
-                        final String foundNotes = releaseNotes;
-                        final long foundSize = apkSize;
+                        if (apkUrl != null) {
+                            newestUrl = apkUrl;
+                            newestVersion = tagName;
+                            newestNotes = rel.optString("body", "Bug fixes and performance improvements.");
+                            newestSize = apkSize;
+                            break;
+                        }
+                    }
+
+                    if (newestUrl != null && newestVersion != null) {
+                        final String foundUrl = newestUrl;
+                        final String foundVersion = newestVersion;
+                        final String foundNotes = newestNotes;
+                        final long foundSize = newestSize;
 
                         AndroidUtilities.runOnUIThread(() -> {
                             actionButton.setEnabled(true);
                             actionButton.setAlpha(1.0f);
+                            downloadUrl = foundUrl;
+                            remoteVersion = foundVersion;
+                            statusTextView.setText("New update available!");
+                            statusTextView.setTextColor(0xFF4CAF50);
 
-                            if (isNewerVersion(foundVersion, BuildConfig.VERSION_NAME)) {
-                                downloadUrl = foundUrl;
-                                remoteVersion = foundVersion;
-                                statusTextView.setText("New update available!");
-                                statusTextView.setTextColor(0xFF4CAF50);
+                            updateCardLayout.setVisibility(View.VISIBLE);
+                            newVersionTextView.setText("Version " + foundVersion + (foundSize > 0 ? " (" + String.format(java.util.Locale.US, "%.1f MB", foundSize / (1024f * 1024f)) + ")" : ""));
+                            changelogTextView.setText(foundNotes);
 
-                                updateCardLayout.setVisibility(View.VISIBLE);
-                                newVersionTextView.setText("Version " + foundVersion + (foundSize > 0 ? " (" + String.format(java.util.Locale.US, "%.1f MB", foundSize / (1024f * 1024f)) + ")" : ""));
-                                changelogTextView.setText(foundNotes);
-
-                                actionButton.setText("Download & Install Update");
-                            } else {
-                                statusTextView.setText("You are using the latest version!");
-                                statusTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText));
-                                updateCardLayout.setVisibility(View.GONE);
-                                actionButton.setText("Check Again");
-                            }
+                            actionButton.setText("Download & Install Update");
                         });
                         return;
                     }
@@ -291,22 +301,58 @@ public class NexagramUpdateActivity extends BaseFragment {
             AndroidUtilities.runOnUIThread(() -> {
                 actionButton.setEnabled(true);
                 actionButton.setAlpha(1.0f);
-                statusTextView.setText("Your app is up to date.");
+                statusTextView.setText("Nexagram is up to date");
                 statusTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText));
+                updateCardLayout.setVisibility(View.GONE);
                 actionButton.setText("Check Again");
             });
         }).start();
     }
 
+    private static boolean isStrictlyNewerThanBase(String remote) {
+        if (TextUtils.isEmpty(remote)) return false;
+        try {
+            String clean = remote.toLowerCase().replace("v", "").trim();
+            String[] parts = clean.split("[.\\-_]");
+            int major = 0, minor = 0, patch = 0;
+            if (parts.length > 0) {
+                String s = parts[0].replaceAll("\\D+", "");
+                if (!s.isEmpty()) major = Integer.parseInt(s);
+            }
+            if (parts.length > 1) {
+                String s = parts[1].replaceAll("\\D+", "");
+                if (!s.isEmpty()) minor = Integer.parseInt(s);
+            }
+            if (parts.length > 2) {
+                String s = parts[2].replaceAll("\\D+", "");
+                if (!s.isEmpty()) patch = Integer.parseInt(s);
+            }
+            if (major >= 10) return false; // Ignore legacy upstream tags (e.g. 12.x)
+            if (major > 2) return true;
+            if (major == 2 && minor > 0) return true;
+            if (major == 2 && minor == 0 && patch > 4) return true;
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private boolean isNewerVersion(String remote, String current) {
         if (TextUtils.isEmpty(remote)) return false;
         try {
-            String[] rParts = remote.split("\\.");
-            String[] cParts = current.split("\\.");
+            String[] rParts = remote.toLowerCase().replace("v", "").split("[.\\-_]");
+            String[] cParts = (current != null ? current : "2.0.4").toLowerCase().replace("v", "").split("[.\\-_]");
             int max = Math.max(rParts.length, cParts.length);
             for (int i = 0; i < max; i++) {
-                int r = i < rParts.length ? Integer.parseInt(rParts[i].replaceAll("\\D+", "")) : 0;
-                int c = i < cParts.length ? Integer.parseInt(cParts[i].replaceAll("\\D+", "")) : 0;
+                int r = 0, c = 0;
+                if (i < rParts.length) {
+                    String s = rParts[i].replaceAll("\\D+", "");
+                    if (!s.isEmpty()) r = Integer.parseInt(s);
+                }
+                if (i < cParts.length) {
+                    String s = cParts[i].replaceAll("\\D+", "");
+                    if (!s.isEmpty()) c = Integer.parseInt(s);
+                }
                 if (r > c) return true;
                 if (r < c) return false;
             }

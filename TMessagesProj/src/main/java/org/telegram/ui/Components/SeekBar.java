@@ -25,8 +25,15 @@ import android.view.View;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.Emoji;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.LiteMode;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.Utilities;
+import org.telegram.ui.ActionBar.Theme;
+
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,6 +80,17 @@ public class SeekBar {
     private long lastUpdateTime;
     private View parentView;
     private float alpha = 1f;
+
+    private Paint glassThumbPillPaint;
+    private Paint glassThumbOpticalGlassPaint;
+    private Paint glassThumbRimPaint;
+    private Paint glassThumbRefractionPaint;
+    private Paint glassThumbGlarePaint;
+    private final RectF glassThumbBounds = new RectF();
+    private final RectF glassThumbInnerBounds = new RectF();
+    private final Path glassThumbClipPath = new Path();
+    private float squishProgress = 0f;
+    private long lastSquishTime = 0;
 
     public SeekBar(View parent) {
         if (paint == null) {
@@ -200,15 +218,16 @@ public class SeekBar {
         if (alpha < 1) {
             canvas.saveLayerAlpha(0, 0, width, height, (int) (255 * alpha), Canvas.ALL_SAVE_FLAG);
         }
-        rect.set(thumbWidth / 2, height / 2 - lineHeight / 2, width - thumbWidth / 2, height / 2 + lineHeight / 2);
+        int effectiveLineH = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? AndroidUtilities.dp(5) : lineHeight;
+        rect.set(thumbWidth / 2, height / 2 - effectiveLineH / 2, width - thumbWidth / 2, height / 2 + effectiveLineH / 2);
         paint.setColor(selected ? backgroundSelectedColor : backgroundColor);
         drawProgressBar(canvas, rect, paint);
         if (bufferedProgress > 0) {
             paint.setColor(selected ? backgroundSelectedColor : cacheColor);
-            rect.set(thumbWidth / 2, height / 2 - lineHeight / 2, thumbWidth / 2 + bufferedProgress * (width - thumbWidth), height / 2 + lineHeight / 2);
+            rect.set(thumbWidth / 2, height / 2 - effectiveLineH / 2, thumbWidth / 2 + bufferedProgress * (width - thumbWidth), height / 2 + effectiveLineH / 2);
             drawProgressBar(canvas, rect, paint);
         }
-        rect.set(thumbWidth / 2, height / 2 - lineHeight / 2, thumbWidth / 2 + (pressed ? draggingThumbX : thumbX), height / 2 + lineHeight / 2);
+        rect.set(thumbWidth / 2, height / 2 - effectiveLineH / 2, thumbWidth / 2 + (pressed ? draggingThumbX : thumbX), height / 2 + effectiveLineH / 2);
         paint.setColor(progressColor);
         drawProgressBar(canvas, rect, paint);
         paint.setColor(circleColor);
@@ -236,13 +255,145 @@ public class SeekBar {
             }
         }
 
-        canvas.drawCircle((pressed ? draggingThumbX : thumbX) + thumbWidth / 2, height / 2, currentRadius, paint);
+        if (LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+            drawLiquidGlassThumb(canvas, (pressed ? draggingThumbX : thumbX) + thumbWidth / 2f, height / 2f);
+            if (Math.abs((pressed ? 1.0f : 0.0f) - squishProgress) > 0.005f && parentView != null) {
+                parentView.invalidate();
+            }
+        } else {
+            canvas.drawCircle((pressed ? draggingThumbX : thumbX) + thumbWidth / 2, height / 2, currentRadius, paint);
+        }
 
         if (alpha < 1) {
             canvas.restore();
         }
 
         updateTimestampAnimation();
+    }
+
+    private void drawLiquidGlassThumb(Canvas canvas, float cx, float cy) {
+        if (glassThumbPillPaint == null) {
+            glassThumbPillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbPillPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbOpticalGlassPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbOpticalGlassPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbRimPaint.setStyle(Paint.Style.STROKE);
+            glassThumbRimPaint.setStrokeWidth(AndroidUtilities.dpf2(1.1f));
+
+            glassThumbRefractionPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbRefractionPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbGlarePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbGlarePaint.setStyle(Paint.Style.FILL);
+        }
+
+        float targetSquish = pressed ? 1.0f : 0.0f;
+        long now = SystemClock.uptimeMillis();
+        if (lastSquishTime > 0) {
+            float dt = Math.min(32, now - lastSquishTime) / 1000f;
+            float diff = targetSquish - squishProgress;
+            if (Math.abs(diff) > 0.002f) {
+                float springK = pressed ? 20f : 24f;
+                squishProgress += diff * Math.min(1.0f, dt * springK);
+            } else {
+                squishProgress = targetSquish;
+            }
+        }
+        lastSquishTime = now;
+
+        // Rest: 24dp x 16dp. Pressed: 36dp x 20dp capsule pill
+        float thumbW = AndroidUtilities.dpf2(24f + 12f * squishProgress);
+        float thumbH = AndroidUtilities.dpf2(16f + 4f * squishProgress);
+        float thumbR = thumbH / 2f;
+
+        canvas.save();
+        glassThumbBounds.set(cx - thumbW / 2f, cy - thumbH / 2f, cx + thumbW / 2f, cy + thumbH / 2f);
+
+        boolean isDark = Theme.isCurrentThemeDark();
+
+        // 1. Clear Liquid Glass Core when pressed
+        if (squishProgress > 0.01f) {
+            int coreColor = isDark ? 0x22FFFFFF : 0x16FFFFFF;
+            glassThumbOpticalGlassPaint.setColor(coreColor);
+            glassThumbOpticalGlassPaint.setAlpha((int) (Color.alpha(coreColor) * squishProgress));
+            canvas.drawRoundRect(glassThumbBounds, thumbR, thumbR, glassThumbOpticalGlassPaint);
+
+            canvas.save();
+            glassThumbClipPath.reset();
+            glassThumbClipPath.addRoundRect(glassThumbBounds, thumbR, thumbR, Path.Direction.CW);
+            canvas.clipPath(glassThumbClipPath);
+
+            RadialGradient leftRefract = new RadialGradient(
+                    glassThumbBounds.left + thumbR * 0.7f, cy,
+                    thumbR * 1.5f,
+                    new int[]{0x7545C5FF, 0x3030A0FF, 0x00000000},
+                    new float[]{0.0f, 0.55f, 1.0f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbRefractionPaint.setShader(leftRefract);
+            glassThumbRefractionPaint.setAlpha((int) (220 * squishProgress));
+            canvas.drawRect(glassThumbBounds.left, glassThumbBounds.top, glassThumbBounds.left + thumbR * 1.6f, glassThumbBounds.bottom, glassThumbRefractionPaint);
+
+            RadialGradient rightRefract = new RadialGradient(
+                    glassThumbBounds.right - thumbR * 0.7f, cy,
+                    thumbR * 1.5f,
+                    new int[]{0x7545C5FF, 0x3030A0FF, 0x00000000},
+                    new float[]{0.0f, 0.55f, 1.0f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbRefractionPaint.setShader(rightRefract);
+            glassThumbRefractionPaint.setAlpha((int) (220 * squishProgress));
+            canvas.drawRect(glassThumbBounds.right - thumbR * 1.6f, glassThumbBounds.top, glassThumbBounds.right, glassThumbBounds.bottom, glassThumbRefractionPaint);
+
+            LinearGradient glare = new LinearGradient(
+                    cx, glassThumbBounds.top,
+                    cx, glassThumbBounds.top + thumbH * 0.45f,
+                    new int[]{0x40FFFFFF, 0x00FFFFFF},
+                    new float[]{0f, 1f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbGlarePaint.setShader(glare);
+            glassThumbGlarePaint.setAlpha((int) (200 * squishProgress));
+            canvas.drawRect(glassThumbBounds.left, glassThumbBounds.top, glassThumbBounds.right, glassThumbBounds.top + thumbH * 0.45f, glassThumbGlarePaint);
+
+            canvas.restore();
+        }
+
+        // 2. Rest state Frosted Pill Fill
+        if (squishProgress < 0.99f) {
+            float restAlpha = 1.0f - squishProgress;
+            int restFillColor = isDark ? 0xF0FFFFFF : 0xFFFFFFFF;
+            glassThumbPillPaint.setColor(restFillColor);
+            glassThumbPillPaint.setAlpha((int) (255 * restAlpha));
+            canvas.drawRoundRect(glassThumbBounds, thumbR, thumbR, glassThumbPillPaint);
+        }
+
+        // 3. Specular Hairline Rim Outline
+        float halfStroke = glassThumbRimPaint.getStrokeWidth() / 2f;
+        glassThumbInnerBounds.set(
+                glassThumbBounds.left + halfStroke,
+                glassThumbBounds.top + halfStroke,
+                glassThumbBounds.right - halfStroke,
+                glassThumbBounds.bottom - halfStroke
+        );
+        float innerR = thumbR - halfStroke;
+
+        int strokeTop = 0xFFFFFFFF;
+        int strokeBottom = isDark ? 0xD0FFFFFF : 0xF0FFFFFF;
+        LinearGradient rimShader = new LinearGradient(
+                cx, glassThumbBounds.top,
+                cx, glassThumbBounds.bottom,
+                new int[]{strokeTop, strokeBottom},
+                new float[]{0f, 1f},
+                Shader.TileMode.CLAMP
+        );
+        glassThumbRimPaint.setShader(rimShader);
+        canvas.drawRoundRect(glassThumbInnerBounds, innerR, innerR, glassThumbRimPaint);
+
+        canvas.restore();
     }
 
     protected void onTimestampUpdate(URLSpanNoUnderline link) {

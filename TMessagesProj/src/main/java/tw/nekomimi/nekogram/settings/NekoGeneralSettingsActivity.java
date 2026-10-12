@@ -204,6 +204,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private final AbstractConfigCell divider4 = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell header5 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("Appearance")));
+    private final AbstractConfigCell uiAppearanceRow = cellGroup.appendCell(new ConfigCellCustom("UiAppearance", ConfigCellCustom.CUSTOM_ITEM_UiAppearance, true));
     private final AbstractConfigCell typefaceRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.typeface));
     private final AbstractConfigCell transparentStatusBarRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.transparentStatusBar));
     private final AbstractConfigCell appBarShadowRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableAppBarShadow));
@@ -770,6 +771,8 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                 view = new LiquidGlassSeekBar(mContext, true);
             } else if (viewType == ConfigCellCustom.CUSTOM_ITEM_LiquidGlassIntensity) {
                 view = new LiquidGlassSeekBar(mContext, false);
+            } else if (viewType == ConfigCellCustom.CUSTOM_ITEM_UiAppearance) {
+                view = new UiAppearanceCell(mContext);
             }
             if (view != null) {
                 return view;
