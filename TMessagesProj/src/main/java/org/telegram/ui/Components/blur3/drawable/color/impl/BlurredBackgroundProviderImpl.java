@@ -37,7 +37,7 @@ public class BlurredBackgroundProviderImpl {
     public static BlurredBackgroundProvider topPanel(Theme.ResourcesProvider resourcesProvider) {
         return new BlurredBackgroundProviderBuilder(resourcesProvider)
             .setBackgroundColor((r, isDark) -> {
-                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.85f : 0.76f;
+                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.68f : 0.60f;
                 final int colorBg = Theme.getColor(Theme.key_windowBackgroundWhite, r);
                 final int colorTarget = Theme.getColor(Theme.key_glass_targetMainTopPanel, r);
                 return solveSrcColor(colorBg, colorTarget, alpha);
@@ -164,7 +164,7 @@ public class BlurredBackgroundProviderImpl {
                             Theme.key_actionBarDefault : Theme.key_chat_topPanelBackground, r), 255);
                     }
 
-                    final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.85f : 0.76f;
+                    final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.68f : 0.60f;
                     final int colorBg = Theme.getColor(Theme.key_chat_topPanelBackground, r);
                     return Theme.multAlpha(colorBg, alpha);
                 })
@@ -184,7 +184,7 @@ public class BlurredBackgroundProviderImpl {
                             Theme.key_actionBarDefault : Theme.key_chat_topPanelBackground, r), 255);
                 }
 
-                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.85f : 0.76f;
+                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.68f : 0.60f;
                 final int colorBg = Theme.getColor(Theme.key_chat_topPanelBackground, r);
                 return Theme.multAlpha(colorBg, alpha);
             })
@@ -199,7 +199,7 @@ public class BlurredBackgroundProviderImpl {
     public static BlurredBackgroundProvider topPanelChatActivitySearchListBg(Theme.ResourcesProvider resourcesProvider) {
         return new BlurredBackgroundProviderBuilder(resourcesProvider)
                 .setBackgroundColor((r, isDark) -> {
-                    final float alpha = 0.7f;
+                    final float alpha = 0.56f;
                     final int colorBg = Theme.getColor(Theme.key_windowBackgroundWhite, r);
                     return Theme.multAlpha(colorBg, alpha);
                 })

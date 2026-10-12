@@ -275,6 +275,7 @@ public class TONIntroActivity extends GradientHeaderActivity implements Notifica
         if (allowTopUp) {
             buyButton = new ButtonWithCounterView(getContext(), resourceProvider).setRound();
             buyButton.setRound();
+            buyButton.setLiquidGlass(true);
             buyButton.setText(getString(R.string.TopUpViaFragment), false);
             buyButton.setOnClickListener(v -> {
                 Browser.openUrlInSystemBrowser(getContext(), getString(R.string.TopUpViaFragmentLink));
@@ -292,6 +293,7 @@ public class TONIntroActivity extends GradientHeaderActivity implements Notifica
         buttonsLayout.addView(twoButtonsLayout);
 
         topUpButton = new ButtonWithCounterView(getContext(), resourceProvider).setRound();
+        topUpButton.setLiquidGlass(true);
         SpannableStringBuilder ssb = new SpannableStringBuilder("x  ");
         ssb.setSpan(new ColoredImageSpan(R.drawable.mini_topup, ColoredImageSpan.ALIGN_CENTER), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append(getString(R.string.TonTopUp));
@@ -304,6 +306,7 @@ public class TONIntroActivity extends GradientHeaderActivity implements Notifica
         }
 
         withdrawButton = new ButtonWithCounterView(getContext(), resourceProvider).setRound();
+        withdrawButton.setLiquidGlass(true);
         ssb = new SpannableStringBuilder("x  ");
         ssb.setSpan(new ColoredImageSpan(R.drawable.mini_stats, ColoredImageSpan.ALIGN_CENTER), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append(getString(R.string.TonStats));
@@ -756,6 +759,8 @@ public class TONIntroActivity extends GradientHeaderActivity implements Notifica
             footerView = new FrameLayout(context);
 
             topUpButton = new ButtonWithCounterView(getContext(), getResourcesProvider());
+            topUpButton.setRound();
+            topUpButton.setLiquidGlass(true);
             footerView.addView(topUpButton, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, 48, Gravity.CENTER, 20, 10, 20, 20));
 
             if (canToUpFragment || allowTopUp()) {

@@ -875,6 +875,10 @@ public class SharedConfig {
     }
 
     public static boolean setNewAppVersionAvailable(TLRPC.TL_help_appUpdate update) {
+        return false;
+    }
+
+    private static boolean unused_setNewAppVersionAvailable(TLRPC.TL_help_appUpdate update) {
         //String updateVersionString = null;
         int versionCode = 0;
         try {

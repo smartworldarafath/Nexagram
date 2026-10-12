@@ -12,12 +12,17 @@ import static org.telegram.messenger.AndroidUtilities.dp;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
+import org.telegram.messenger.LiteMode;
 import android.text.Layout;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -56,6 +61,18 @@ public class SeekBarView extends FrameLayout {
 
     private Paint innerPaint1;
     private Paint outerPaint1;
+    private Paint glassThumbPillPaint;
+    private Paint glassThumbOpticalGlassPaint;
+    private Paint glassThumbRimPaint;
+    private Paint glassThumbRefractionPaint;
+    private Paint glassThumbGlarePaint;
+    private final RectF glassThumbBounds = new RectF();
+    private final RectF glassThumbInnerBounds = new RectF();
+    private final Path glassThumbClipPath = new Path();
+    private float squishProgress = 0f;
+    private long lastSquishTime = 0;
+    private float dragVelocityX = 0f;
+    private float lastDragX = -1f;
     private int thumbSize;
     private int selectorWidth;
     private int thumbX;
@@ -232,9 +249,17 @@ public class SeekBarView extends FrameLayout {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             sx = ev.getX();
             sy = ev.getY();
+            int additionWidth = (getMeasuredHeight() - thumbSize) / 2;
+            if (sx >= thumbX - additionWidth && sx <= thumbX + selectorWidth + additionWidth && sy >= 0 && sy <= getMeasuredHeight()) {
+                pressed = pressedDelayed = true;
+                thumbDX = (int) (sx - thumbX);
+                invalidate();
+            }
             return true;
         } else if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
             captured = false;
+            dragVelocityX = 0f;
+            lastDragX = -1f;
             if (ev.getAction() == MotionEvent.ACTION_UP) {
                 final ViewConfiguration vc = ViewConfiguration.get(getContext());
                 if (Math.abs(ev.getY() - sy) < vc.getScaledTouchSlop()) {
@@ -449,7 +474,8 @@ public class SeekBarView extends FrameLayout {
 
         float centerY = getMeasuredHeight() / 2f;
         float left = selectorWidth / 2f, right = getMeasuredWidth() - selectorWidth / 2;
-        float top = centerY - AndroidUtilities.dp(lineWidthDp) / 2f, bottom = centerY + AndroidUtilities.dp(lineWidthDp) / 2f;
+        float lineHDp = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 6f : (float) lineWidthDp;
+        float top = centerY - AndroidUtilities.dpf2(lineHDp) / 2f, bottom = centerY + AndroidUtilities.dpf2(lineHDp) / 2f;
 
         rect.set(left, top, right, bottom);
         drawProgressBar(canvas, rect, innerPaint1);
@@ -487,20 +513,21 @@ public class SeekBarView extends FrameLayout {
             hoverDrawable.draw(canvas);
         }
         boolean needInvalidate = false;
-        int newRad = AndroidUtilities.dp(pressed ? 8 : 6);
+        int newRad = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? AndroidUtilities.dp(pressed ? 15 : 12) : AndroidUtilities.dp(pressed ? 8 : 6);
         long newUpdateTime = SystemClock.elapsedRealtime();
         long dt = newUpdateTime - lastUpdateTime;
         if (dt > 18) {
             dt = 16;
         }
         if (currentRadius != newRad) {
+            float speed = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? AndroidUtilities.dp(2) * (dt / 40.0f) : AndroidUtilities.dp(1) * (dt / 60.0f);
             if (currentRadius < newRad) {
-                currentRadius += AndroidUtilities.dp(1) * (dt / 60.0f);
+                currentRadius += speed;
                 if (currentRadius > newRad) {
                     currentRadius = newRad;
                 }
             } else {
-                currentRadius -= AndroidUtilities.dp(1) * (dt / 60.0f);
+                currentRadius -= speed;
                 if (currentRadius < newRad) {
                     currentRadius = newRad;
                 }
@@ -516,15 +543,31 @@ public class SeekBarView extends FrameLayout {
             }
         }
 
-        if (transitionProgress < 1f) {
-            final float oldCircleProgress = 1f - Easings.easeInQuad.getInterpolation(Math.min(1f, transitionProgress * 3f));
-            final float newCircleProgress = Easings.easeOutQuad.getInterpolation(transitionProgress);
-            if (oldCircleProgress > 0f) {
-                canvas.drawCircle(transitionThumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * oldCircleProgress, outerPaint1);
+        if (LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+            if (transitionProgress < 1f) {
+                final float oldCircleProgress = 1f - Easings.easeInQuad.getInterpolation(Math.min(1f, transitionProgress * 3f));
+                final float newCircleProgress = Easings.easeOutQuad.getInterpolation(transitionProgress);
+                if (oldCircleProgress > 0f) {
+                    drawLiquidGlassThumb(canvas, transitionThumbX + selectorWidth / 2f, centerY, currentRadius * oldCircleProgress);
+                }
+                drawLiquidGlassThumb(canvas, thumbX + selectorWidth / 2f, centerY, currentRadius * newCircleProgress);
+            } else {
+                drawLiquidGlassThumb(canvas, thumbX + selectorWidth / 2f, centerY, currentRadius);
             }
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * newCircleProgress, outerPaint1);
+            if (Math.abs((pressed ? 1.0f : 0.0f) - squishProgress) > 0.005f || Math.abs(dragVelocityX) > 0.005f) {
+                needInvalidate = true;
+            }
         } else {
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius, outerPaint1);
+            if (transitionProgress < 1f) {
+                final float oldCircleProgress = 1f - Easings.easeInQuad.getInterpolation(Math.min(1f, transitionProgress * 3f));
+                final float newCircleProgress = Easings.easeOutQuad.getInterpolation(transitionProgress);
+                if (oldCircleProgress > 0f) {
+                    canvas.drawCircle(transitionThumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * oldCircleProgress, outerPaint1);
+                }
+                canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * newCircleProgress, outerPaint1);
+            } else {
+                canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius, outerPaint1);
+            }
         }
 
         drawTimestampLabel(canvas);
@@ -532,6 +575,152 @@ public class SeekBarView extends FrameLayout {
         if (needInvalidate) {
             postInvalidateOnAnimation();
         }
+    }
+
+    private void drawLiquidGlassThumb(Canvas canvas, float cx, float cy, float radius) {
+        if (radius <= 0) return;
+        if (glassThumbPillPaint == null) {
+            glassThumbPillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbPillPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbOpticalGlassPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbOpticalGlassPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbRimPaint.setStyle(Paint.Style.STROKE);
+            glassThumbRimPaint.setStrokeWidth(AndroidUtilities.dpf2(1.1f));
+
+            glassThumbRefractionPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbRefractionPaint.setStyle(Paint.Style.FILL);
+
+            glassThumbGlarePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassThumbGlarePaint.setStyle(Paint.Style.FILL);
+        }
+
+        float targetSquish = pressed ? 1.0f : 0.0f;
+        long now = SystemClock.uptimeMillis();
+        if (lastSquishTime > 0) {
+            float dt = Math.min(32, now - lastSquishTime) / 1000f;
+            float diff = targetSquish - squishProgress;
+            if (Math.abs(diff) > 0.002f) {
+                float springK = pressed ? 20f : 24f;
+                squishProgress += diff * Math.min(1.0f, dt * springK);
+            } else {
+                squishProgress = targetSquish;
+            }
+        }
+        lastSquishTime = now;
+
+        if (pressed) {
+            if (lastDragX >= 0) {
+                float dx = cx - lastDragX;
+                dragVelocityX = AndroidUtilities.lerp(dragVelocityX, Math.max(-0.25f, Math.min(0.25f, dx / AndroidUtilities.dp(16f))), 0.25f);
+            }
+            lastDragX = cx;
+        } else {
+            dragVelocityX = AndroidUtilities.lerp(dragVelocityX, 0f, 0.2f);
+            lastDragX = -1f;
+        }
+
+        // Rest: 26dp x 18dp. Pressed: 40dp x 22dp capsule pill.
+        float baseW = AndroidUtilities.dpf2(26f + 14f * squishProgress);
+        float baseH = AndroidUtilities.dpf2(18f + 4f * squishProgress);
+
+        float stretchFactor = 1.0f + Math.abs(dragVelocityX) * 0.20f;
+        float thumbW = baseW * stretchFactor;
+        float thumbH = baseH / (float) Math.sqrt(stretchFactor);
+        float thumbR = thumbH / 2f;
+
+        canvas.save();
+        glassThumbBounds.set(cx - thumbW / 2f, cy - thumbH / 2f, cx + thumbW / 2f, cy + thumbH / 2f);
+
+        boolean isDark = Theme.isCurrentThemeDark();
+
+        // 1. Optical Clear Liquid Glass Core (fades in as squishProgress increases)
+        // Background track lines are 100% visible inside the pill
+        if (squishProgress > 0.01f) {
+            int coreColor = isDark ? 0x22FFFFFF : 0x16FFFFFF;
+            glassThumbOpticalGlassPaint.setColor(coreColor);
+            glassThumbOpticalGlassPaint.setAlpha((int) (Color.alpha(coreColor) * squishProgress));
+            canvas.drawRoundRect(glassThumbBounds, thumbR, thumbR, glassThumbOpticalGlassPaint);
+
+            // Refraction chromatic edges on left and right curved caps
+            canvas.save();
+            glassThumbClipPath.reset();
+            glassThumbClipPath.addRoundRect(glassThumbBounds, thumbR, thumbR, Path.Direction.CW);
+            canvas.clipPath(glassThumbClipPath);
+
+            // Left curved cap cyan sheen
+            RadialGradient leftRefract = new RadialGradient(
+                    glassThumbBounds.left + thumbR * 0.7f, cy,
+                    thumbR * 1.5f,
+                    new int[]{0x7545C5FF, 0x3030A0FF, 0x00000000},
+                    new float[]{0.0f, 0.55f, 1.0f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbRefractionPaint.setShader(leftRefract);
+            glassThumbRefractionPaint.setAlpha((int) (220 * squishProgress));
+            canvas.drawRect(glassThumbBounds.left, glassThumbBounds.top, glassThumbBounds.left + thumbR * 1.6f, glassThumbBounds.bottom, glassThumbRefractionPaint);
+
+            // Right curved cap cyan sheen
+            RadialGradient rightRefract = new RadialGradient(
+                    glassThumbBounds.right - thumbR * 0.7f, cy,
+                    thumbR * 1.5f,
+                    new int[]{0x7545C5FF, 0x3030A0FF, 0x00000000},
+                    new float[]{0.0f, 0.55f, 1.0f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbRefractionPaint.setShader(rightRefract);
+            glassThumbRefractionPaint.setAlpha((int) (220 * squishProgress));
+            canvas.drawRect(glassThumbBounds.right - thumbR * 1.6f, glassThumbBounds.top, glassThumbBounds.right, glassThumbBounds.bottom, glassThumbRefractionPaint);
+
+            // Subtle top glass glare
+            LinearGradient glare = new LinearGradient(
+                    cx, glassThumbBounds.top,
+                    cx, glassThumbBounds.top + thumbH * 0.45f,
+                    new int[]{0x40FFFFFF, 0x00FFFFFF},
+                    new float[]{0f, 1f},
+                    Shader.TileMode.CLAMP
+            );
+            glassThumbGlarePaint.setShader(glare);
+            glassThumbGlarePaint.setAlpha((int) (200 * squishProgress));
+            canvas.drawRect(glassThumbBounds.left, glassThumbBounds.top, glassThumbBounds.right, glassThumbBounds.top + thumbH * 0.45f, glassThumbGlarePaint);
+
+            canvas.restore();
+        }
+
+        // 2. Rest state Frosted Pill Fill (fades out as squishProgress increases)
+        if (squishProgress < 0.99f) {
+            float restAlpha = 1.0f - squishProgress;
+            int restFillColor = isDark ? 0xF0FFFFFF : 0xFFFFFFFF;
+            glassThumbPillPaint.setColor(restFillColor);
+            glassThumbPillPaint.setAlpha((int) (255 * restAlpha));
+            canvas.drawRoundRect(glassThumbBounds, thumbR, thumbR, glassThumbPillPaint);
+        }
+
+        // 3. Specular Hairline Rim Outline
+        float halfStroke = glassThumbRimPaint.getStrokeWidth() / 2f;
+        glassThumbInnerBounds.set(
+                glassThumbBounds.left + halfStroke,
+                glassThumbBounds.top + halfStroke,
+                glassThumbBounds.right - halfStroke,
+                glassThumbBounds.bottom - halfStroke
+        );
+        float innerR = thumbR - halfStroke;
+
+        int strokeTop = 0xFFFFFFFF;
+        int strokeBottom = isDark ? 0xD0FFFFFF : 0xF0FFFFFF;
+        LinearGradient rimShader = new LinearGradient(
+                cx, glassThumbBounds.top,
+                cx, glassThumbBounds.bottom,
+                new int[]{strokeTop, strokeBottom},
+                new float[]{0f, 1f},
+                Shader.TileMode.CLAMP
+        );
+        glassThumbRimPaint.setShader(rimShader);
+        canvas.drawRoundRect(glassThumbInnerBounds, innerR, innerR, glassThumbRimPaint);
+
+        canvas.restore();
     }
 
     private ArrayList<Pair<Float, CharSequence>> timestamps;
@@ -655,7 +844,7 @@ public class SeekBarView extends FrameLayout {
     }
 
     private void drawProgressBar(Canvas canvas, RectF rect, Paint paint) {
-        float radius = AndroidUtilities.dp(2);
+        float radius = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? (rect.bottom - rect.top) / 2f : AndroidUtilities.dp(2);
         if (timestamps == null || timestamps.isEmpty()) {
             canvas.drawRoundRect(rect, radius, radius, paint);
         } else {
