@@ -67,8 +67,9 @@ public class LiteMode {
         FLAG_AUTOPLAY_VIDEOS |
         FLAG_AUTOPLAY_GIFS |
         FLAG_CHAT_THANOS |
-        FLAG_PARTICLES
-    ); // 204383
+        FLAG_PARTICLES |
+        FLAG_LIQUID_GLASS
+    );
     public static int PRESET_HIGH = (
         FLAGS_ANIMATED_STICKERS |
         FLAGS_ANIMATED_EMOJI |
@@ -81,8 +82,9 @@ public class LiteMode {
         FLAG_CALLS_ANIMATIONS |
         FLAG_AUTOPLAY_VIDEOS |
         FLAG_AUTOPLAY_GIFS |
-        FLAG_PARTICLES
-    ); // 262143
+        FLAG_PARTICLES |
+        FLAG_LIQUID_GLASS
+    );
     public static int PRESET_POWER_SAVER = 0;
 
     private static int BATTERY_LOW = 10;
@@ -210,74 +212,26 @@ public class LiteMode {
         }
 
         final SharedPreferences preferences = MessagesController.getGlobalMainSettings();
-        if (!preferences.contains("lite_mode6")) {
-            if (preferences.contains("lite_mode5")) {
+        if (!preferences.contains("lite_mode7")) {
+            if (preferences.contains("lite_mode6")) {
+                defaultValue = preferences.getInt("lite_mode6", defaultValue);
+            } else if (preferences.contains("lite_mode5")) {
                 defaultValue = preferences.getInt("lite_mode5", defaultValue);
-                defaultValue &=~ FLAG_LIQUID_GLASS;
-                preferences.edit().putInt("lite_mode6", defaultValue).apply();
             } else if (preferences.contains("lite_mode4")) {
                 defaultValue = preferences.getInt("lite_mode4", defaultValue);
-                preferences.edit().putInt("lite_mode5", defaultValue).apply();
             } else if (preferences.contains("lite_mode3")) {
                 defaultValue = preferences.getInt("lite_mode3", defaultValue);
-                defaultValue |= FLAG_PARTICLES;
-                preferences.edit().putInt("lite_mode5", defaultValue).apply();
             } else if (preferences.contains("lite_mode2")) {
                 defaultValue = preferences.getInt("lite_mode2", defaultValue);
-                defaultValue |= FLAG_CHAT_THANOS;
-                preferences.edit().putInt("lite_mode3", defaultValue).apply();
             } else if (preferences.contains("lite_mode")) {
                 defaultValue = preferences.getInt("lite_mode", defaultValue);
-                if (defaultValue == 4095) {
-                    defaultValue = PRESET_HIGH;
-                }
-            } else {
-                if (preferences.contains("light_mode")) {
-                    boolean prevLiteModeEnabled = (preferences.getInt("light_mode", SharedConfig.getDevicePerformanceClass() == SharedConfig.PERFORMANCE_CLASS_LOW ? 1 : 0) & 1) > 0;
-                    if (prevLiteModeEnabled) {
-                        defaultValue = PRESET_LOW;
-                    } else {
-                        defaultValue = PRESET_HIGH;
-                    }
-                }
-                // migrate settings
-                if (preferences.contains("loopStickers")) {
-                    boolean loopStickers = preferences.getBoolean("loopStickers", true);
-                    if (loopStickers) {
-                        defaultValue |= FLAG_ANIMATED_STICKERS_CHAT;
-                    } else {
-                        defaultValue &= ~FLAG_ANIMATED_STICKERS_CHAT;
-                    }
-                }
-                if (preferences.contains("autoplay_video")) {
-                    boolean autoplayVideo = preferences.getBoolean("autoplay_video", true) || preferences.getBoolean("autoplay_video_liteforce", false);
-                    if (autoplayVideo) {
-                        defaultValue |= FLAG_AUTOPLAY_VIDEOS;
-                    } else {
-                        defaultValue &= ~FLAG_AUTOPLAY_VIDEOS;
-                    }
-                }
-                if (preferences.contains("autoplay_gif")) {
-                    boolean autoplayGif = preferences.getBoolean("autoplay_gif", true);
-                    if (autoplayGif) {
-                        defaultValue |= FLAG_AUTOPLAY_GIFS;
-                    } else {
-                        defaultValue &= ~FLAG_AUTOPLAY_GIFS;
-                    }
-                }
-                if (preferences.contains("chatBlur")) {
-                    boolean chatBlur = preferences.getBoolean("chatBlur", true);
-                    if (chatBlur) {
-                        defaultValue |= FLAG_CHAT_BLUR;
-                    } else {
-                        defaultValue &= ~FLAG_CHAT_BLUR;
-                    }
-                }
             }
+            defaultValue |= FLAG_LIQUID_GLASS;
+            preferences.edit().putInt("lite_mode7", defaultValue).apply();
         }
 
         int prevValue = value;
-        value = preferences.getInt("lite_mode6", defaultValue);
+        value = preferences.getInt("lite_mode7", defaultValue) | FLAG_LIQUID_GLASS;
         if (loaded) {
             onFlagsUpdate(prevValue, value);
         }
@@ -286,7 +240,7 @@ public class LiteMode {
     }
 
     public static void savePreference() {
-        MessagesController.getGlobalMainSettings().edit().putInt("lite_mode6", value).putInt("lite_mode_battery_level", powerSaverLevel).apply();
+        MessagesController.getGlobalMainSettings().edit().putInt("lite_mode7", value).putInt("lite_mode_battery_level", powerSaverLevel).apply();
     }
 
     public static int getPowerSaverLevel() {

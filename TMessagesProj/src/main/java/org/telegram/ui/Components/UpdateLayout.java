@@ -66,6 +66,10 @@ public class UpdateLayout extends IUpdateLayout {
         updateLayout.setBackground(Theme.getSelectorDrawable(0x40ffffff, false));
         sideMenuContainer.addView(updateLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.LEFT | Gravity.BOTTOM));
         updateLayout.setOnClickListener(v -> {
+            if (xyz.nextalone.nagram.ui.NexagramAppUpdateManager.isNexagramUpdateAvailable()) {
+                xyz.nextalone.nagram.ui.NexagramAppUpdateManager.openUpdate(activity);
+                return;
+            }
             if (!SharedConfig.isAppUpdateAvailable()) {
                 return;
             }
@@ -124,7 +128,22 @@ public class UpdateLayout extends IUpdateLayout {
         if (sideMenuContainer == null) {
             return;
         }
-        if (SharedConfig.isAppUpdateAvailable()) {
+        if (xyz.nextalone.nagram.ui.NexagramAppUpdateManager.isNexagramUpdateAvailable()) {
+            createUpdateUI(currentAccount);
+            updateLayoutIcon.setIcon(MediaActionDrawable.ICON_DOWNLOAD, true, animated);
+            setUpdateText("Update Nexagram", animated);
+            updateSizeTextView.setText(xyz.nextalone.nagram.ui.NexagramAppUpdateManager.updateSize > 0 ? AndroidUtilities.formatFileSize(xyz.nextalone.nagram.ui.NexagramAppUpdateManager.updateSize) : null, animated);
+            if (updateLayout.getTag() != null) {
+                return;
+            }
+            updateLayout.setVisibility(View.VISIBLE);
+            updateLayout.setTag(1);
+            if (animated) {
+                updateLayout.animate().translationY(0).setInterpolator(CubicBezierInterpolator.EASE_OUT).setListener(null).setDuration(180).start();
+            } else {
+                updateLayout.setTranslationY(0);
+            }
+        } else if (SharedConfig.isAppUpdateAvailable()) {
             createUpdateUI(currentAccount);
 
             String fileName = FileLoader.getAttachFileName(SharedConfig.pendingAppUpdate.document);
@@ -143,7 +162,7 @@ public class UpdateLayout extends IUpdateLayout {
                     showSize = false;
                 } else {
                     updateLayoutIcon.setIcon(MediaActionDrawable.ICON_DOWNLOAD, true, animated);
-                    setUpdateText(LocaleController.getString(R.string.AppUpdate), animated);
+                    setUpdateText("Update Nexagram", animated);
                     showSize = true;
                 }
             }

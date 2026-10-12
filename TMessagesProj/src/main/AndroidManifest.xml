@@ -188,36 +188,6 @@
 
         <activity-alias
             android:enabled="false"
-            android:name="org.telegram.messenger.ColorfulIcon"
-            android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_colorful"
-            android:roundIcon="@mipmap/ic_launcher_nagram_colorful_round"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:enabled="false"
-            android:name="org.telegram.messenger.DarkGreenIcon"
-            android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_darkgreen"
-            android:roundIcon="@mipmap/ic_launcher_nagram_darkgreen_round"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity-alias
-            android:enabled="false"
             android:name="org.telegram.messenger.NeonIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
             android:icon="@mipmap/ic_launcher_nagram_neon"
@@ -234,10 +204,10 @@
 
         <activity-alias
             android:enabled="false"
-            android:name="org.telegram.messenger.NielloIcon"
+            android:name="org.telegram.messenger.AmoledIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_round_niello"
-            android:roundIcon="@mipmap/ic_launcher_nagram_round_niello_round"
+            android:icon="@mipmap/ic_launcher_nagram_amoled"
+            android:roundIcon="@mipmap/ic_launcher_nagram_amoled_round"
             android:exported="true">
 
             <intent-filter>
@@ -250,10 +220,10 @@
 
         <activity-alias
             android:enabled="false"
-            android:name="org.telegram.messenger.BlueIcon"
+            android:name="org.telegram.messenger.AquaIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_block_round"
-            android:roundIcon="@mipmap/ic_launcher_nagram_block_round_round"
+            android:icon="@mipmap/ic_launcher_nagram_aqua"
+            android:roundIcon="@mipmap/ic_launcher_nagram_aqua_round"
             android:exported="true">
 
             <intent-filter>
@@ -266,10 +236,10 @@
 
         <activity-alias
             android:enabled="false"
-            android:name="org.telegram.messenger.DarkBlueIcon"
+            android:name="org.telegram.messenger.ClasterIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_round_blue"
-            android:roundIcon="@mipmap/ic_launcher_nagram_round_blue_round"
+            android:icon="@mipmap/ic_launcher_nagram_claster"
+            android:roundIcon="@mipmap/ic_launcher_nagram_claster_round"
             android:exported="true">
 
             <intent-filter>
@@ -282,10 +252,58 @@
 
         <activity-alias
             android:enabled="false"
-            android:name="org.telegram.messenger.BlurBlueIcon"
+            android:name="org.telegram.messenger.GreyIcon"
             android:targetActivity="org.telegram.ui.LaunchActivity"
-            android:icon="@mipmap/ic_launcher_nagram_blue"
-            android:roundIcon="@mipmap/ic_launcher_nagram_blue_round"
+            android:icon="@mipmap/ic_launcher_nagram_grey"
+            android:roundIcon="@mipmap/ic_launcher_nagram_grey_round"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <activity-alias
+            android:enabled="false"
+            android:name="org.telegram.messenger.NeonPremiumIcon"
+            android:targetActivity="org.telegram.ui.LaunchActivity"
+            android:icon="@mipmap/ic_launcher_nagram_neon_premium"
+            android:roundIcon="@mipmap/ic_launcher_nagram_neon_premium_round"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <activity-alias
+            android:enabled="false"
+            android:name="org.telegram.messenger.PixelIcon"
+            android:targetActivity="org.telegram.ui.LaunchActivity"
+            android:icon="@mipmap/ic_launcher_nagram_pixel"
+            android:roundIcon="@mipmap/ic_launcher_nagram_pixel_round"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <activity-alias
+            android:enabled="false"
+            android:name="org.telegram.messenger.VioletIcon"
+            android:targetActivity="org.telegram.ui.LaunchActivity"
+            android:icon="@mipmap/ic_launcher_nagram_violet"
+            android:roundIcon="@mipmap/ic_launcher_nagram_violet_round"
             android:exported="true">
 
             <intent-filter>

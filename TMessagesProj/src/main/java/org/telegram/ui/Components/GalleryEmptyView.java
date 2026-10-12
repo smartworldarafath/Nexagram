@@ -65,11 +65,13 @@ public class GalleryEmptyView extends LinearLayout {
 
         galleryAccessButton = new ButtonWithCounterView(context, null);
         galleryAccessButton.setRound();
+        galleryAccessButton.setLiquidGlass(true);
         galleryAccessButton.setText(getString(R.string.GalleryAccessAllowAccessButton), false);
         addView(galleryAccessButton, LayoutHelper.createLinear(LayoutHelper.WRAP_CONTENT, 44, Gravity.CENTER_HORIZONTAL | Gravity.TOP));
 
         cameraAccessButton = new ButtonWithCounterView(context, false, null);
         cameraAccessButton.setRound();
+        cameraAccessButton.setLiquidGlass(true);
         SpannableStringBuilder ssb = new SpannableStringBuilder("c");
         ssb.setSpan(new ColoredImageSpan(R.drawable.outline_attach_camera_24), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append("  ").append(getString(R.string.GalleryAccessAllowAccessOpenCamera));

@@ -476,6 +476,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         flagSecureReason.attach();
 
         super.onCreate(savedInstanceState);
+        AndroidUtilities.setPreferredMaxRefreshRate(getWindow());
         // Set initial status bar color immediately to prevent flash
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(0xFF426482); // Use theme's colorPrimaryDark
@@ -6128,12 +6129,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     }
 
     public void checkAppUpdate(boolean force, Browser.Progress progress, boolean updateAlways) {
-//        if (!ApplicationLoader.isStandaloneBuild() && !ApplicationLoader.isBetaBuild()) {
-//            return;
-//        }
-//        if (!force && !BuildVars.CHECK_UPDATES) {
-//            return;
-//        }
+        xyz.nextalone.nagram.ui.NexagramAppUpdateManager.checkUpdates(force, () -> {
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable);
+        });
+        xyz.nextalone.nagram.ui.NexagramVerificationManager.checkRevocations(currentAccount, null);
         if (ApplicationLoader.applicationLoaderInstance.isCustomUpdate()) {
             final BetaUpdate prevUpdate = ApplicationLoader.applicationLoaderInstance.getUpdate();
             final boolean first = firstAppUpdateCheck;
@@ -7140,6 +7139,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     @Override
     protected void onResume() {
         super.onResume();
+        AndroidUtilities.setPreferredMaxRefreshRate(getWindow());
         isResumed = true;
         pipActivityHandler.onResume();
         if (onResumeStaticCallback != null) {

@@ -57,10 +57,12 @@ import org.telegram.ui.Components.Bulletin;
 import org.telegram.ui.Components.BulletinFactory;
 import org.telegram.ui.Components.CombinedDrawable;
 import org.telegram.ui.Components.EmojiTextView;
+import org.telegram.messenger.LiteMode;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.FolderBottomSheet;
 import org.telegram.ui.Components.ItemOptions;
 import org.telegram.ui.Components.LayoutHelper;
+import org.telegram.ui.Components.LiquidGlassDrawable;
 import org.telegram.ui.Components.ListView.AdapterWithDiffUtils;
 import org.telegram.ui.Components.LoadingDrawable;
 import org.telegram.ui.Components.Premium.LimitReachedBottomSheet;
@@ -241,6 +243,10 @@ public class FiltersSetupActivity extends BaseFragment implements NotificationCe
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.playAnimation();
             imageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            if (LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+                LiquidGlassDrawable glassBg = new LiquidGlassDrawable(45);
+                imageView.setBackground(glassBg);
+            }
             addView(imageView, LayoutHelper.createFrame(90, 90, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 14, 0, 0));
             imageView.setOnClickListener(v -> {
                 if (!imageView.isPlaying()) {

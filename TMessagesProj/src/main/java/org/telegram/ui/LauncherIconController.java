@@ -36,14 +36,15 @@ public class LauncherIconController {
     public enum LauncherIcon {
         DEFAULT("DefaultIcon", R.mipmap.ic_launcher_nagram, R.mipmap.icon_background_nagram, R.string.AppIconDefault),
         GOOGLE("GoogleIcon", R.mipmap.icon_background_google, R.mipmap.icon_foreground_google, R.string.AppIconGoogle),
-        COLORFUL("ColorfulIcon", R.mipmap.icon_background_colorful, R.mipmap.icon_foreground_colorful, R.string.AppIconColorful),
-        DARKGREEN("DarkGreenIcon", R.mipmap.icon_background_darkgreen, R.mipmap.icon_foreground_darkgreen, R.string.AppIconDarkGreen),
         NEON("NeonIcon", R.mipmap.icon_background_neon, R.mipmap.icon_foreground_neon, R.string.AppIconNeon),
-        NIELLO("NielloIcon", R.drawable.ic_launcher_nagram_round_niello_background, R.drawable.ic_launcher_nagram_round_niello_foreground, R.string.AppIconNiello),
-        BLUE("BlueIcon", R.color.nagram_block_round_background, R.drawable.ic_launcher_nagram_block_round_foreground, R.string.AppIconBlue),
-        DARKBLUE("DarkBlueIcon", R.color.nagram_round_blue_background, R.drawable.ic_launcher_nagram_round_blue_foreground, R.string.AppIconDarkBlue),
-        BLURBLUE("BlurBlueIcon", R.drawable.ic_launcher_nagram_blue_background, R.drawable.ic_launcher_nagram_blue_foreground, R.string.AppIconBlurBlue),
-        NOX("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium);
+        NOX("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium),
+        AMOLED("AmoledIcon", R.mipmap.ic_launcher_nagram_amoled, 0, R.string.AppIconAmoled),
+        AQUA("AquaIcon", R.mipmap.ic_launcher_nagram_aqua, 0, R.string.AppIconAqua),
+        CLASTER("ClasterIcon", R.mipmap.ic_launcher_nagram_claster, 0, R.string.AppIconClaster),
+        GREY("GreyIcon", R.mipmap.ic_launcher_nagram_grey, 0, R.string.AppIconGrey),
+        NEON_PREMIUM("NeonPremiumIcon", R.mipmap.ic_launcher_nagram_neon_premium, 0, R.string.AppIconNeonPremium),
+        PIXEL("PixelIcon", R.mipmap.ic_launcher_nagram_pixel, 0, R.string.AppIconPixel),
+        VIOLET("VioletIcon", R.mipmap.ic_launcher_nagram_violet, 0, R.string.AppIconViolet);
 
         public final String key;
         public final int background;
@@ -73,7 +74,7 @@ public class LauncherIconController {
         }
 
         public boolean isNekoX() {
-            return this == DEFAULT;
+            return this != GOOGLE && this != NEON && this != NOX;
         }
     }
 }
