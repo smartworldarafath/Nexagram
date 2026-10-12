@@ -354,6 +354,7 @@ public class StarsIntroActivity extends GradientHeaderActivity implements Notifi
 
         buyButton = new ButtonWithCounterView(getContext(), resourceProvider);
         buyButton.setRound();
+        buyButton.setLiquidGlass(true);
         buyButton.setText("", false);
         buyButton.setOnClickListener(v -> {
             if (MessagesController.getInstance(currentAccount).isFrozen()) {

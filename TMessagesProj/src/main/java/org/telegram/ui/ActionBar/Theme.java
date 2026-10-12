@@ -532,7 +532,7 @@ public class Theme {
         public OverrideWallpaperInfo overrideWallpaper;
         public boolean isDefault;
 
-        ThemeAccent() {
+        public ThemeAccent() {
 
         }
 

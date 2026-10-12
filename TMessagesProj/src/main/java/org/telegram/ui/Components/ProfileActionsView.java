@@ -12,10 +12,12 @@ import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.LinearGradient;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
+import org.telegram.messenger.LiteMode;
 import android.graphics.RectF;
 import android.graphics.RenderNode;
 import android.graphics.Shader;
@@ -59,6 +61,11 @@ public class ProfileActionsView extends View {
     private final List<Action> actions = new ArrayList<>();
     private final Paint paint = new Paint();
     private final Paint shaderPaint = new Paint();
+    private final Paint glassStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint glassGlarePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Path glassClipPath = new Path();
+    private final RectF glassStrokeRect = new RectF();
+    private final RectF glassGlareRect = new RectF();
     private float parentExpanded;
 
     public boolean isAnimatingCallAction = false;
@@ -130,6 +137,10 @@ public class ProfileActionsView extends View {
 
         paint.setColor(Color.BLACK);
         paint.setAlpha(40);
+
+        glassStrokePaint.setStyle(Paint.Style.STROKE);
+        glassStrokePaint.setStrokeWidth(dpf2(1.2f));
+        glassGlarePaint.setStyle(Paint.Style.FILL);
 
         xpadding = dpf2(14);
         ypadding = dpf2(12);
@@ -304,26 +315,30 @@ public class ProfileActionsView extends View {
                         action.rect.width() / 2.0f * (1.0f - action.getScale()),
                         action.rect.height() / 2.0f * (1.0f - action.getScale())
                     );
-                    int wasAlpha = paint.getAlpha();
-                    int newAlpha = (int) (action.getAlpha() * alphaFraction1 * wasAlpha);
-                    paint.setAlpha((int) (newAlpha * (radialGradient != null ? 0.1f : 1f)));
-
-                    if (SharedConfig.shadowsInSections && isButtonColorLight() && parentExpanded < 0.5f) {
-                        paint.setShadowLayer(dpf2(1.5f), 0, 0, Theme.multAlpha(Color.BLACK & 0x20FFFFFF, (newAlpha / 255f * (radialGradient != null ? 0.1f : 1f))));
+                    if (LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+                        LiquidGlassDrawable.drawGlass(canvas, AndroidUtilities.rectTmp, r, 0, action.bounce.isPressed(), action.getAlpha() * alphaFraction1);
                     } else {
-                        paint.setShadowLayer(0, 0, 0, 0);
-                    }
+                        int wasAlpha = paint.getAlpha();
+                        int newAlpha = (int) (action.getAlpha() * alphaFraction1 * wasAlpha);
+                        paint.setAlpha((int) (newAlpha * (radialGradient != null ? 0.1f : 1f)));
 
-                    canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, paint);
-                    if (radialGradient != null) {
-                        int wasAlpha2 = shaderPaint.getAlpha();
-                        shaderPaint.setAlpha((int) (action.getAlpha() * alphaFraction1 * wasAlpha2));
-                        matrix.setTranslate(AndroidUtilities.rectTmp.left, AndroidUtilities.rectTmp.top);
-                        radialGradient.setLocalMatrix(matrix);
-                        canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, shaderPaint);
-                        shaderPaint.setAlpha(wasAlpha2);
+                        if (SharedConfig.shadowsInSections && isButtonColorLight() && parentExpanded < 0.5f) {
+                            paint.setShadowLayer(dpf2(1.5f), 0, 0, Theme.multAlpha(Color.BLACK & 0x20FFFFFF, (newAlpha / 255f * (radialGradient != null ? 0.1f : 1f))));
+                        } else {
+                            paint.setShadowLayer(0, 0, 0, 0);
+                        }
+
+                        canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, paint);
+                        if (radialGradient != null) {
+                            int wasAlpha2 = shaderPaint.getAlpha();
+                            shaderPaint.setAlpha((int) (action.getAlpha() * alphaFraction1 * wasAlpha2));
+                            matrix.setTranslate(AndroidUtilities.rectTmp.left, AndroidUtilities.rectTmp.top);
+                            radialGradient.setLocalMatrix(matrix);
+                            canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, shaderPaint);
+                            shaderPaint.setAlpha(wasAlpha2);
+                        }
+                        paint.setAlpha(wasAlpha);
                     }
-                    paint.setAlpha(wasAlpha);
                 }
             }
         }

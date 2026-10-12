@@ -17,6 +17,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -44,6 +45,7 @@ import androidx.annotation.NonNull;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.Emoji;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.LiteMode;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.blur3.drawable.BlurredBackgroundDrawable;
@@ -95,6 +97,7 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
     private int scrollingToChild = -1;
 
     private GradientDrawable selectorDrawable;
+    private LiquidGlassDrawable glassSelectorDrawable;
 
     private int tabLineColorKey = Theme.key_actionBarTabLine;
     private int activeTextColorKey = Theme.key_actionBarTabActiveText;
@@ -166,6 +169,9 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
         float rad = AndroidUtilities.dpf2(14);
         selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, rad, rad, rad, rad});
 //        selectorDrawable.setCornerRadii(new float[]{rad, rad, rad, rad, 0, 0, 0, 0});
+        glassSelectorDrawable = new LiquidGlassDrawable(14);
+        glassSelectorDrawable.setHasShadow(true);
+        glassSelectorDrawable.setSpecularIntensity(1.0f);
 
         setFillViewport(true);
         setWillNotDraw(false);
@@ -662,7 +668,11 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
             );
         }
 //        selectorDrawable.setColor(processColor(Theme.getColor(tabLineColorKey, resourcesProvider)));
-        selectorDrawable.setColor(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f));
+        int activeColor = processColor(Theme.getColor(activeTextColorKey, resourcesProvider));
+        selectorDrawable.setColor(Theme.multAlpha(activeColor, .15f));
+        if (glassSelectorDrawable != null) {
+            glassSelectorDrawable.setTintColor(0);
+        }
         invalidate();
     }
 
@@ -735,8 +745,6 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         if (child == tabsContainer) {
-            final boolean result = super.drawChild(canvas, child, drawingTime);
-
             final int height = getMeasuredHeight();
             float l = indicatorX + indicatorXAnimationDx;
             float r = l + indicatorWidth + indicatorWidthAnimationDx;
@@ -746,23 +754,57 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
                 l += current.getTranslationX();
                 r += current.getTranslationX();
             }
-            int wasAlpha = selectorDrawable.getAlpha();
-            selectorDrawable.setAlpha((int) (wasAlpha * tabsContainer.getAlpha()));
-//            selectorDrawable.setBounds(
-//                (int) l,
-//                height - dpr(4),
-//                (int) r,
-//                height
-//            );
-            selectorDrawable.setBounds(
-                    getPaddingLeft() + (int) l + dp(4),
-                    getPaddingTop() + dp(4),
-                    getPaddingLeft() + (int) r - dp(4),
-                    height - getPaddingBottom() - dp(4)
-            );
-            selectorDrawable.draw(canvas);
-            selectorDrawable.setAlpha(wasAlpha);
 
+            if (LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+                // Outer segmented control recessed capsule track (from Apple adoption-guide-segmented-control)
+                boolean isDark = Theme.isCurrentThemeDark();
+                Paint trackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                trackPaint.setColor(isDark ? 0x2A000000 : 0x14000000);
+                int trackL = tabsContainer.getLeft() + dp(4);
+                int trackT = getPaddingTop() + dp(3);
+                int trackR = tabsContainer.getRight() - dp(4);
+                int trackB = height - getPaddingBottom() - dp(3);
+                if (trackR > trackL) {
+                    AndroidUtilities.rectTmp.set(trackL, trackT, trackR, trackB);
+                    float trRadius = (trackB - trackT) / 2f;
+                    canvas.drawRoundRect(AndroidUtilities.rectTmp, trRadius, trRadius, trackPaint);
+
+                    Paint trackBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    trackBorderPaint.setStyle(Paint.Style.STROKE);
+                    trackBorderPaint.setStrokeWidth(AndroidUtilities.dpf2(1f));
+                    trackBorderPaint.setColor(isDark ? 0x18FFFFFF : 0x10000000);
+                    float halfStroke = trackBorderPaint.getStrokeWidth() / 2f;
+                    AndroidUtilities.rectTmp.inset(halfStroke, halfStroke);
+                    canvas.drawRoundRect(AndroidUtilities.rectTmp, trRadius - halfStroke, trRadius - halfStroke, trackBorderPaint);
+                }
+
+                // Inner floating Liquid Glass selection pill
+                int pillPad = dp(2);
+                int pl = getPaddingLeft() + (int) l + pillPad;
+                int pt = getPaddingTop() + dp(5);
+                int pr = getPaddingLeft() + (int) r - pillPad;
+                int pb = height - getPaddingBottom() - dp(5);
+
+                if (glassSelectorDrawable != null && pr > pl) {
+                    glassSelectorDrawable.setCornerRadius((pb - pt) / 2f);
+                    glassSelectorDrawable.setBounds(pl, pt, pr, pb);
+                    glassSelectorDrawable.setAlpha((int) (255 * tabsContainer.getAlpha()));
+                    glassSelectorDrawable.draw(canvas);
+                }
+            } else {
+                int pl = getPaddingLeft() + (int) l + dp(4);
+                int pt = getPaddingTop() + dp(4);
+                int pr = getPaddingLeft() + (int) r - dp(4);
+                int pb = height - getPaddingBottom() - dp(4);
+
+                int wasAlpha = selectorDrawable.getAlpha();
+                selectorDrawable.setAlpha((int) (wasAlpha * tabsContainer.getAlpha()));
+                selectorDrawable.setBounds(pl, pt, pr, pb);
+                selectorDrawable.draw(canvas);
+                selectorDrawable.setAlpha(wasAlpha);
+            }
+
+            final boolean result = super.drawChild(canvas, child, drawingTime);
             return result;
         }
         return super.drawChild(canvas, child, drawingTime);
@@ -875,8 +917,8 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
                             tabsContainer.invalidate();
                             invalidate();
                         });
-                        valueAnimator.setDuration(200);
-                        valueAnimator.setInterpolator(CubicBezierInterpolator.DEFAULT);
+                        valueAnimator.setDuration(260);
+                        valueAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
                         valueAnimator.start();
                     }
                     animateFromIndicaxtorX = 0;

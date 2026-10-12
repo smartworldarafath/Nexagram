@@ -1335,13 +1335,13 @@ object NaConfig {
         addConfig(
             "LiquidGlassAngle",
             ConfigItem.configTypeInt,
-            0
-    )
+            360
+        )
     val liquidGlassIntensity =
         addConfig(
             "LiquidGlassIntensity",
             ConfigItem.configTypeInt,
-            75
+            150
         )
     val disableGooeyAvatarAnimation =
         addConfig(

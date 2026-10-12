@@ -3622,19 +3622,22 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             bottomButtonContainer = new FrameLayout[2];
             bottomButton = new ButtonWithCounterView[2];
             for (int a = 0; a < 2; ++a) {
-                BlurredBackgroundSourceColor source = new BlurredBackgroundSourceColor();
-                source.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
-                BlurredBackgroundDrawableViewFactory factory = new BlurredBackgroundDrawableViewFactory(source);
                 Button2 button2 = new Button2(context);
-                BlurredBackgroundDrawable drawable = factory.create(button2, new BlurredBackgroundColorProviderThemed(resourcesProvider, Theme.key_windowBackgroundWhite));
-                drawable.setPadding(dp(8));
-                drawable.setRadius(dp(22));
-                button2.setBackground(drawable);
+                if (!LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS)) {
+                    BlurredBackgroundSourceColor source = new BlurredBackgroundSourceColor();
+                    source.setColor(getThemedColor(Theme.key_windowBackgroundWhite));
+                    BlurredBackgroundDrawableViewFactory factory = new BlurredBackgroundDrawableViewFactory(source);
+                    BlurredBackgroundDrawable drawable = factory.create(button2, new BlurredBackgroundColorProviderThemed(resourcesProvider, Theme.key_windowBackgroundWhite));
+                    drawable.setPadding(dp(8));
+                    drawable.setRadius(dp(22));
+                    button2.setBackground(drawable);
+                }
 
                 bottomButtonContainer[a] = new FrameLayout(context);
 
-                    bottomButton[a] = new ButtonWithCounterView(context, resourcesProvider);
-                bottomButton[a].setRoundRadius(dp(19));
+                bottomButton[a] = new ButtonWithCounterView(context, resourcesProvider);
+                bottomButton[a].setRoundRadius(22);
+                bottomButton[a].setLiquidGlass(true);
                 bottomButton[a].setUseWrapContent(true);
                 bottomButton[a].setPadding(dp(16), 0, dp(16), 0);
                 if (a == 0) {
@@ -4833,7 +4836,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     updateListAnimated(false);
                 });
                 o.add(R.drawable.msg_retry, LocaleController.getString(R.string.SwitchVersion), () -> {
-                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/NextAlone/Nagram/releases");
+                    Browser.openUrl(ProfileActivity.this.getParentActivity(), "https://github.com/smartworldarafath/Nexagram/releases");
                 });
 
                 o.add(R.drawable.msg_search, LocaleController.getString(R.string.CheckUpdate), () -> {
@@ -6274,6 +6277,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         buttonShadow.setBackgroundColor(getThemedColor(Theme.key_divider));
         bottomButton2Container.addView(buttonShadow, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 1.0f / AndroidUtilities.density, Gravity.TOP | Gravity.FILL_HORIZONTAL, 0, 0, 0, 0));
         bottomButton2 = new ButtonWithCounterView(context, resourcesProvider);
+        bottomButton2.setLiquidGlass(true);
         bottomButton2.setText(getString(R.string.Save), false);
         bottomButton2Container.addView(bottomButton2, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.FILL, 10, 10 + (1.0f / AndroidUtilities.density), 10, 10));
         bottomButton2.setOnClickListener(v -> {
