@@ -243,7 +243,7 @@ public class NexagramUpdateActivity extends BaseFragment {
                         JSONObject rel = releases.optJSONObject(rIdx);
                         if (rel == null) continue;
                         String tagName = rel.optString("tag_name", "").replace("v", "").trim();
-                        if (!isStrictlyNewerThanBase(tagName) || !isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
+                        if (!NexagramAppUpdateManager.isValidNexagramVersion(tagName) || !NexagramAppUpdateManager.isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
                             continue;
                         }
 

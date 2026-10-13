@@ -1,7 +1,6 @@
 package xyz.nextalone.nagram.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -29,7 +28,18 @@ public class NexagramAppUpdateManager {
     private static boolean isChecking = false;
 
     public static boolean isNexagramUpdateAvailable() {
-        return hasUpdate && downloadUrl != null;
+        return hasUpdate && downloadUrl != null && !TextUtils.isEmpty(newVersion);
+    }
+
+    public static void clearUpdate() {
+        hasUpdate = false;
+        newVersion = null;
+        downloadUrl = null;
+        updateSize = 0;
+        releaseNotes = null;
+        AndroidUtilities.runOnUIThread(() -> {
+            NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable);
+        });
     }
 
     public static void checkUpdates(boolean force, Runnable callback) {
@@ -64,7 +74,7 @@ public class NexagramAppUpdateManager {
                         JSONObject rel = releases.optJSONObject(rIdx);
                         if (rel == null) continue;
                         String tagName = rel.optString("tag_name", "").replace("v", "").trim();
-                        if (!isStrictlyNewerThanBase(tagName) || !isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
+                        if (!isValidNexagramVersion(tagName) || !isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
                             continue;
                         }
 
@@ -111,8 +121,15 @@ public class NexagramAppUpdateManager {
                 FileLog.e(e);
             }
 
+            hasUpdate = false;
+            downloadUrl = null;
+            newVersion = null;
+            updateSize = 0;
+            releaseNotes = null;
+
             AndroidUtilities.runOnUIThread(() -> {
                 isChecking = false;
+                NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.appUpdateAvailable);
                 if (callback != null) callback.run();
             });
         }).start();
@@ -124,37 +141,24 @@ public class NexagramAppUpdateManager {
         }
     }
 
-    private static boolean isStrictlyNewerThanBase(String remote) {
+    public static boolean isValidNexagramVersion(String remote) {
         if (TextUtils.isEmpty(remote)) return false;
         try {
             String clean = remote.toLowerCase().replace("v", "").trim();
+            if (!clean.contains(".")) return false;
             String[] parts = clean.split("[.\\-_]");
-            int major = 0, minor = 0, patch = 0;
+            int major = -1;
             if (parts.length > 0) {
                 String s = parts[0].replaceAll("\\D+", "");
                 if (!s.isEmpty()) major = Integer.parseInt(s);
             }
-            if (parts.length > 1) {
-                String s = parts[1].replaceAll("\\D+", "");
-                if (!s.isEmpty()) minor = Integer.parseInt(s);
-            }
-            if (parts.length > 2) {
-                String s = parts[2].replaceAll("\\D+", "");
-                if (!s.isEmpty()) patch = Integer.parseInt(s);
-            }
-
-            if (major > 2) return true;
-            if (major == 2) {
-                if (minor > 0) return true;
-                if (minor == 0 && patch >= 5) return true;
-            }
-            return false;
+            return major >= 2 && major < 10;
         } catch (Exception e) {
             return false;
         }
     }
 
-    private static boolean isNewerVersion(String remote, String current) {
+    public static boolean isNewerVersion(String remote, String current) {
         if (TextUtils.isEmpty(remote)) return false;
         if (TextUtils.isEmpty(current)) return true;
 
