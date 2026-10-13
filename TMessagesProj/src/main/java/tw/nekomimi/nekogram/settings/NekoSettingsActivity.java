@@ -69,10 +69,6 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
     private int debugRow;
     private int categories2Row;
 
-    private int uiAppearanceHeaderRow;
-    private int uiAppearanceRow;
-    private int uiAppearance2Row;
-
     private int aboutRow;
     private int channelRow;
     private int channelTipsRow;
@@ -177,10 +173,6 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
         debugRow = addRow("debug");
         categories2Row = addRow();
 
-        uiAppearanceHeaderRow = addRow("uiAppearanceHeader");
-        uiAppearanceRow = addRow("uiAppearance");
-        uiAppearance2Row = addRow();
-
         aboutRow = addRow("about");
         channelRow = addRow("channel");
         channelTipsRow = addRow("channelTips");
@@ -199,8 +191,6 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
 
     private class ListAdapter extends BaseListAdapter {
 
-        private static final int TYPE_UI_APPEARANCE = 100;
-
         public ListAdapter(Context context) {
             super(context);
         }
@@ -208,11 +198,6 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == TYPE_UI_APPEARANCE) {
-                View view = new UiAppearanceCell(mContext);
-                view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-                return new RecyclerListView.Holder(view);
-            }
             return super.onCreateViewHolder(parent, viewType);
         }
 
@@ -246,8 +231,6 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
                     HeaderCell headerCell = (HeaderCell) holder.itemView;
                     if (position == categoriesRow) {
                         headerCell.setText(LocaleController.getString(R.string.Categories));
-                    } else if (position == uiAppearanceHeaderRow) {
-                        headerCell.setText(LocaleController.getString("UiAppearance", R.string.UiAppearance));
                     } else if (position == aboutRow) {
                         headerCell.setText(LocaleController.getString(R.string.About));
                     } else if (position == settingsRow) {
@@ -277,12 +260,10 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
 
         @Override
         public int getItemViewType(int position) {
-            if (position == categories2Row || position == uiAppearance2Row || position == about2Row || position == settings2Row) {
+            if (position == categories2Row || position == about2Row || position == settings2Row) {
                 return TYPE_SHADOW;
-            } else if (position == categoriesRow || position == uiAppearanceHeaderRow || position == aboutRow || position == settingsRow) {
+            } else if (position == categoriesRow || position == aboutRow || position == settingsRow) {
                 return TYPE_HEADER;
-            } else if (position == uiAppearanceRow) {
-                return TYPE_UI_APPEARANCE;
             } else if (position > categoriesRow && position < categories2Row) {
                 return TYPE_TEXT;
             } else if (position >= channelRow && position < about2Row) {
