@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_nagram_background">#FFF27E2B</color>
+    <color name="ic_launcher_nagram_amoled_background">#000000</color>
+    <color name="ic_launcher_nagram_blue_background">#0090FE</color>
+    <color name="ic_launcher_nagram_claster_background">#42546F</color>
+    <color name="ic_launcher_nagram_grey_background">#757985</color>
+    <color name="ic_launcher_nagram_neon_premium_background">#8E1FC0</color>
+    <color name="ic_launcher_nagram_pixel_background">#DF3A6B</color>
+    <color name="ic_launcher_nagram_violet_background">#BC30F6</color>
+</resources>
