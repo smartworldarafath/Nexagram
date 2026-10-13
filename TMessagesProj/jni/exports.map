@@ -1,8 +1,0 @@
-{
-  global:
-    Java_*;        # all JNI functions resolved by name
-    JNI_OnLoad;
-    JNI_OnUnload;
-  local:
-    *;             # hide everything else (FFmpeg, libyuv, webrtc, ...)
-};
