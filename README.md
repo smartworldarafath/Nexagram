@@ -12,7 +12,7 @@ Nexagram is a third-party Telegram client based on [NekoX](https://github.com/Ne
 3. Editable text style 
 4. Forced copy
 5. Invert reply
-6. Quick reply in longClick menu
+6. Quick reply in longClick menu (thanks to @blxueya)
 7. Undo and Redo
 8. Scrollable chat preview (thanks to TeleTux)
 9. Noise suppress and voice enhance (thanks to )
@@ -223,30 +223,95 @@ Is Nexagram not in your language, or the translation is incorrect or incomplete?
 Special thanks to all the amazing contributors who helped build and maintain the core features:
 
 <table>
-  <tr>
-    <td align="center" width="120px">
-      <a href="https://github.com/smartworldarafath">
-        <img src="https://github.com/smartworldarafath.png?size=100" width="80px;" alt="Zero by Arafath"/><br />
-        <sub><b>Zero by Arafath</b></sub>
-      </a><br />
-      <sub>Lead Developer</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="120px">
-      <a href="https://github.com/NekoX-Dev/NekoX">
-        <img src="https://github.com/NekoX-Dev.png?size=100" width="80px;" alt="NekoX"/><br />
-        <sub><b>NekoX</b></sub>
-      </a><br />
-      <sub>Base Project</sub>
-    </td>
-    <td align="center" width="120px">
-      <a href="https://gitlab.com/Nekogram/Nekogram">
-        <img src="https://github.com/Nekogram.png?size=100" width="80px;" alt="Nekogram"/><br />
-        <sub><b>Nekogram</b></sub>
-      </a><br />
-      <sub>Upstream Project</sub>
-    </td>
+    <tr>
+      <td align="center" width="120px">
+        <a href="https://github.com/smartworldarafath">
+          <img src="https://github.com/smartworldarafath.png?size=100" width="80px;" alt="Zero by Arafath"/><br />
+          <sub><b>Zero by Arafath</b></sub>
+        </a><br />
+        <sub>Lead Developer</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/omg-xtao">
+          <img src="https://github.com/omg-xtao.png?size=100" width="80px;" alt="omg-xtao"/><br />
+          <sub><b>omg-xtao</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/NextAlone">
+          <img src="https://github.com/NextAlone.png?size=100" width="80px;" alt="NextAlone"/><br />
+          <sub><b>NextAlone</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/rjriajul">
+          <img src="https://github.com/rjriajul.png?size=100" width="80px;" alt="rjriajul"/><br />
+          <sub><b>rjriajul</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" width="120px">
+        <a href="https://github.com/Parsa307">
+          <img src="https://github.com/Parsa307.png?size=100" width="80px;" alt="Parsa307"/><br />
+          <sub><b>Parsa307</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/mariodon">
+          <img src="https://github.com/mariodon.png?size=100" width="80px;" alt="mariodon"/><br />
+          <sub><b>mariodon</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/zjns">
+          <img src="https://github.com/zjns.png?size=100" width="80px;" alt="zjns"/><br />
+          <sub><b>zjns</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/risin42">
+          <img src="https://github.com/risin42.png?size=100" width="80px;" alt="risin42"/><br />
+          <sub><b>risin42</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" width="120px">
+        <a href="https://github.com/qwq233">
+          <img src="https://github.com/qwq233.png?size=100" width="80px;" alt="qwq233"/><br />
+          <sub><b>qwq233</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/blxueya">
+          <img src="https://github.com/blxueya.png?size=100" width="80px;" alt="blxueya"/><br />
+          <sub><b>blxueya</b></sub>
+        </a><br />
+        <sub>Contributor</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://github.com/NekoX-Dev/NekoX">
+          <img src="https://github.com/NekoX-Dev.png?size=100" width="80px;" alt="NekoX"/><br />
+          <sub><b>NekoX</b></sub>
+        </a><br />
+        <sub>Base Project</sub>
+      </td>
+      <td align="center" width="120px">
+        <a href="https://gitlab.com/Nekogram/Nekogram">
+          <img src="https://github.com/Nekogram.png?size=100" width="80px;" alt="Nekogram"/><br />
+          <sub><b>Nekogram</b></sub>
+        </a><br />
+        <sub>Upstream Project</sub>
+      </td>
   </tr>
   <tr>
     <td align="center" width="120px">
