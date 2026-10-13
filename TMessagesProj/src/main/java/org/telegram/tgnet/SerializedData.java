@@ -255,6 +255,9 @@ public class SerializedData extends AbstractSerializedData {
 
     public void writeString(String s) {
         try {
+            if (s == null) {
+                s = "";
+            }
             writeByteArray(s.getBytes("UTF-8"));
         } catch (Exception e) {
             if (BuildVars.LOGS_ENABLED) {

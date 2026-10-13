@@ -1987,7 +1987,15 @@ public class Theme {
             }
             ThemeAccent accent = themeAccentsMap.get(currentAccentId);
             if (accent == null) {
-                return null;
+                currentAccentId = firstAccentIsDefault ? DEFALT_THEME_ACCENT_ID : 0;
+                accent = themeAccentsMap.get(currentAccentId);
+                if (accent == null && !themeAccents.isEmpty()) {
+                    accent = themeAccents.get(0);
+                    currentAccentId = accent.id;
+                }
+                if (accent == null) {
+                    return null;
+                }
             }
             if (createNew) {
                 int id = ++lastAccentId;
@@ -4247,6 +4255,12 @@ public class Theme {
                                     if (accent.info != null) {
                                         accent.isDefault = accent.info.isDefault;
                                     }
+                                    if (accent.patternSlug == null) {
+                                        accent.patternSlug = "";
+                                    }
+                                    if (accent.id == 1003) {
+                                        continue;
+                                    }
                                     info.themeAccentsMap.put(accent.id, accent);
                                     if (accent.info != null) {
                                         info.accentsByThemeId.put(accent.info.id, accent);
@@ -4254,12 +4268,13 @@ public class Theme {
                                     newAccents.add(accent);
                                     info.lastAccentId = Math.max(info.lastAccentId, accent.id);
                                 } catch (Throwable e) {
-                                    throw new RuntimeException(e);
+                                    FileLog.e(e);
+                                    continue;
                                 }
                             }
                         } catch (Throwable e) {
                             FileLog.e(e);
-                            throw new RuntimeException(e);
+                            themeConfig.edit().remove("accents_" + info.assetName).apply();
                         }
                     } else {
                         String key = "accent_for_" + info.assetName;
@@ -4323,6 +4338,7 @@ public class Theme {
                     }
                     if (info.themeAccentsMap != null && info.themeAccentsMap.get(info.currentAccentId) == null) {
                         info.currentAccentId = info.firstAccentIsDefault ? DEFALT_THEME_ACCENT_ID : 0;
+                        themeConfig.edit().putInt("accent_current_" + info.assetName, info.currentAccentId).apply();
                     }
                     info.loadWallpapers(themeConfig);
                     ThemeAccent accent = info.getAccent(false);
@@ -4359,7 +4375,6 @@ public class Theme {
             autoNightLastSunCheckDay = preferences.getInt("autoNightLastSunCheckDay", -1);
         } catch (Exception e) {
             FileLog.e(e);
-            throw new RuntimeException(e);
         }
         if (applyingTheme == null) {
             applyingTheme = defaultTheme;
@@ -6392,7 +6407,7 @@ public class Theme {
                 data.writeInt32(count);
                 for (int a = 0; a < N; a++) {
                     ThemeAccent accent = theme.themeAccents.get(a);
-                    if (accent.id < 100) {
+                    if (accent == null || accent.id < 100 || accent.id == 1003) {
                         continue;
                     }
                     data.writeInt32(accent.id);
@@ -6411,7 +6426,7 @@ public class Theme {
                     data.writeInt64(0);
                     data.writeDouble(accent.patternIntensity);
                     data.writeBool(accent.patternMotion);
-                    data.writeString(accent.patternSlug);
+                    data.writeString(accent.patternSlug != null ? accent.patternSlug : "");
                     data.writeBool(accent.info != null);
                     if (accent.info != null) {
                         data.writeInt32(accent.account);
@@ -6432,10 +6447,12 @@ public class Theme {
             if (theme.prevAccentId != -1) {
                 if (remove) {
                     ThemeAccent accent = theme.themeAccentsMap.get(theme.currentAccentId);
-                    theme.themeAccentsMap.remove(accent.id);
-                    theme.themeAccents.remove(accent);
-                    if (accent.info != null) {
-                        theme.accentsByThemeId.remove(accent.info.id);
+                    if (accent != null) {
+                        theme.themeAccentsMap.remove(accent.id);
+                        theme.themeAccents.remove(accent);
+                        if (accent.info != null) {
+                            theme.accentsByThemeId.remove(accent.info.id);
+                        }
                     }
                 }
                 theme.currentAccentId = theme.prevAccentId;
