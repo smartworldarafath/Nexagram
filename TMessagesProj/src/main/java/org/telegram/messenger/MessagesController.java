@@ -25041,9 +25041,6 @@ public class MessagesController extends BaseController implements NotificationCe
 
     public void setContentSettings(boolean showSensitiveContent) {
         if (contentSettings != null) {
-            if (!contentSettings.sensitive_can_change) {
-                return;
-            }
             contentSettings.sensitive_enabled = showSensitiveContent;
         }
 
@@ -25058,16 +25055,22 @@ public class MessagesController extends BaseController implements NotificationCe
         req.sensitive_enabled = showSensitiveContent;
         getConnectionsManager().sendRequest(req, (res, err) -> AndroidUtilities.runOnUIThread(() -> {
             if (err != null) {
-                BulletinFactory.showError(err);
+                FileLog.e(err.text);
             }
         }));
     }
 
     public boolean showSensitiveContent() {
+        boolean isVerified = ApplicationLoader.applicationContext != null &&
+                ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                        .getBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_VERIFIED, false);
+        if (!isVerified) {
+            return false;
+        }
         if (contentSettings != null && System.currentTimeMillis() - contentSettingsLoadedTime < 1000 * 60 * 60) {
             return contentSettings.sensitive_enabled;
         }
-        return ignoreRestrictionReasons == null || ignoreRestrictionReasons.contains("sensitive");
+        return ignoreRestrictionReasons != null && ignoreRestrictionReasons.contains("sensitive");
     }
 
     private boolean loadingArePaidReactionsAnonymous;

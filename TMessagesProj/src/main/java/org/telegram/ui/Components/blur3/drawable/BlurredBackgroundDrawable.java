@@ -253,34 +253,24 @@ public abstract class BlurredBackgroundDrawable extends Drawable {
                 radii, Path.Direction.CW);
             path.close();
 
-            final float radiusMax = Math.min(boundsWithPadding.width(), boundsWithPadding.height()) / 2f;
-
-            Arrays.fill(tmpRadii, 0);
-            tmpRadii[0] = radii[0]; tmpRadii[1] = radii[1]; tmpRadii[2] = radii[2]; tmpRadii[3] = radii[3];
-            if (radiiAreSame && radii[0] > radiusMax) {
-                tmpRadii[0] = tmpRadii[1] = tmpRadii[2] = tmpRadii[3] = radiusMax;
-            }
             strokePathTop.rewind();
             strokePathTop.addRoundRect(
-                boundsWithPadding.left, boundsWithPadding.top, boundsWithPadding.right,
-                Math.min(boundsWithPadding.top + radii[0], boundsWithPadding.bottom), tmpRadii, Path.Direction.CW);
+                boundsWithPadding.left, boundsWithPadding.top, boundsWithPadding.right, boundsWithPadding.bottom,
+                radii, Path.Direction.CW);
             strokePathTop.addRoundRect(
-                boundsWithPadding.left, boundsWithPadding.top + strokeWidthTop, boundsWithPadding.right,
-                Math.min(boundsWithPadding.top + radii[0], boundsWithPadding.bottom), tmpRadii, Path.Direction.CCW);
+                boundsWithPadding.left + strokeWidthTop, boundsWithPadding.top + strokeWidthTop,
+                boundsWithPadding.right - strokeWidthTop, boundsWithPadding.bottom - strokeWidthTop,
+                radii, Path.Direction.CCW);
             strokePathTop.close();
 
-            Arrays.fill(tmpRadii, 0);
-            tmpRadii[4] = radii[4]; tmpRadii[5] = radii[5]; tmpRadii[6] = radii[6]; tmpRadii[7] = radii[7];
-            if (radiiAreSame && radii[0] > radiusMax) {
-                tmpRadii[4] = tmpRadii[5] = tmpRadii[6] = tmpRadii[7] = radiusMax;
-            }
             strokePathBottom.rewind();
             strokePathBottom.addRoundRect(
-                boundsWithPadding.left, Math.max(boundsWithPadding.bottom - radii[4], boundsWithPadding.top),
-                boundsWithPadding.right, boundsWithPadding.bottom, tmpRadii, Path.Direction.CW);
+                boundsWithPadding.left, boundsWithPadding.top, boundsWithPadding.right, boundsWithPadding.bottom,
+                radii, Path.Direction.CW);
             strokePathBottom.addRoundRect(
-                boundsWithPadding.left, Math.max(boundsWithPadding.bottom - radii[4], boundsWithPadding.top),
-                boundsWithPadding.right, boundsWithPadding.bottom - strokeWidthBottom, tmpRadii, Path.Direction.CCW);
+                boundsWithPadding.left + strokeWidthBottom, boundsWithPadding.top + strokeWidthBottom,
+                boundsWithPadding.right - strokeWidthBottom, boundsWithPadding.bottom - strokeWidthBottom,
+                radii, Path.Direction.CCW);
             strokePathBottom.close();
         }
 
@@ -803,46 +793,25 @@ public abstract class BlurredBackgroundDrawable extends Drawable {
 
 
                     if (withStroke) {
-                        final float[] radii = Arrays.copyOf(boundProps.radii, 8);
-                        final boolean radiiAreSame = RadiiUtils.radiiAreSame(radii);
-                        final float radiusMax = Math.min(rect.width(), rect.height()) / 2f;
                         final Paint strokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                        strokePaint.setStyle(Paint.Style.STROKE);
 
-                        if (Color.alpha(strokeColorTop) > 0 && radii[0] > 0) {
-                            Arrays.fill(tmpRadii, 0);
-                            tmpRadii[0] = radii[0]; tmpRadii[1] = radii[1]; tmpRadii[2] = radii[2]; tmpRadii[3] = radii[3];
-                            if (radiiAreSame && radii[0] > radiusMax) {
-                                tmpRadii[0] = tmpRadii[1] = tmpRadii[2] = tmpRadii[3] = radiusMax;
-                            }
-
-                            final Path strokePathTop = new Path();
-
-                            strokePathTop.addRoundRect(
-                                    rect.left, rect.top, rect.right,
-                                    Math.min(rect.top + Math.max(radii[0], radii[2]), rect.bottom), tmpRadii, Path.Direction.CW);
-                            strokePathTop.addRoundRect(
-                                    rect.left, rect.top + boundProps.strokeWidthTop, rect.right,
-                                    Math.min(rect.top + Math.max(radii[0], radii[2]), rect.bottom), tmpRadii, Path.Direction.CCW);
+                        if (Color.alpha(strokeColorTop) > 0 && boundProps.radii[0] > 0) {
                             strokePaint.setColor(strokeColorTop);
-                            canvas.drawPath(strokePathTop, strokePaint);
+                            strokePaint.setStrokeWidth(boundProps.strokeWidthTop);
+                            canvas.save();
+                            canvas.clipRect(rect.left, rect.top, rect.right, Math.min(rect.top + Math.max(boundProps.radii[0], boundProps.radii[2]), rect.bottom));
+                            canvas.drawRoundRect(rect, boundProps.radii[0], boundProps.radii[0], strokePaint);
+                            canvas.restore();
                         }
 
-                        if (Color.alpha(strokeColorBottom) > 0 && radii[4] > 0) {
-                            Arrays.fill(tmpRadii, 0);
-                            tmpRadii[4] = radii[4]; tmpRadii[5] = radii[5]; tmpRadii[6] = radii[6]; tmpRadii[7] = radii[7];
-                            if (radiiAreSame && radii[0] > radiusMax) {
-                                tmpRadii[4] = tmpRadii[5] = tmpRadii[6] = tmpRadii[7] = radiusMax;
-                            }
-
-                            final Path strokePathBottom = new Path();
-                            strokePathBottom.addRoundRect(
-                                    rect.left, Math.max(rect.bottom - Math.max(radii[4], radii[6]), rect.top),
-                                    rect.right, rect.bottom, tmpRadii, Path.Direction.CW);
-                            strokePathBottom.addRoundRect(
-                                    rect.left, Math.max(rect.bottom - Math.max(radii[4], radii[6]), rect.top),
-                                    rect.right, rect.bottom - boundProps.strokeWidthBottom, tmpRadii, Path.Direction.CCW);
+                        if (Color.alpha(strokeColorBottom) > 0 && boundProps.radii[4] > 0) {
                             strokePaint.setColor(strokeColorBottom);
-                            canvas.drawPath(strokePathBottom, strokePaint);
+                            strokePaint.setStrokeWidth(boundProps.strokeWidthBottom);
+                            canvas.save();
+                            canvas.clipRect(rect.left, Math.max(rect.bottom - Math.max(boundProps.radii[4], boundProps.radii[6]), rect.top), rect.right, rect.bottom);
+                            canvas.drawRoundRect(rect, boundProps.radii[4], boundProps.radii[4], strokePaint);
+                            canvas.restore();
                         }
                     }
                 }

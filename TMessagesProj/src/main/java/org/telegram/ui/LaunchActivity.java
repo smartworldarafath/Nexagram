@@ -6175,6 +6175,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         }
         final int accountNum = currentAccount;
         if (progress != null) progress.init();
+        xyz.nextalone.nagram.ui.NexagramUpdateActivity.checkForUpdateInBackground(this, force);
         UpdateHelper.getInstance().checkNewVersionAvailable((res, error) -> {
             SharedConfig.lastUpdateCheckTime = System.currentTimeMillis();
             SharedConfig.saveConfig();
@@ -6804,6 +6805,10 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                     }, 200);
                 }
             }
+            return;
+        }
+        if (requestCode == 9081) {
+            org.telegram.ui.Components.Verification18BottomSheet.handleActivityResult(requestCode, resultCode, data);
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);

@@ -59,6 +59,8 @@ public class ProfileActionsView extends View {
     private final List<Action> actions = new ArrayList<>();
     private final Paint paint = new Paint();
     private final Paint shaderPaint = new Paint();
+    private Paint profileGlassBorderPaint;
+    private Paint profileGlassShadowPaint;
     private float parentExpanded;
 
     public boolean isAnimatingCallAction = false;
@@ -314,6 +316,17 @@ public class ProfileActionsView extends View {
                         paint.setShadowLayer(0, 0, 0, 0);
                     }
 
+                    boolean isDark = Theme.isCurrentThemeDark();
+                    if (profileGlassShadowPaint == null) {
+                        profileGlassShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                        profileGlassShadowPaint.setStyle(Paint.Style.FILL);
+                    }
+                    // Soft drop shadow under button
+                    profileGlassShadowPaint.setColor(isDark ? 0x22000000 : 0x12000000);
+                    AndroidUtilities.rectTmp.offset(0, dpf2(1f));
+                    canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, profileGlassShadowPaint);
+                    AndroidUtilities.rectTmp.offset(0, -dpf2(1f));
+
                     canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, paint);
                     if (radialGradient != null) {
                         int wasAlpha2 = shaderPaint.getAlpha();
@@ -323,6 +336,17 @@ public class ProfileActionsView extends View {
                         canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, shaderPaint);
                         shaderPaint.setAlpha(wasAlpha2);
                     }
+
+                    // Subtle shining radius border on button (reduced shine)
+                    if (profileGlassBorderPaint == null) {
+                        profileGlassBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                        profileGlassBorderPaint.setStyle(Paint.Style.STROKE);
+                        profileGlassBorderPaint.setStrokeWidth(dpf2(0.75f));
+                    }
+                    int strokeAlpha = (int) (action.getAlpha() * alphaFraction1 * 255);
+                    int strokeColor = isDark ? ColorUtils.setAlphaComponent(Color.WHITE, (int) (32 * (strokeAlpha / 255f))) : ColorUtils.setAlphaComponent(0, (int) (14 * (strokeAlpha / 255f)));
+                    profileGlassBorderPaint.setColor(strokeColor);
+                    canvas.drawRoundRect(AndroidUtilities.rectTmp, r, r, profileGlassBorderPaint);
                     paint.setAlpha(wasAlpha);
                 }
             }
