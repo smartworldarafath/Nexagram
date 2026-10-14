@@ -60,6 +60,7 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
     private BackupImageView backupImageView;
     private Theme.ResourcesProvider resourcesProvider;
     private final Paint paintCounterBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint glassPillStrokePaint;
     private final AnimatedTextView.AnimatedTextDrawable counter;
 
     private static final int ANIMATOR_ID_IS_SELECTED = 0;
@@ -156,13 +157,24 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         if (selectedFactor > 0 && !skipDrawSelector) {
             final float alpha = AnimatorUtils.DECELERATE_INTERPOLATOR.getInterpolation(selectedFactor);
 
-            paintCounterBackground.setColor(Theme.multAlpha(colorSelected, 0.09f * alpha));
             tmpRectF.set(0, 0, viewWidth, getHeight());
             final float r = Math.min(tmpRectF.width(), tmpRectF.height()) / 2f;
             final float s = lerp(0.6f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
             canvas.save();
             canvas.scale(s, s, tmpRectF.centerX(), tmpRectF.centerY());
+
+            paintCounterBackground.setStyle(Paint.Style.FILL);
+            paintCounterBackground.setColor(Theme.multAlpha(colorSelected, 0.13f * alpha));
             canvas.drawRoundRect(tmpRectF, r, r, paintCounterBackground);
+
+            if (glassPillStrokePaint == null) {
+                glassPillStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                glassPillStrokePaint.setStyle(Paint.Style.STROKE);
+                glassPillStrokePaint.setStrokeWidth(dpf2(0.9f));
+            }
+            glassPillStrokePaint.setColor(ColorUtils.setAlphaComponent(Color.WHITE, (int) (70 * alpha)));
+            canvas.drawRoundRect(tmpRectF, r, r, glassPillStrokePaint);
+
             canvas.restore();
         }
 

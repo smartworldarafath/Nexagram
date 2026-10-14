@@ -558,6 +558,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
             textPaint.setTextSize(AndroidUtilities.dp(16));
 
             sizeBar = new SeekBarView(context);
+            sizeBar.setGlassMode(true);
             sizeBar.setReportChanges(true);
             sizeBar.setDelegate(new SeekBarView.SeekBarViewDelegate() {
                 @Override

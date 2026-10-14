@@ -314,14 +314,28 @@ public class MainTabsLayout extends AnimatedLinearLayout {
             final float sWidth = getInterpolatedWidthByX(x, this);
             final float sHeight = getHeight() - getPaddingTop() - getPaddingBottom();
 
-            canvas.drawRoundRect(
-                    x - sWidth / 2f, (getHeight() - sHeight) / 2f,
-                    x + sWidth / 2f, (getHeight() + sHeight) / 2f,
-                    sHeight / 2f, sHeight / 2f, selectorPaint);
+            final float left = x - sWidth / 2f;
+            final float top = (getHeight() - sHeight) / 2f;
+            final float right = x + sWidth / 2f;
+            final float bottom = (getHeight() + sHeight) / 2f;
+            final float radius = sHeight / 2f;
+
+            selectorPaint.setStyle(Paint.Style.FILL);
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, selectorPaint);
+
+            if (selectorRimPaint == null) {
+                selectorRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                selectorRimPaint.setStyle(Paint.Style.STROKE);
+                selectorRimPaint.setStrokeWidth(dp(0.9f));
+            }
+            selectorRimPaint.setColor(0x40FFFFFF);
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, selectorRimPaint);
         }
 
         super.dispatchDraw(canvas);
     }
+
+    private Paint selectorRimPaint;
 
 
     final Paint selectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -512,28 +526,22 @@ public class MainTabsLayout extends AnimatedLinearLayout {
 
         private void longTouchStart() {
             animatorIsScaled.setValue(true, true);
-
-            /*
             if (!scaleX.isRunning()) {
-                scaleX.setStartVelocity(-0.45f);
-                scaleY.setStartVelocity(-0.45f);
+                scaleX.setStartVelocity(-0.35f);
+                scaleY.setStartVelocity(-0.35f);
             }
-            scaleX.animateToFinalPosition(1.012f);
-            scaleY.animateToFinalPosition(1.012f);
-            */
+            scaleX.animateToFinalPosition(1.018f);
+            scaleY.animateToFinalPosition(1.018f);
         }
 
         private void longTouchEnd() {
             animatorIsScaled.setValue(false, true);
-
-            /*
             if (!scaleX.isRunning()) {
-                scaleX.setStartVelocity(0.25f);
-                scaleY.setStartVelocity(0.25f);
+                scaleX.setStartVelocity(0.20f);
+                scaleY.setStartVelocity(0.20f);
             }
             scaleX.animateToFinalPosition(1f);
             scaleY.animateToFinalPosition(1f);
-            */
         }
     });
 

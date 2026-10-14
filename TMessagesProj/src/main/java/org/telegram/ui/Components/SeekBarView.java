@@ -12,9 +12,13 @@ import static org.telegram.messenger.AndroidUtilities.dp;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
@@ -75,6 +79,27 @@ public class SeekBarView extends FrameLayout {
     private int transitionThumbX;
     private int separatorsCount;
     private int lineWidthDp = 3;
+
+    private boolean isGlassMode;
+    private Paint glassShadowPaint;
+    private Paint glassBodyPaint;
+    private Paint glassInnerDepthPaint;
+    private Paint glassSpecularPaint;
+    private Paint glassChromaticPaint;
+    private Paint glassRimPaint;
+    private Paint glassGlintPaint;
+    private Paint glassTrackPaint;
+    private Paint glassTrackStrokePaint;
+    private Paint glassTickActivePaint;
+    private Paint glassTickInactivePaint;
+    private Paint glassCenterPipPaint;
+
+    private RadialGradient glassInnerRadialShader;
+    private LinearGradient glassSpecularShader;
+    private LinearGradient glassChromaticShader;
+    private float lastRadiusShader = -1;
+    private float lastCxShader = -1;
+    private float lastCyShader = -1;
 
     private boolean twoSided;
     private final Theme.ResourcesProvider resourcesProvider;
@@ -171,6 +196,139 @@ public class SeekBarView extends FrameLayout {
 
     public void setSeparatorsCount(int separatorsCount) {
         this.separatorsCount = separatorsCount;
+    }
+
+    public void setGlassMode(boolean glassMode) {
+        if (this.isGlassMode != glassMode) {
+            this.isGlassMode = glassMode;
+            if (glassMode) {
+                currentRadius = AndroidUtilities.dp(13);
+                lineWidthDp = 6;
+                initGlassPaints();
+            } else {
+                currentRadius = AndroidUtilities.dp(6);
+                lineWidthDp = 3;
+            }
+            invalidate();
+        }
+    }
+
+    public boolean isGlassMode() {
+        return isGlassMode;
+    }
+
+    private void initGlassPaints() {
+        if (glassBodyPaint == null) {
+            glassShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+            glassBodyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassBodyPaint.setStyle(Paint.Style.FILL);
+
+            glassInnerDepthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassInnerDepthPaint.setStyle(Paint.Style.FILL);
+
+            glassSpecularPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassSpecularPaint.setStyle(Paint.Style.STROKE);
+            glassSpecularPaint.setStrokeWidth(AndroidUtilities.dpf2(1.2f));
+
+            glassChromaticPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassChromaticPaint.setStyle(Paint.Style.STROKE);
+            glassChromaticPaint.setStrokeWidth(AndroidUtilities.dpf2(0.9f));
+
+            glassRimPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassRimPaint.setStyle(Paint.Style.STROKE);
+            glassRimPaint.setStrokeWidth(AndroidUtilities.dpf2(0.75f));
+
+            glassGlintPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassGlintPaint.setStyle(Paint.Style.FILL);
+
+            glassTrackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassTrackPaint.setStyle(Paint.Style.FILL);
+
+            glassTrackStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassTrackStrokePaint.setStyle(Paint.Style.STROKE);
+            glassTrackStrokePaint.setStrokeWidth(AndroidUtilities.dpf2(0.75f));
+
+            glassTickActivePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassTickActivePaint.setStyle(Paint.Style.FILL);
+
+            glassTickInactivePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassTickInactivePaint.setStyle(Paint.Style.FILL);
+
+            glassCenterPipPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassCenterPipPaint.setStyle(Paint.Style.FILL);
+        }
+    }
+
+    private void drawGlassThumb(Canvas canvas, float cx, float cy, float radius) {
+        initGlassPaints();
+
+        // 1. Ambient Drop Shadow (Soft depth layers)
+        glassShadowPaint.setColor(0x28000000);
+        canvas.drawCircle(cx, cy + AndroidUtilities.dp(1.8f), radius + AndroidUtilities.dp(0.6f), glassShadowPaint);
+        glassShadowPaint.setColor(0x12000000);
+        canvas.drawCircle(cx, cy + AndroidUtilities.dp(3.4f), radius + AndroidUtilities.dp(1.6f), glassShadowPaint);
+
+        // 2. High-luminance Frosted Glass Lens Body
+        glassBodyPaint.setColor(0xfffdfefe);
+        canvas.drawCircle(cx, cy, radius, glassBodyPaint);
+
+        // 3. Shaders for Optical Curvature & Highlights
+        if (glassInnerRadialShader == null || lastRadiusShader != radius || lastCxShader != cx || lastCyShader != cy) {
+            lastRadiusShader = radius;
+            lastCxShader = cx;
+            lastCyShader = cy;
+
+            glassInnerRadialShader = new RadialGradient(
+                cx, cy - radius * 0.15f, Math.max(radius, 1f),
+                new int[]{0x02ffffff, 0x12ffffff, 0x22000000},
+                new float[]{0.0f, 0.65f, 1.0f},
+                Shader.TileMode.CLAMP
+            );
+            glassInnerDepthPaint.setShader(glassInnerRadialShader);
+
+            glassSpecularShader = new LinearGradient(
+                cx - radius * 0.707f, cy - radius * 0.707f,
+                cx + radius * 0.707f, cy + radius * 0.707f,
+                new int[]{0xeeffffff, 0x70ffffff, 0x15ffffff, 0x00ffffff},
+                new float[]{0.0f, 0.32f, 0.65f, 1.0f},
+                Shader.TileMode.CLAMP
+            );
+            glassSpecularPaint.setShader(glassSpecularShader);
+
+            glassChromaticShader = new LinearGradient(
+                cx - radius, cy - radius,
+                cx + radius, cy + radius,
+                new int[]{0x45ffe0b2, 0x00ffffff, 0x3580d8ff},
+                new float[]{0.0f, 0.48f, 1.0f},
+                Shader.TileMode.CLAMP
+            );
+            glassChromaticPaint.setShader(glassChromaticShader);
+        }
+
+        // 4. Lens Curvature Falloff
+        canvas.drawCircle(cx, cy, radius, glassInnerDepthPaint);
+
+        // 5. Chromatic Dispersion Rim
+        canvas.drawCircle(cx, cy, Math.max(0f, radius - AndroidUtilities.dpf2(0.5f)), glassChromaticPaint);
+
+        // 6. Directional Specular Sheen (Key light from -45 degrees)
+        canvas.drawCircle(cx, cy, Math.max(0f, radius - AndroidUtilities.dpf2(0.6f)), glassSpecularPaint);
+
+        // 7. Crisp Glass Perimeter Rim
+        glassRimPaint.setColor(0x28000000);
+        canvas.drawCircle(cx, cy, radius, glassRimPaint);
+
+        // 8. Specular Glint Reflection Pool
+        float glintX = cx - radius * 0.32f;
+        float glintY = cy - radius * 0.32f;
+        float glintRadius = radius * 0.28f;
+        glassGlintPaint.setColor(0x75ffffff);
+        canvas.drawCircle(glintX, glintY, glintRadius, glassGlintPaint);
+
+        // 9. Subtle Center Accent Pip
+        glassCenterPipPaint.setColor(Theme.multAlpha(outerPaint1.getColor(), 0.38f));
+        canvas.drawCircle(cx, cy, AndroidUtilities.dp(2.2f), glassCenterPipPaint);
     }
 
     public void setColors(int inner, int outer) {
@@ -449,10 +607,21 @@ public class SeekBarView extends FrameLayout {
 
         float centerY = getMeasuredHeight() / 2f;
         float left = selectorWidth / 2f, right = getMeasuredWidth() - selectorWidth / 2;
-        float top = centerY - AndroidUtilities.dp(lineWidthDp) / 2f, bottom = centerY + AndroidUtilities.dp(lineWidthDp) / 2f;
+        float trackHeight = isGlassMode ? AndroidUtilities.dp(6) : AndroidUtilities.dp(lineWidthDp);
+        float top = centerY - trackHeight / 2f, bottom = centerY + trackHeight / 2f;
 
         rect.set(left, top, right, bottom);
-        drawProgressBar(canvas, rect, innerPaint1);
+        if (isGlassMode) {
+            initGlassPaints();
+            int trackBgColor = Theme.multAlpha(outerPaint1.getColor(), 0.16f);
+            glassTrackPaint.setColor(trackBgColor);
+            canvas.drawRoundRect(rect, trackHeight / 2f, trackHeight / 2f, glassTrackPaint);
+
+            glassTrackStrokePaint.setColor(Theme.multAlpha(outerPaint1.getColor(), 0.10f));
+            canvas.drawRoundRect(rect, trackHeight / 2f, trackHeight / 2f, glassTrackStrokePaint);
+        } else {
+            drawProgressBar(canvas, rect, innerPaint1);
+        }
         if (bufferedProgress > 0) {
             innerPaint1.setColor(getThemedColor(Theme.key_player_progressCachedBackground));
             rect.set(left, top, selectorWidth / 2f + bufferedProgress * (getMeasuredWidth() - selectorWidth), bottom);
@@ -476,7 +645,32 @@ public class SeekBarView extends FrameLayout {
                 outerPaint1.setAlpha(wasAlpha);
             } else {
                 rect.set(left, top, left + thumbX, bottom);
-                drawProgressBar(canvas, rect, outerPaint1);
+                if (isGlassMode) {
+                    float fillRight = left + thumbX;
+                    if (fillRight > left) {
+                        rect.set(left, top, fillRight, bottom);
+                        canvas.drawRoundRect(rect, trackHeight / 2f, trackHeight / 2f, outerPaint1);
+                    }
+                } else {
+                    drawProgressBar(canvas, rect, outerPaint1);
+                }
+            }
+        }
+
+        if (isGlassMode && separatorsCount > 1) {
+            float step = (right - left) / ((float) separatorsCount - 1f);
+            float dotRadius = AndroidUtilities.dp(1.25f);
+            for (int i = 0; i < separatorsCount; i++) {
+                float dotX = left + i * step;
+                if (dotX > left + AndroidUtilities.dp(2) && dotX < right - AndroidUtilities.dp(2)) {
+                    if (dotX <= left + thumbX) {
+                        glassTickActivePaint.setColor(ColorUtils.setAlphaComponent(Color.WHITE, 130));
+                        canvas.drawCircle(dotX, centerY, dotRadius, glassTickActivePaint);
+                    } else {
+                        glassTickInactivePaint.setColor(Theme.multAlpha(outerPaint1.getColor(), 0.32f));
+                        canvas.drawCircle(dotX, centerY, dotRadius, glassTickInactivePaint);
+                    }
+                }
             }
         }
 
@@ -487,20 +681,21 @@ public class SeekBarView extends FrameLayout {
             hoverDrawable.draw(canvas);
         }
         boolean needInvalidate = false;
-        int newRad = AndroidUtilities.dp(pressed ? 8 : 6);
+        int newRad = isGlassMode ? AndroidUtilities.dp(pressed ? 15 : 13) : AndroidUtilities.dp(pressed ? 8 : 6);
         long newUpdateTime = SystemClock.elapsedRealtime();
         long dt = newUpdateTime - lastUpdateTime;
         if (dt > 18) {
             dt = 16;
         }
         if (currentRadius != newRad) {
+            float speed = isGlassMode ? AndroidUtilities.dp(1.5f) : AndroidUtilities.dp(1);
             if (currentRadius < newRad) {
-                currentRadius += AndroidUtilities.dp(1) * (dt / 60.0f);
+                currentRadius += speed * (dt / 40.0f);
                 if (currentRadius > newRad) {
                     currentRadius = newRad;
                 }
             } else {
-                currentRadius -= AndroidUtilities.dp(1) * (dt / 60.0f);
+                currentRadius -= speed * (dt / 40.0f);
                 if (currentRadius < newRad) {
                     currentRadius = newRad;
                 }
@@ -520,11 +715,23 @@ public class SeekBarView extends FrameLayout {
             final float oldCircleProgress = 1f - Easings.easeInQuad.getInterpolation(Math.min(1f, transitionProgress * 3f));
             final float newCircleProgress = Easings.easeOutQuad.getInterpolation(transitionProgress);
             if (oldCircleProgress > 0f) {
-                canvas.drawCircle(transitionThumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * oldCircleProgress, outerPaint1);
+                if (isGlassMode) {
+                    drawGlassThumb(canvas, transitionThumbX + selectorWidth / 2f, centerY, currentRadius * oldCircleProgress);
+                } else {
+                    canvas.drawCircle(transitionThumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * oldCircleProgress, outerPaint1);
+                }
             }
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * newCircleProgress, outerPaint1);
+            if (isGlassMode) {
+                drawGlassThumb(canvas, thumbX + selectorWidth / 2f, centerY, currentRadius * newCircleProgress);
+            } else {
+                canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius * newCircleProgress, outerPaint1);
+            }
         } else {
-            canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius, outerPaint1);
+            if (isGlassMode) {
+                drawGlassThumb(canvas, thumbX + selectorWidth / 2f, centerY, currentRadius);
+            } else {
+                canvas.drawCircle(thumbX + selectorWidth / 2, y + thumbSize / 2, currentRadius, outerPaint1);
+            }
         }
 
         drawTimestampLabel(canvas);
@@ -655,7 +862,7 @@ public class SeekBarView extends FrameLayout {
     }
 
     private void drawProgressBar(Canvas canvas, RectF rect, Paint paint) {
-        float radius = AndroidUtilities.dp(2);
+        float radius = isGlassMode ? (rect.bottom - rect.top) / 2f : AndroidUtilities.dp(2);
         if (timestamps == null || timestamps.isEmpty()) {
             canvas.drawRoundRect(rect, radius, radius, paint);
         } else {

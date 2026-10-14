@@ -67,7 +67,8 @@ public class LiteMode {
         FLAG_AUTOPLAY_VIDEOS |
         FLAG_AUTOPLAY_GIFS |
         FLAG_CHAT_THANOS |
-        FLAG_PARTICLES
+        FLAG_PARTICLES |
+        FLAG_LIQUID_GLASS
     ); // 204383
     public static int PRESET_HIGH = (
         FLAGS_ANIMATED_STICKERS |
@@ -81,7 +82,8 @@ public class LiteMode {
         FLAG_CALLS_ANIMATIONS |
         FLAG_AUTOPLAY_VIDEOS |
         FLAG_AUTOPLAY_GIFS |
-        FLAG_PARTICLES
+        FLAG_PARTICLES |
+        FLAG_LIQUID_GLASS
     ); // 262143
     public static int PRESET_POWER_SAVER = 0;
 
@@ -213,7 +215,7 @@ public class LiteMode {
         if (!preferences.contains("lite_mode6")) {
             if (preferences.contains("lite_mode5")) {
                 defaultValue = preferences.getInt("lite_mode5", defaultValue);
-                defaultValue &=~ FLAG_LIQUID_GLASS;
+                defaultValue |= FLAG_LIQUID_GLASS;
                 preferences.edit().putInt("lite_mode6", defaultValue).apply();
             } else if (preferences.contains("lite_mode4")) {
                 defaultValue = preferences.getInt("lite_mode4", defaultValue);
@@ -278,6 +280,10 @@ public class LiteMode {
 
         int prevValue = value;
         value = preferences.getInt("lite_mode6", defaultValue);
+        if (!preferences.getBoolean("lite_mode_liquid_glass_v2_applied", false)) {
+            value |= FLAG_LIQUID_GLASS;
+            preferences.edit().putBoolean("lite_mode_liquid_glass_v2_applied", true).putInt("lite_mode6", value).apply();
+        }
         if (loaded) {
             onFlagsUpdate(prevValue, value);
         }
