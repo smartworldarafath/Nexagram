@@ -732,6 +732,7 @@ public class LiteModeSettingsActivity extends BaseFragment {
             addView(headerLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.WRAP_CONTENT, Gravity.TOP | Gravity.FILL_HORIZONTAL, 21, 17, 21, 0));
 
             seekBarView = new SeekBarView(context, true, null);
+            seekBarView.setGlassMode(true);
             seekBarView.setReportChanges(true);
             seekBarView.setDelegate(new SeekBarView.SeekBarViewDelegate() {
                 @Override

@@ -26,11 +26,11 @@ public class BlurredBackgroundProviderImpl {
                 final int colorTarget = Theme.getColor(Theme.key_glass_targetMainTabs, r);
                 return solveSrcColor(colorBg, colorTarget, alpha);
             })
-            .setStrokeColorTop(0x11000000, 0x06FFFFFF)
+            .setStrokeColorTop(0x22000000, 0x30FFFFFF)
             .setStrokeColorBottom(0x20000000, 0x11FFFFFF)
-            .setShadowColor(0x20000000, 0x04FFFFFF)
-            .setShadowLayer(dpf2(2.667f), 0, dpf2(0.85f))
-            .setStrokeWidth(dpf2(0.4f), dpf2(0.4f))
+            .setShadowColor(0x24000000, 0x06FFFFFF)
+            .setShadowLayer(dpf2(3.0f), 0, dpf2(1.0f))
+            .setStrokeWidth(dpf2(0.75f), dpf2(0.75f))
             .build();
     }
 

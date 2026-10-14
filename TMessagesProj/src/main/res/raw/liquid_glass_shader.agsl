@@ -18,33 +18,76 @@ half sdfRect(half2 p, half4 r) {
 }
 
 half4 srcOver(half4 src, half4 dst) {
-    half3 outRGB = (src.rgb + dst.rgb * (1.0 - src.a));
-    float outA = src.a + (1.0 - src.a) * dst.a;
-    return half4(outRGB, outA);
+  half3 outRGB = (src.rgb + dst.rgb * (1.0 - src.a));
+  float outA = src.a + (1.0 - src.a) * dst.a;
+  return half4(outRGB, outA);
 }
 
 half4 main(in float2 fragCoord) {
-  half2 p = fragCoord - center;
+  half2 p = half2(fragCoord - center);
   half sd = sdfRect(p, radius);
-  half2 uv = fragCoord;
-  if (sd < 0.0) {
-    half sdX = sdfRect(p + half2(1.0, 0.0), radius);
-    half sdY = sdfRect(p + half2(0.0, 1.0), radius);
 
-    half n_cos = max(thickness + sd, 0.0) / thickness;
-    half n_cos2 = n_cos * n_cos;
-    half n_sin = sqrt(1.0 - n_cos2);
-    half2 normal_xy = half2((sdX - sd) * n_cos, (sdY - sd) * n_cos);
-    half ca = cos(refract_angle), sa = sin(refract_angle);
-    normal_xy = half2(normal_xy.x * ca - normal_xy.y * sa, normal_xy.x * sa + normal_xy.y * ca);
-    half3 normal = normalize(half3(normal_xy, n_sin));
-
-    half3 refract_vec = refract(half3(0.0, 0.0, -1.0), normal, 1.0 / refract_index);
-    half h = sd < -thickness ? thickness : sqrt(sd * (-2.0 * thickness - sd));
-    half refract_length = (h + 8.0 * thickness) / -refract_vec.z;
-
-    uv += refract_vec.xy * refract_length * refract_intensity;
+  if (sd >= 0.0) {
+    return img.eval(fragCoord);
   }
 
-  return srcOver(half4(foreground_color_premultiplied), img.eval(uv));
+  half sdX = sdfRect(p + half2(1.0, 0.0), radius);
+  half sdY = sdfRect(p + half2(0.0, 1.0), radius);
+
+  // Surface gradient (outward-pointing normal)
+  half2 grad = half2(sdX - sd, sdY - sd);
+  half gradLen = length(grad);
+  half2 outwardNorm = gradLen > 0.001 ? grad / gradLen : half2(0.0);
+
+  // Meniscus height profile & surface curvature
+  half effectiveThickness = max(thickness, 1.0);
+  half bevelProgress = clamp(-sd / effectiveThickness, 0.0, 1.0);
+
+  // Spherical meniscus curvature
+  half n_cos = bevelProgress;
+  half n_cos2 = n_cos * n_cos;
+  half n_sin = sqrt(max(1.0 - n_cos2, 0.0));
+
+  // 3D surface normal
+  half2 normal_xy = outwardNorm * n_cos;
+  half3 normal = normalize(half3(normal_xy, n_sin));
+
+  // Snell's Law refraction ray
+  half nIndex = max(refract_index, 1.01);
+  half3 refract_vec = refract(half3(0.0, 0.0, -1.0), normal, 1.0 / nIndex);
+  half h = sd < -effectiveThickness ? effectiveThickness : sqrt(max(sd * (-2.0 * effectiveThickness - sd), 0.0));
+  half refract_length = (h + 8.0 * effectiveThickness) / max(-refract_vec.z, 0.01);
+
+  // Refraction displacement offset
+  half2 offset = refract_vec.xy * refract_length * refract_intensity;
+
+  // Apple-style Chromatic Dispersion (optical 3-band spectral split)
+  half2 disp = offset * 0.045;
+  half4 colR = img.eval(fragCoord + offset + disp);
+  half4 colG = img.eval(fragCoord + offset);
+  half4 colB = img.eval(fragCoord + offset - disp);
+  half4 glassColor = half4(colR.r, colG.g, colB.b, (colR.a + colG.a + colB.a) / 3.0);
+
+  // Directional Specular Sheen (Apple iOS Key Light Rim Highlight)
+  half2 lightDir = half2(cos(refract_angle), sin(refract_angle));
+  half lightAlign = max(dot(outwardNorm, lightDir), 0.0);
+  half specular = pow(lightAlign, 4.0) * 0.50;
+
+  // Schlick Fresnel edge highlight (Ambient White Rim Line like iOS Liquid Glass)
+  half edgeFactor = 1.0 - bevelProgress;
+  half fresnel = pow(edgeFactor, 2.5) * 0.35;
+
+  // Rim sheen modulation
+  half rimBoost = smoothstep(1.0, 0.0, bevelProgress);
+  half totalHighlight = (specular * 0.65 + fresnel) * rimBoost * min(refract_intensity * 0.65, 2.0);
+
+  // Frosted glass translucent matte reflection
+  half matte = 0.035 * (1.0 - bevelProgress * 0.7);
+  glassColor.rgb += half3(matte);
+
+  // Composite with background and apply top-layer specular rim highlight
+  half4 composited = srcOver(half4(foreground_color_premultiplied), glassColor);
+  composited.rgb += half3(totalHighlight * (1.0 - foreground_color_premultiplied.a * 0.3));
+
+  return clamp(composited, half4(0.0), half4(1.0));
 }
