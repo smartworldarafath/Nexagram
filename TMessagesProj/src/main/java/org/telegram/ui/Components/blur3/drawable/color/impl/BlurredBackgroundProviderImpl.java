@@ -21,16 +21,19 @@ public class BlurredBackgroundProviderImpl {
     public static BlurredBackgroundProvider mainTabs(Theme.ResourcesProvider resourcesProvider) {
         return new BlurredBackgroundProviderBuilder(resourcesProvider)
             .setBackgroundColor((r, isDark) -> {
-                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.85f : 0.76f;
+                if (!isDark) {
+                    return 0xA6FFFFFF;
+                }
+                final float alpha = LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0.82f : 0.76f;
                 final int colorBg = Theme.getColor(Theme.key_windowBackgroundWhite, r);
                 final int colorTarget = Theme.getColor(Theme.key_glass_targetMainTabs, r);
                 return solveSrcColor(colorBg, colorTarget, alpha);
             })
-            .setStrokeColorTop(0x22000000, 0x30FFFFFF)
-            .setStrokeColorBottom(0x20000000, 0x11FFFFFF)
-            .setShadowColor(0x24000000, 0x06FFFFFF)
-            .setShadowLayer(dpf2(3.0f), 0, dpf2(1.0f))
-            .setStrokeWidth(dpf2(0.75f), dpf2(0.75f))
+            .setStrokeColorTop(0x45FFFFFF, 0x30FFFFFF)
+            .setStrokeColorBottom(0x18000000, 0x11FFFFFF)
+            .setShadowColor(0x28000000, 0x08FFFFFF)
+            .setShadowLayer(dpf2(4.0f), 0, dpf2(2.0f))
+            .setStrokeWidth(dpf2(0.8f), dpf2(0.8f))
             .build();
     }
 

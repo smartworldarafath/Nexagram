@@ -17,6 +17,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -352,8 +353,9 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
         if (newTab == null || prevTab == null) {
             return;
         }
-        int newColor = processColor(Theme.getColor(activeTextColorKey, resourcesProvider));
-        int prevColor = processColor(Theme.getColor(unactiveTextColorKey, resourcesProvider));
+        boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+        int newColor = isDark ? 0xFFFFFFFF : 0xFF000000;
+        int prevColor = isDark ? 0xFF98989D : 0xFF8E8E93;
 
         int r1 = Color.red(newColor);
         int g1 = Color.green(newColor);
@@ -614,11 +616,15 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
     }
 
     public void finishAddingTabs() {
+        boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+        int activeColor = isDark ? 0xFFFFFFFF : 0xFF000000;
+        int inactiveColor = isDark ? 0xFF98989D : 0xFF8E8E93;
+
         int count = tabsContainer.getChildCount();
         for (int a = 0; a < count; a++) {
             TextView tab = (TextView) tabsContainer.getChildAt(a);
             tab.setTag(currentPosition == a ? activeTextColorKey : unactiveTextColorKey);
-            tab.setTextColor(processColor(Theme.getColor(currentPosition == a ? activeTextColorKey : unactiveTextColorKey, resourcesProvider)));
+            tab.setTextColor(currentPosition == a ? activeColor : inactiveColor);
             if (useMinimalWidth) {
                 if (
                     prevPositionToWidth.size() != positionToWidth.size() ||
@@ -649,20 +655,21 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
 
     @Override
     public void updateColors() {
+        boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+        int activeColor = isDark ? 0xFFFFFFFF : 0xFF000000;
+        int inactiveColor = isDark ? 0xFF98989D : 0xFF8E8E93;
+
         int count = tabsContainer.getChildCount();
         for (int a = 0; a < count; a++) {
             TextView tab = (TextView) tabsContainer.getChildAt(a);
-            tab.setTextColor(processColor(Theme.getColor(currentPosition == a ? activeTextColorKey : unactiveTextColorKey, resourcesProvider)));
-//            tab.setBackground(Theme.createSelectorDrawable(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f), 3));
+            tab.setTextColor(currentPosition == a ? activeColor : inactiveColor);
             tab.setBackground(
                 new InsetDrawable(
-                    Theme.createSelectorDrawable(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f), Theme.RIPPLE_MASK_ROUNDRECT_6DP, dp(14)),
+                    Theme.createSelectorDrawable(Theme.multAlpha(activeColor, .10f), Theme.RIPPLE_MASK_ROUNDRECT_6DP, dp(14)),
                     dp(4), dp(4), dp(4), dp(4)
                 )
             );
         }
-//        selectorDrawable.setColor(processColor(Theme.getColor(tabLineColorKey, resourcesProvider)));
-        selectorDrawable.setColor(Theme.multAlpha(processColor(Theme.getColor(activeTextColorKey, resourcesProvider)), .15f));
         invalidate();
     }
 
@@ -693,6 +700,59 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
     }
 
 
+    private Paint glassCapsuleBgPaint;
+    private Paint glassCapsuleShadowPaint;
+    private Paint glassCapsuleStrokePaint;
+    private final RectF glassCapsuleRect = new RectF();
+
+    private Paint glassIndicatorPaint;
+    private Paint glassIndicatorShadowPaint;
+    private Paint glassIndicatorStrokePaint;
+    private final RectF glassIndicatorRect = new RectF();
+
+    private void drawGlassCapsuleBackground(Canvas canvas) {
+        if (tabsContainer == null || tabsContainer.getChildCount() == 0) return;
+        if (glassCapsuleBgPaint == null) {
+            glassCapsuleBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassCapsuleBgPaint.setStyle(Paint.Style.FILL);
+
+            glassCapsuleShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassCapsuleShadowPaint.setStyle(Paint.Style.FILL);
+
+            glassCapsuleStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            glassCapsuleStrokePaint.setStyle(Paint.Style.STROKE);
+            glassCapsuleStrokePaint.setStrokeWidth(AndroidUtilities.dpf2(0.75f));
+        }
+
+        boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+        final int height = getMeasuredHeight();
+        float cLeft = getPaddingLeft() + tabsContainer.getLeft() + AndroidUtilities.dp(3);
+        float cRight = getPaddingLeft() + tabsContainer.getRight() - AndroidUtilities.dp(3);
+        if (cRight <= cLeft) {
+            cLeft = getPaddingLeft() + AndroidUtilities.dp(3);
+            cRight = getMeasuredWidth() - getPaddingRight() - AndroidUtilities.dp(3);
+        }
+        float cTop = AndroidUtilities.dp(4);
+        float cBottom = height - AndroidUtilities.dp(4);
+        float cRadius = (cBottom - cTop) / 2f;
+
+        glassCapsuleRect.set(cLeft, cTop, cRight, cBottom);
+
+        // 1. Soft Ambient Drop Shadow (matching Folders.svg filter dy=8 blur=20)
+        glassCapsuleShadowPaint.setColor(isDark ? 0x24000000 : 0x18000000);
+        glassCapsuleRect.offset(0, AndroidUtilities.dpf2(2.5f));
+        canvas.drawRoundRect(glassCapsuleRect, cRadius, cRadius, glassCapsuleShadowPaint);
+        glassCapsuleRect.offset(0, -AndroidUtilities.dpf2(2.5f));
+
+        // 2. Frosted Glass Fill: Folders.svg fill="white" fill-opacity="0.65" (0xA6FFFFFF)
+        glassCapsuleBgPaint.setColor(isDark ? 0x28FFFFFF : 0xA6FFFFFF);
+        canvas.drawRoundRect(glassCapsuleRect, cRadius, cRadius, glassCapsuleBgPaint);
+
+        // 3. Specular Rim Border
+        glassCapsuleStrokePaint.setColor(isDark ? 0x24FFFFFF : 0x14000000);
+        canvas.drawRoundRect(glassCapsuleRect, cRadius, cRadius, glassCapsuleStrokePaint);
+    }
+
     @Override
     protected void dispatchDraw(@NonNull Canvas canvas) {
         canvas.save();
@@ -706,6 +766,8 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
             canvas.clipPath(clipPath);
             canvas.translate(-getScrollX(), 0);
             canvas.translate(left.set(0), 0);
+        } else {
+            drawGlassCapsuleBackground(canvas);
         }
         super.dispatchDraw(canvas);
         canvas.restore();
@@ -735,8 +797,6 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         if (child == tabsContainer) {
-            final boolean result = super.drawChild(canvas, child, drawingTime);
-
             final int height = getMeasuredHeight();
             float l = indicatorX + indicatorXAnimationDx;
             float r = l + indicatorWidth + indicatorWidthAnimationDx;
@@ -746,24 +806,45 @@ public class ScrollSlidingTextTabStrip extends HorizontalScrollView implements T
                 l += current.getTranslationX();
                 r += current.getTranslationX();
             }
-            int wasAlpha = selectorDrawable.getAlpha();
-            selectorDrawable.setAlpha((int) (wasAlpha * tabsContainer.getAlpha()));
-//            selectorDrawable.setBounds(
-//                (int) l,
-//                height - dpr(4),
-//                (int) r,
-//                height
-//            );
-            selectorDrawable.setBounds(
-                    getPaddingLeft() + (int) l + dp(4),
-                    getPaddingTop() + dp(4),
-                    getPaddingLeft() + (int) r - dp(4),
-                    height - getPaddingBottom() - dp(4)
-            );
-            selectorDrawable.draw(canvas);
-            selectorDrawable.setAlpha(wasAlpha);
 
-            return result;
+            if (glassIndicatorPaint == null) {
+                glassIndicatorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                glassIndicatorPaint.setStyle(Paint.Style.FILL);
+
+                glassIndicatorShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                glassIndicatorShadowPaint.setStyle(Paint.Style.FILL);
+
+                glassIndicatorStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                glassIndicatorStrokePaint.setStyle(Paint.Style.STROKE);
+                glassIndicatorStrokePaint.setStrokeWidth(AndroidUtilities.dpf2(0.5f));
+            }
+
+            boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+            float indLeft = getPaddingLeft() + l + AndroidUtilities.dp(3);
+            float indRight = getPaddingLeft() + r - AndroidUtilities.dp(3);
+            float indTop = AndroidUtilities.dp(6);
+            float indBottom = height - AndroidUtilities.dp(6);
+            float indRadius = (indBottom - indTop) / 2f;
+
+            if (indRight > indLeft) {
+                glassIndicatorRect.set(indLeft, indTop, indRight, indBottom);
+
+                // Subtle shadow under active pill
+                glassIndicatorShadowPaint.setColor(isDark ? 0x18000000 : 0x10000000);
+                glassIndicatorRect.offset(0, AndroidUtilities.dpf2(1f));
+                canvas.drawRoundRect(glassIndicatorRect, indRadius, indRadius, glassIndicatorShadowPaint);
+                glassIndicatorRect.offset(0, -AndroidUtilities.dpf2(1f));
+
+                // Active pill fill: Folders.svg fill="#EDEDED"
+                glassIndicatorPaint.setColor(isDark ? 0x38FFFFFF : 0xFFEDEDED);
+                canvas.drawRoundRect(glassIndicatorRect, indRadius, indRadius, glassIndicatorPaint);
+
+                // Subtle outline
+                glassIndicatorStrokePaint.setColor(isDark ? 0x22FFFFFF : 0x08000000);
+                canvas.drawRoundRect(glassIndicatorRect, indRadius, indRadius, glassIndicatorStrokePaint);
+            }
+
+            return super.drawChild(canvas, child, drawingTime);
         }
         return super.drawChild(canvas, child, drawingTime);
     }
