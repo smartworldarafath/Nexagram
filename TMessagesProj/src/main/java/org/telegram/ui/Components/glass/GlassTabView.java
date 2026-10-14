@@ -157,22 +157,33 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
         if (selectedFactor > 0 && !skipDrawSelector) {
             final float alpha = AnimatorUtils.DECELERATE_INTERPOLATOR.getInterpolation(selectedFactor);
 
-            tmpRectF.set(0, 0, viewWidth, getHeight());
-            final float r = Math.min(tmpRectF.width(), tmpRectF.height()) / 2f;
-            final float s = lerp(0.6f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
+            tmpRectF.set(dp(2), dp(3), viewWidth - dp(2), getHeight() - dp(3));
+            final float r = tmpRectF.height() / 2f;
+            final float s = lerp(0.85f, 1, selectedFactor) * MathUtils.clamp(attachScale, 0, 1);
             canvas.save();
             canvas.scale(s, s, tmpRectF.centerX(), tmpRectF.centerY());
 
-            paintCounterBackground.setStyle(Paint.Style.FILL);
-            paintCounterBackground.setColor(Theme.multAlpha(colorSelected, 0.13f * alpha));
-            canvas.drawRoundRect(tmpRectF, r, r, paintCounterBackground);
+            boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
 
+            // Subtle drop shadow under active capsule pill
             if (glassPillStrokePaint == null) {
                 glassPillStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                glassPillStrokePaint.setStyle(Paint.Style.STROKE);
-                glassPillStrokePaint.setStrokeWidth(dpf2(0.9f));
             }
-            glassPillStrokePaint.setColor(ColorUtils.setAlphaComponent(Color.WHITE, (int) (70 * alpha)));
+            glassPillStrokePaint.setStyle(Paint.Style.FILL);
+            glassPillStrokePaint.setColor(isDark ? ColorUtils.setAlphaComponent(0, (int) (30 * alpha)) : ColorUtils.setAlphaComponent(0, (int) (20 * alpha)));
+            tmpRectF.offset(0, dpf2(1f));
+            canvas.drawRoundRect(tmpRectF, r, r, glassPillStrokePaint);
+            tmpRectF.offset(0, -dpf2(1f));
+
+            // In Tab Bar.svg: active pill is fill="#EDEDED"
+            paintCounterBackground.setStyle(Paint.Style.FILL);
+            int pillColor = isDark ? ColorUtils.setAlphaComponent(0xFFFFFFFF, (int) (55 * alpha)) : ColorUtils.blendARGB(0x00FFFFFF, 0xFFEDEDED, alpha);
+            paintCounterBackground.setColor(pillColor);
+            canvas.drawRoundRect(tmpRectF, r, r, paintCounterBackground);
+
+            glassPillStrokePaint.setStyle(Paint.Style.STROKE);
+            glassPillStrokePaint.setStrokeWidth(dpf2(0.75f));
+            glassPillStrokePaint.setColor(isDark ? ColorUtils.setAlphaComponent(Color.WHITE, (int) (50 * alpha)) : ColorUtils.setAlphaComponent(0x000000, (int) (12 * alpha)));
             canvas.drawRoundRect(tmpRectF, r, r, glassPillStrokePaint);
 
             canvas.restore();
@@ -279,9 +290,10 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
     }
 
     public void updateColorsLottie() {
-        colorDefault = Theme.getColor(Theme.key_glass_tabUnselected, resourcesProvider);
-        colorSelected = Theme.getColor(Theme.key_glass_tabSelected, resourcesProvider);
-        colorSelectedText = Theme.getColor(Theme.key_glass_tabSelectedText, resourcesProvider);
+        boolean isDark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
+        colorDefault = isDark ? 0xFF8E8E93 : 0xFF1A1A1A;
+        colorSelected = 0xFF008BFF;
+        colorSelectedText = 0xFF008BFF;
         updateColors();
         invalidate();
     }
