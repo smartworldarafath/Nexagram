@@ -182,8 +182,8 @@ public class GlassTabView extends FrameLayout implements MainTabsLayout.Tab, Fac
             canvas.drawRoundRect(tmpRectF, r, r, paintCounterBackground);
 
             glassPillStrokePaint.setStyle(Paint.Style.STROKE);
-            glassPillStrokePaint.setStrokeWidth(dpf2(0.75f));
-            glassPillStrokePaint.setColor(isDark ? ColorUtils.setAlphaComponent(Color.WHITE, (int) (50 * alpha)) : ColorUtils.setAlphaComponent(0x000000, (int) (12 * alpha)));
+            glassPillStrokePaint.setStrokeWidth(dpf2(0.5f));
+            glassPillStrokePaint.setColor(isDark ? ColorUtils.setAlphaComponent(Color.WHITE, (int) (24 * alpha)) : ColorUtils.setAlphaComponent(0x000000, (int) (10 * alpha)));
             canvas.drawRoundRect(tmpRectF, r, r, glassPillStrokePaint);
 
             canvas.restore();
