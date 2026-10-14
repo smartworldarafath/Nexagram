@@ -320,6 +320,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             textPaint.setTextSize(dp(16));
 
             sizeBar = new SeekBarView(context);
+            sizeBar.setGlassMode(true);
             sizeBar.setReportChanges(true);
             sizeBar.setSeparatorsCount(endFontSize - startFontSize + 1);
             sizeBar.setDelegate(new SeekBarView.SeekBarViewDelegate() {
@@ -404,6 +405,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             textPaint.setTextSize(dp(16));
 
             sizeBar = new SeekBarView(context);
+            sizeBar.setGlassMode(true);
             sizeBar.setReportChanges(true);
             sizeBar.setSeparatorsCount(endRadius - startRadius + 1);
             sizeBar.setDelegate(new SeekBarView.SeekBarViewDelegate() {

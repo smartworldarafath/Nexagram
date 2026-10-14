@@ -881,6 +881,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             textPaint.setTextSize(AndroidUtilities.dp(16));
 
             sizeBar = new SeekBarView(context);
+            sizeBar.setGlassMode(true);
             sizeBar.setReportChanges(true);
             sizeBar.setDelegate(new SeekBarView.SeekBarViewDelegate() {
                 @Override
@@ -938,6 +939,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             setWillNotDraw(false);
             textPaint.setTextSize(AndroidUtilities.dp(14));
             bar = new SeekBarView(context);
+            bar.setGlassMode(true);
             bar.setReportChanges(true);
             bar.setDelegate(new SeekBarView.SeekBarViewDelegate() {
                 @Override
