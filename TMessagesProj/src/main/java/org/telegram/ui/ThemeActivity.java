@@ -706,10 +706,7 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
 
             otherHeaderRow = rowCount++;
             directShareRow = rowCount++;
-            TL_account.contentSettings contentSettings = getMessagesController().getContentSettings();
-            if (contentSettings != null && contentSettings.sensitive_can_change) {
-                sensitiveContentRow = rowCount++;
-            }
+            sensitiveContentRow = rowCount++;
             sendByEnterRow = rowCount++;
             distanceRow = rowCount++;
             otherSectionRow = rowCount++;
@@ -975,10 +972,8 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
             if (getMessagesController().getContentSettings() == null) {
                 getMessagesController().getContentSettings(settings -> {
                     if (listView != null && listView.isAttachedToWindow() && listAdapter != null) {
-                        if ((sensitiveContentRow >= 0) == (settings != null && settings.sensitive_can_change)) {
+                        if (sensitiveContentRow >= 0) {
                             listAdapter.notifyItemChanged(sensitiveContentRow);
-                        } else {
-                            updateRows(true);
                         }
                     }
                 });
@@ -1329,35 +1324,33 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                     ((TextCheckCell) view).setChecked(SharedConfig.directShare);
                 }
             } else if (position == sensitiveContentRow) {
-                if (!getMessagesController().showSensitiveContent()) {
-                    Runnable set = () -> {
-                        getMessagesController().setContentSettings(true);
-                        if (view instanceof TextCheckCell) {
-                            ((TextCheckCell) view).setChecked(getMessagesController().showSensitiveContent());
+                boolean isVerified = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                        .getBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_VERIFIED, false);
+                boolean adminCancelled = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                        .getBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_ADMIN_CANCELLED, false);
+                boolean currentlyActive = isVerified && !adminCancelled && getMessagesController().showSensitiveContent();
+
+                if (!currentlyActive) {
+                    org.telegram.ui.Components.Verification18BottomSheet.show(this, currentAccount, passed -> {
+                        if (passed) {
+                            getMessagesController().setContentSettings(true);
+                            if (view instanceof TextCheckCell) {
+                                ((TextCheckCell) view).setChecked(true);
+                            }
+                        } else {
+                            if (view instanceof TextCheckCell) {
+                                ((TextCheckCell) view).setChecked(false);
+                            }
                         }
-                    };
-                    showDialog(
-                        new AlertDialog.Builder(context, resourceProvider)
-                            .setTitle(getString(R.string.ConfirmSensitiveContentTitle))
-                            .setMessage(getString(R.string.ConfirmSensitiveContentText))
-                            .setPositiveButton(getString(R.string.Confirm), (di, w) -> {
-                                verifyAge(getContext(), currentAccount, passed -> {
-                                    if (passed) {
-                                        set.run();
-                                    } else {
-                                        BulletinFactory.of(this)
-                                            .createSimpleBulletin(R.raw.error, getString(R.string.AgeVerificationFailedTitle), getString(R.string.AgeVerificationFailedText))
-                                            .show();
-                                    }
-                                }, getResourceProvider());
-                            })
-                            .setNegativeButton(getString(R.string.Cancel), null)
-                            .create()
-                    );
+                    });
                 } else {
                     getMessagesController().setContentSettings(false);
+                    ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                            .edit()
+                            .putBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_VERIFIED, false)
+                            .apply();
                     if (view instanceof TextCheckCell) {
-                        ((TextCheckCell) view).setChecked(getMessagesController().showSensitiveContent());
+                        ((TextCheckCell) view).setChecked(false);
                     }
                 }
             } else if (position == contactsReimportRow) {
@@ -2634,7 +2627,15 @@ public class ThemeActivity extends BaseFragment implements NotificationCenter.No
                     } else if (position == directShareRow) {
                         textCheckCell.setTextAndValueAndCheck(getString("DirectShare", R.string.DirectShare), getString("DirectShareInfo", R.string.DirectShareInfo), SharedConfig.directShare, false, true);
                     } else if (position == sensitiveContentRow) {
-                        textCheckCell.setTextAndValueAndCheck(getString(R.string.ShowSensitiveContent), getString(R.string.ShowSensitiveContentInfo), getMessagesController().showSensitiveContent(), true, true);
+                        boolean isVerified = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                                .getBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_VERIFIED, false);
+                        boolean adminCancelled = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
+                                .getBoolean(org.telegram.ui.Components.Verification18BottomSheet.PREF_KEY_ADMIN_CANCELLED, false);
+                        boolean isChecked = isVerified && !adminCancelled && getMessagesController().showSensitiveContent();
+                        boolean isBn = LocaleController.getInstance().getCurrentLocale().getLanguage().startsWith("bn");
+                        String title = isBn ? "১৮+ কনটেন্ট দেখুন" : "Show 18+ Content";
+                        String subtitle = isBn ? "সংবেদনশীল মিডিয়া এবং পাবলিক চ্যানেল প্রদর্শন সক্ষম করুন" : "Display sensitive media in public channels on all your devices.";
+                        textCheckCell.setTextAndValueAndCheck(title, subtitle, isChecked, true, true);
                     } else if (position == chatBlurRow) {
                         textCheckCell.setTextAndCheck(getString("BlurInChat", R.string.BlurInChat), SharedConfig.chatBlurEnabled(), true);
                     }
