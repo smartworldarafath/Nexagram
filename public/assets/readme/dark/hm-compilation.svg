@@ -13,6 +13,6 @@
       </g>
       <g transform="translate(-15, -15) scale(1.25)"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-12-3l-1.4-1.4L8.8 11 6.6 8.8 8 7.4l3.6 3.6L8 15zm5 0h6v-2h-6v2z" fill="#FFFFFF"/></g>
     </g>
-    <text x="96" y="42" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="25" font-weight="700" fill="#ffffff">Compilation & Build Guide</text>
+    <text x="96" y="42" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="25" font-weight="700" fill="#ffffff">Compilation &amp; Build Guide</text>
     <text x="96" y="66" font-family="system-ui, -apple-system, Roboto, sans-serif" font-size="13" font-weight="400" fill="#cbb4ca">Step-by-step instructions for Linux, macOS, WSL2, and GitHub Actions</text>
   </svg>

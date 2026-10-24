@@ -13,6 +13,6 @@
       </g>
       <g transform="translate(-15, -15) scale(1.25)"><path d="M4 6h16v10H4V6zm18 12H2v2h20v-2zm-6-9h4v6h-4V9z" fill="#071E3D"/></g>
     </g>
-    <text x="96" y="42" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="25" font-weight="700" fill="#211824">Tech Stack & Architecture</text>
-    <text x="96" y="66" font-family="system-ui, -apple-system, Roboto, sans-serif" font-size="13" font-weight="400" fill="#675466">Native Android core powered by Kotlin, Java, C++ & Material 3 Expressive</text>
+    <text x="96" y="42" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="25" font-weight="700" fill="#211824">Tech Stack &amp; Architecture</text>
+    <text x="96" y="66" font-family="system-ui, -apple-system, Roboto, sans-serif" font-size="13" font-weight="400" fill="#675466">Native Android core powered by Kotlin, Java, C++ &amp; Material 3 Expressive</text>
   </svg>
