@@ -17,7 +17,7 @@
       </g>
       <g transform="translate(-15, -15) scale(1.25)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" fill="#FFFFFF"/></g>
     </g>
-    <text x="36" y="125" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="21" font-weight="700" fill="#ffffff">Hardened Privacy & Security</text>
+    <text x="36" y="125" font-family="system-ui, -apple-system, 'Google Sans', Roboto, sans-serif" font-size="21" font-weight="700" fill="#ffffff">Hardened Privacy &amp; Security</text>
     <text x="36" y="152" font-family="system-ui, -apple-system, Roboto, sans-serif" font-size="13.5" font-weight="400" fill="#beabbe">
       <tspan x="36" dy="0">Completely telemetry-free, zero tracking analytics,</tspan><tspan x="36" dy="20">unlimited concurrent accounts, and fine-grained</tspan><tspan x="36" dy="20">media cache and auto-delete storage controls.</tspan>
     </text>
