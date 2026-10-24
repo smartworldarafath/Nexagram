@@ -480,6 +480,10 @@ const htmlPreview = `<!DOCTYPE html>
     <div class="preview-box">
       <h2>🌙 Dark Mode (Default)</h2>
       
+      <div class="center" style="margin-bottom: 24px;">
+        <img src="assets/logo.png" alt="Nexagram Logo" width="96" height="96" style="border-radius: 22px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+      </div>
+
       <div class="center">
         <img src="assets/readme/dark/btn-download.svg" alt="Download APK" height="50">
         <img src="assets/readme/dark/btn-github.svg" alt="Source Code" height="50">
@@ -530,6 +534,10 @@ const htmlPreview = `<!DOCTYPE html>
     <div class="preview-box light">
       <h2>☀️ Light Mode</h2>
       
+      <div class="center" style="margin-bottom: 24px;">
+        <img src="assets/logo.png" alt="Nexagram Logo" width="96" height="96" style="border-radius: 22px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
+      </div>
+
       <div class="center">
         <img src="assets/readme/light/btn-download.svg" alt="Download APK" height="50">
         <img src="assets/readme/light/btn-github.svg" alt="Source Code" height="50">

@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/logo.png" alt="Nexagram Logo" width="108" height="108" style="border-radius: 26px; box-shadow: 0 4px 20px rgba(0,0,0,0.18);" />
+
 # Nexagram
 
 **Liquid Glass & Android Material 3 Expressive client for Telegram**
