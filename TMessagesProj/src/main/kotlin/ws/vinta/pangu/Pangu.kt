@@ -1,6 +1,6 @@
 /*
  * Created by Vinta Chen on 2014/11/05.
- * Modified by qwq233 on 2023/07/17
+ * Modified by smartworldarafath on 2023/07/17
  */
 package ws.vinta.pangu
 
@@ -19,7 +19,7 @@ import java.util.regex.Pattern
  * love and writing need some space in good time.
  *
  * @author Vinta Chen
- * @author qwq233
+ * @author smartworldarafath
  * @since 1.0.0
  */
 class Pangu {

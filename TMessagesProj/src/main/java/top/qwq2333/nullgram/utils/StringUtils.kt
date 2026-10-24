@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2019-2024 qwq233 <qwq233@qwq2333.top>
- * https://github.com/qwq233/Nullgram
+ * Copyright (C) 2019-2024 smartworldarafath <153785481+smartworldarafath@users.noreply.github.com>
+ * https://github.com/smartworldarafath/Nexagram
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

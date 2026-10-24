@@ -1,4 +1,4 @@
-# Nexagram
+﻿# Nexagram
 
 Nexagram is a third-party Telegram client based on [NekoX](https://github.com/NekoX-Dev/NekoX) with some modifications.
 
@@ -245,13 +245,6 @@ Special thanks to all the amazing contributors who helped build and maintain the
       </a><br />
       <sub>Contributor</sub>
     </td>
-    <td align="center" width="120px">
-      <a href="https://github.com/rjriajul">
-        <img src="https://github.com/rjriajul.png?size=100" width="80px;" alt="rjriajul"/><br />
-        <sub><b>rjriajul</b></sub>
-      </a><br />
-      <sub>Contributor</sub>
-    </td>
   </tr>
   <tr>
     <td align="center" width="120px">
@@ -285,13 +278,6 @@ Special thanks to all the amazing contributors who helped build and maintain the
   </tr>
   <tr>
     <td align="center" width="120px">
-      <a href="https://github.com/qwq233">
-        <img src="https://github.com/qwq233.png?size=100" width="80px;" alt="qwq233"/><br />
-        <sub><b>qwq233</b></sub>
-      </a><br />
-      <sub>Contributor</sub>
-    </td>
-    <td align="center" width="120px">
       <a href="https://github.com/blxueya">
         <img src="https://github.com/blxueya.png?size=100" width="80px;" alt="blxueya"/><br />
         <sub><b>blxueya</b></sub>
@@ -322,8 +308,8 @@ Special thanks to all the amazing contributors who helped build and maintain the
       <sub>Upstream Project</sub>
     </td>
     <td align="center" width="120px">
-      <a href="https://github.com/qwq233/Nullgram">
-        <img src="https://github.com/qwq233.png?size=100" width="80px;" alt="Nullgram"/><br />
+      <a href="https://github.com/Nullgram/Nullgram">
+        <img src="https://github.com/Nullgram.png?size=100" width="80px;" alt="Nullgram"/><br />
         <sub><b>Nullgram</b></sub>
       </a><br />
       <sub>Upstream Project</sub>
@@ -353,7 +339,7 @@ Special thanks to all the amazing contributors who helped build and maintain the
 - [NekoX](https://github.com/NekoX-Dev/NekoX)
 - [Nekogram](https://gitlab.com/Nekogram/Nekogram)
 - [Pigeongram](https://gitlab.com/JasonKhew96/Nekogram)
-- [Nullgram](https://github.com/qwq233/Nullgram)
+- [Nullgram](https://github.com/Nullgram/Nullgram)
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
 
