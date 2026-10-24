@@ -1,29 +1,68 @@
-﻿# Nexagram
+<div align="center">
+
+# Nexagram
+
+**Liquid Glass & Android Material 3 Expressive client for Telegram**
+
+<br>
+
+<p align="center">
+  <a href="https://github.com/smartworldarafath/Nexagram/releases"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/btn-download.svg"><img src="assets/readme/light/btn-download.svg" alt="Download APK" height="50"></picture></a>
+  <a href="https://github.com/smartworldarafath/Nexagram"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/btn-github.svg"><img src="assets/readme/light/btn-github.svg" alt="Source Code" height="50"></picture></a>
+  <a href="#support"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/btn-support.svg"><img src="assets/readme/light/btn-support.svg" alt="Support Project" height="50"></picture></a>
+  <a href="https://t.me/nexagram_group"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/btn-telegram.svg"><img src="assets/readme/light/btn-telegram.svg" alt="Telegram Community" height="50"></picture></a>
+</p>
+
+<p align="center">
+  <a href="#compilation-guide" title="Android 7.0+ (API 24+)"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-android.svg"><img src="assets/readme/light/badge-android.svg" alt="Android 7.0+" height="28"></picture></a>
+  <a href="https://t.me/nexagram_group" title="Official Telegram Client"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-telegram.svg"><img src="assets/readme/light/badge-telegram.svg" alt="Telegram Client" height="28"></picture></a>
+  <a href="https://github.com/NekoX-Dev/NekoX" title="Forked from NekoX"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-nekox.svg"><img src="assets/readme/light/badge-nekox.svg" alt="NekoX Enhanced" height="28"></picture></a>
+  <a href="#features" title="Liquid Glass Physics UI"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-liquid.svg"><img src="assets/readme/light/badge-liquid.svg" alt="Liquid Glass UI" height="28"></picture></a>
+  <a href="#nekox-changes" title="Universal Proxy Engine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-proxy.svg"><img src="assets/readme/light/badge-proxy.svg" alt="Universal Proxy" height="28"></picture></a>
+  <a href="#nekox-changes" title="Zero Telemetry & 100% Privacy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-privacy.svg"><img src="assets/readme/light/badge-privacy.svg" alt="Hardened Privacy" height="28"></picture></a>
+  <a href="LICENSE" title="GNU General Public License v3.0"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-license.svg"><img src="assets/readme/light/badge-license.svg" alt="GPL-3.0 License" height="28"></picture></a>
+  <a href="https://github.com/smartworldarafath/Nexagram" title="100% Free & Open Source"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-opensource.svg"><img src="assets/readme/light/badge-opensource.svg" alt="100% Open Source" height="28"></picture></a>
+  <a href="https://github.com/smartworldarafath/Nexagram/pulls" title="Pull Requests Welcome!"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/badge-prs.svg"><img src="assets/readme/light/badge-prs.svg" alt="PRs Welcome" height="28"></picture></a>
+</p>
+
+</div>
 
 Nexagram is a third-party Telegram client based on [NekoX](https://github.com/NekoX-Dev/NekoX) with some modifications.
 
-- Releases: <https://github.com/smartworldarafath/Nexagram/releases>
-- Issues here: <https://github.com/smartworldarafath/Nexagram/issues>
+- 📦 **Releases**: <https://github.com/smartworldarafath/Nexagram/releases>
+- 🐛 **Issues here**: <https://github.com/smartworldarafath/Nexagram/issues>
 
-## Additional feature over Nexagram
+<h2 id="features"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-features.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-features.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-features.svg"><img src="assets/readme/light/h-features.svg" alt="Nexagram Features: Supercharged messaging, advanced chat tools & Liquid Glass UI" width="100%"></picture></h2>
 
-1. Nice icon (thanks to MaitungTM)
-2. Combine message
-3. Editable text style 
-4. Forced copy
-5. Invert reply
-6. Quick reply in longClick menu (thanks to @blxueya)
-7. Undo and Redo
-8. Scrollable chat preview (thanks to TeleTux)
-9. Noise suppress and voice enhance (thanks to )
+<div align="center">
+
+| | |
+|:---:|:---:|
+| <a href="#features" title="Liquid Glass Optics"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-liquid.svg"><img src="assets/readme/light/card-liquid.svg" alt="Liquid Glass Optics" width="430"></picture></a> | <a href="#nekox-changes" title="Universal Proxy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-proxy.svg"><img src="assets/readme/light/card-proxy.svg" alt="Universal Proxy" width="430"></picture></a> |
+| <a href="#features" title="Supercharged Messaging"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-messages.svg"><img src="assets/readme/light/card-messages.svg" alt="Supercharged Messaging" width="430"></picture></a> | <a href="#nekox-changes" title="Hardened Privacy"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-privacy.svg"><img src="assets/readme/light/card-privacy.svg" alt="Hardened Privacy" width="430"></picture></a> |
+| <a href="#nekox-changes" title="Expressive Customization"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-customization.svg"><img src="assets/readme/light/card-customization.svg" alt="Expressive Customization" width="430"></picture></a> | <a href="#compilation-guide" title="Native C++ & Kotlin Engine"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/card-performance.svg"><img src="assets/readme/light/card-performance.svg" alt="Native Engine" width="430"></picture></a> |
+
+</div>
+
+### 🚀 Additional feature over Nexagram
+
+1. 🎨 **Nice icon** (thanks to MaitungTM)
+2. 🔗 **Combine message**
+3. ✏️ **Editable text style**
+4. 📋 **Forced copy**
+5. 🔄 **Invert reply**
+6. ⚡ **Quick reply in longClick menu** (thanks to @blxueya)
+7. ↩️ **Undo and Redo**
+8. 📜 **Scrollable chat preview** (thanks to TeleTux)
+9. 🎙️ **Noise suppress and voice enhance** (thanks to )
 
 ----
 
-## NekoX Changes
+<h2 id="nekox-changes"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-nekox.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-nekox.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-nekox.svg"><img src="assets/readme/light/h-nekox.svg" alt="NekoX & Upstream Changes: Built-in proxies, unlimited accounts, and custom emoji packs" width="100%"></picture></h2>
 
-- Most of Nekogram's features
-- Unlimited login accounts
-- **Proxy**
+- 🐱 Most of Nekogram's features
+- 👥 Unlimited login accounts
+- 🌐 **Proxy**
     - Built-in VMess, Shadowsocks, SSR, Trojan-GFW proxies support (No longer maintained)
     - Built-in public proxy (WebSocket relay via Cloudflare CDN), [documentation and for PC](https://github.com/arm64v8a/NekoXProxy)
     - Proxy subscription support
@@ -35,18 +74,18 @@ Nexagram is a third-party Telegram client based on [NekoX](https://github.com/Ne
     - Allow auto-disabling proxy when VPN is enabled
     - Proxy automatic switcher
     - Don't alert "Proxy unavailable" for non-current account
-- **Stickers**
+- 🎨 **Stickers**
     - Custom [Emoji packs](https://github.com/NekoX-Dev/NekoX/wiki/emoji)
     - Add stickers without sticker pack
     - Sticker set list backup / restore / share
-- **Internationalization**
+- 🌍 **Internationalization**
     - OpenCC Chinese Convert
     - Full InstantView translation support
     - Translation support for selected text on input and in messages
     - Google Cloud Translate / Yandex.Translate support
     - Force English emoji keywords to be loaded
     - Persian calendar support
-- **Additional Options**
+- ⚙️ **Additional Options**
     - Option to disable vibration
     - Dialog sorting is optional "Unread and can be prioritized for reminding" etc
     - Option to skip "regret within five seconds"
@@ -58,7 +97,7 @@ Nexagram is a third-party Telegram client based on [NekoX](https://github.com/Ne
     - Custom server (official, test DC)
     - Option to block others from starting a secret chat with you
     - Option to disable trending
-- **Additional Actions**
+- 🛠️ **Additional Actions**
     - Allow clicking on links in self profile
     - Delete all messages in group
     - Unblock all users support
@@ -74,7 +113,7 @@ Nexagram is a third-party Telegram client based on [NekoX](https://github.com/Ne
     - Support saving multiple selected messages to Saved Messages
     - Support unpinning multiple selected messages
     - View stats option for messages
-- **Optimization**
+- 🚀 **Optimization**
     - Keep the original file name when downloading files
     - View the data center you belong to when you don't have an avatar
     - Enhanced notification service, optional version without Google Services
@@ -82,21 +121,38 @@ Nexagram is a third-party Telegram client based on [NekoX](https://github.com/Ne
     - Improved link long click menu
     - Improved hide messages from blocked users feature
     - Don't process cleanup draft events after opening chat
-- **Others**
+- 🔐 **Others**
     - OpenKeychain client (sign / verify / decrypt / import)
     - Text replacer
-- **UI**
+- 📱 **UI**
     - Telegram X style menu for unpinning messages
     - Built-in Material Design themes / Telegram X style icons
-- And more :)
+- ✨ And more :)
 
-## API and Protocol documentation
+<h2 id="tech-stack"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-stack.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-stack.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-stack.svg"><img src="assets/readme/light/h-stack.svg" alt="Tech Stack: Built with Android SDK 34, Kotlin, Java, C++ & Material 3 Expressive" width="100%"></picture></h2>
 
-Telegram API manuals: <https://core.telegram.org/api>
+<div align="center">
 
-MTProto protocol manuals: <https://core.telegram.org/mtproto>
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-android.svg"><img src="assets/readme/light/pill-android.svg" alt="Android SDK 34" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-kotlin.svg"><img src="assets/readme/light/pill-kotlin.svg" alt="Kotlin 2.0" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-java.svg"><img src="assets/readme/light/pill-java.svg" alt="Java 17+" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-cpp.svg"><img src="assets/readme/light/pill-cpp.svg" alt="C++ / NDK" height="38"></picture>
+  <br><br>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-m3e.svg"><img src="assets/readme/light/pill-m3e.svg" alt="Material 3 Expressive" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-liquid.svg"><img src="assets/readme/light/pill-liquid.svg" alt="Liquid Glass 4.2" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-telegram.svg"><img src="assets/readme/light/pill-telegram.svg" alt="Telegram MTProto" height="38"></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/pill-license.svg"><img src="assets/readme/light/pill-license.svg" alt="GNU GPLv3" height="38"></picture>
+</p>
 
-## Compilation Guide
+</div>
+
+### 📚 API and Protocol documentation
+
+- 📖 Telegram API manuals: <https://core.telegram.org/api>
+- 🔐 MTProto protocol manuals: <https://core.telegram.org/mtproto>
+
+<h2 id="compilation-guide"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-compilation.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-compilation.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-compilation.svg"><img src="assets/readme/light/h-compilation.svg" alt="Compilation Guide: Build from source with Linux or GitHub Actions" width="100%"></picture></h2>
 
 **NOTE: For Windows users, please consider using a Linux VM (such as WSL2) or dual booting.**
 
@@ -158,7 +214,7 @@ Build:
 
 ----
 
-## Compilation with GitHub Action
+### 🤖 Compilation with GitHub Action
 
 1. Create your own `release.keystore` to replace `TMessagesProj/release.keystore`.
 
@@ -190,17 +246,17 @@ Then, use base64 to encode the above.
 
 5. Generate `TMessagesProj/jni/integrity/genuine.h` - https://github.com/brevent/genuine
 
-## FAQ
+<h2 id="faq"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-faq.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-faq.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-faq.svg"><img src="assets/readme/light/h-faq.svg" alt="FAQ: Frequently asked questions about Nexagram and NekoX" width="100%"></picture></h2>
 
-#### What is the differences between Nexagram, NekoX and Nekogram?
+#### 💡 What is the differences between Nexagram, NekoX and Nekogram?
 
 Developed by different developers, read the feature list above to understand the differences.
 
-#### What is the noGcm version?
+#### 🔔 What is the noGcm version?
 
 Google Cloud Messaging, also known as gcm / fcm, message push service by google used by original Telegram android app, it requires your device to have Google Service Framework (non-free) installed.
 
-#### I've encountered a bug!
+#### 🐛 I've encountered a bug!
 
 First, make sure you have the latest version installed (check the channel).
 
@@ -210,7 +266,7 @@ Then, submit it to our [group](https://t.me/nexagram_group) with #bug.
 
 If you experience a *crash*, you also need to click on the version number at the bottom of the settings and select "Enable Log" and send it to us.
 
-## Localization
+### 🌐 Localization
 
 Nexagram is forked from Telegram, thus most locales follows the translations of Telegram for Android, checkout <https://translations.telegram.org/en/android/>.
 
@@ -218,7 +274,7 @@ Is Nexagram not in your language, or the translation is incorrect or incomplete?
 
 [![Crowdin](https://badges.crowdin.net/e/156df3a631d257cc6b57301566d545fb/localized.svg)](https://xtaolabs.crowdin.com/nexagram)
 
-## Contributors & Acknowledgements
+<h2 id="contributors"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-contributors.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-contributors.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-contributors.svg"><img src="assets/readme/light/h-contributors.svg" alt="Contributors & Credits: Thanks to our open source creators and upstream developers" width="100%"></picture></h2>
 
 Special thanks to all the amazing contributors who helped build and maintain the core features:
 
@@ -334,7 +390,7 @@ Special thanks to all the amazing contributors who helped build and maintain the
 - 🎨 **MaitungTM** - Custom Icon Design
 - 🗺️ **dic1911** & **Momogram** team - MapLibre migration & member tags
 
-## Thanks
+### 🤝 Thanks
 
 - [NekoX](https://github.com/NekoX-Dev/NekoX)
 - [Nekogram](https://gitlab.com/Nekogram/Nekogram)
@@ -343,10 +399,9 @@ Special thanks to all the amazing contributors who helped build and maintain the
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
 
-
 ---
 
-## ☕ Support / Buy Me a Coffee & Become a Sponsor
+<h2 id="support"><picture><source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/readme/dark/hm-support.svg"><source media="(prefers-color-scheme: dark)" srcset="assets/readme/dark/h-support.svg"><source media="(max-width: 640px)" srcset="assets/readme/light/hm-support.svg"><img src="assets/readme/light/h-support.svg" alt="Support & Sponsorship: Help sustain Nexagram open-source development and maintenance" width="100%"></picture></h2>
 
 If you find **Nexagram** helpful and want to support ongoing development, maintenance, and new features, consider contributing through any of the options below! Your support means the world and helps keep this project open-source.
 
@@ -360,7 +415,6 @@ If you find **Nexagram** helpful and want to support ongoing development, mainte
 | **<img src="assets/icons/payoneer.png" alt="Payoneer" height="16" /> Payoneer** | Email: `arafathrahman710@gmail.com` • Customer ID: `70366820` |
 
 </div>
-
 
 ---
 
