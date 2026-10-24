@@ -28,13 +28,6 @@ Thank you to everyone who contributed code, translations, bug reports, and desig
       <sub>Founder</sub>
     </td>
     <td align="center" width="120px">
-      <a href="https://github.com/rjriajul">
-        <img src="https://github.com/rjriajul.png?size=100" width="80px;" alt="rjriajul"/><br />
-        <sub><b>rjriajul</b></sub>
-      </a><br />
-      <sub>Contributor</sub>
-    </td>
-    <td align="center" width="120px">
       <a href="https://github.com/Parsa307">
         <img src="https://github.com/Parsa307.png?size=100" width="80px;" alt="Parsa307"/><br />
         <sub><b>Parsa307</b></sub>
@@ -65,13 +58,6 @@ Thank you to everyone who contributed code, translations, bug reports, and desig
       <sub>NagramX Dev</sub>
     </td>
     <td align="center" width="120px">
-      <a href="https://github.com/qwq233">
-        <img src="https://github.com/qwq233.png?size=100" width="80px;" alt="qwq233"/><br />
-        <sub><b>qwq233</b></sub>
-      </a><br />
-      <sub>Nullgram Dev</sub>
-    </td>
-    <td align="center" width="120px">
       <a href="https://github.com/blxueya">
         <img src="https://github.com/blxueya.png?size=100" width="80px;" alt="blxueya"/><br />
         <sub><b>blxueya</b></sub>
@@ -87,12 +73,10 @@ Thank you to everyone who contributed code, translations, bug reports, and desig
 - **NextAlone** ([@NextAlone](https://github.com/NextAlone)) - Founder of Nagram
 
 ## Code & Feature Contributors
-- **rjriajul** ([@rjriajul](https://github.com/rjriajul)) - Fixes in WebmEncoder & memory leak optimizations
 - **Parsa307** ([@Parsa307](https://github.com/Parsa307)) - Greetings sticker features
 - **mariodon** ([@mariodon](https://github.com/mariodon)) - UI fixes for small tablets
 - **zjns** ([@zjns](https://github.com/zjns)) - Gemini LLM API fixes
 - **risin42** ([@risin42](https://github.com/risin42)) - NagramX & LLM features
-- **qwq233** ([@qwq233](https://github.com/qwq233)) - Nullgram client integration
 - **blxueya** ([@blxueya](https://github.com/blxueya)) - Quick reply in longClick menu
 - **MaitungTM** - Custom app icon design
 - **dic1911** & **Momogram** team - MapLibre migration & member tags
@@ -101,6 +85,6 @@ Thank you to everyone who contributed code, translations, bug reports, and desig
 - [NekoX](https://github.com/NekoX-Dev/NekoX)
 - [Nekogram](https://gitlab.com/Nekogram/Nekogram)
 - [Pigeongram](https://gitlab.com/JasonKhew96/Nekogram)
-- [Nullgram](https://github.com/qwq233/Nullgram)
+- [Nullgram](https://github.com/Nullgram/Nullgram)
 - [TeleTux](https://github.com/TeleTux/TeleTux)
 - [OwlGram](https://github.com/OwlGramDev/OwlGram)
