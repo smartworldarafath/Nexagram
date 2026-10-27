@@ -392,14 +392,10 @@ public class AlertsCreator {
                 request instanceof TLRPC.TL_messages_migrateChat ||
                 request instanceof TL_phone.inviteToGroupCall) {
             if (fragment != null && error.text.equals("CHANNELS_TOO_MUCH")) {
-                if (fragment.getParentActivity() != null) {
-                    fragment.showDialog(new LimitReachedBottomSheet(fragment, fragment.getParentActivity(), LimitReachedBottomSheet.TYPE_TO0_MANY_COMMUNITIES, currentAccount, null));
+                if (request instanceof TLRPC.TL_channels_joinChannel || request instanceof TLRPC.TL_channels_inviteToChannel) {
+                    fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_JOIN));
                 } else {
-                    if (request instanceof TLRPC.TL_channels_joinChannel || request instanceof TLRPC.TL_channels_inviteToChannel) {
-                        fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_JOIN));
-                    } else {
-                        fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_EDIT));
-                    }
+                    fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_EDIT));
                 }
                 return null;
             } else if (fragment != null) {
@@ -417,11 +413,7 @@ public class AlertsCreator {
                 fragment = LaunchActivity.getLastFragment();
             }
             if (error.text.equals("CHANNELS_TOO_MUCH")) {
-                if (fragment.getParentActivity() != null) {
-                    fragment.showDialog(new LimitReachedBottomSheet(fragment, fragment.getParentActivity(), LimitReachedBottomSheet.TYPE_TO0_MANY_COMMUNITIES, currentAccount, null));
-                } else {
-                    fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_CREATE));
-                }
+                fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_CREATE));
                 return null;
             } else if (error.text.startsWith("FLOOD_WAIT")) {
                 showFloodWaitAlert(error.text, fragment);
@@ -433,11 +425,7 @@ public class AlertsCreator {
                 fragment = LaunchActivity.getLastFragment();
             }
             if (error.text.equals("CHANNELS_TOO_MUCH")) {
-                if (fragment.getParentActivity() != null) {
-                    fragment.showDialog(new LimitReachedBottomSheet(fragment, fragment.getParentActivity(), LimitReachedBottomSheet.TYPE_TO0_MANY_COMMUNITIES, currentAccount, null));
-                } else {
-                    fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_CREATE));
-                }
+                fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_CREATE));
                 return null;
             } else if (error.text.startsWith("FLOOD_WAIT")) {
                 showFloodWaitAlert(error.text, fragment);
@@ -534,25 +522,8 @@ public class AlertsCreator {
             } else if (error.text.equals("USERS_TOO_MUCH")) {
                 showSimpleAlert(fragment, LocaleController.getString(R.string.JoinToGroupErrorFull));
             } else if (error.text.equals("CHANNELS_TOO_MUCH")) {
-                if (fragment.getParentActivity() != null) {
-                    fragment.showDialog(new LimitReachedBottomSheet(fragment, fragment.getParentActivity(), LimitReachedBottomSheet.TYPE_TO0_MANY_COMMUNITIES, currentAccount, null));
-                } else {
-                    fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_JOIN));
-                }
-            } else if (error.text.equals("INVITE_HASH_EXPIRED")) {
-                showSimpleAlert(fragment, LocaleController.getString(R.string.ExpiredLink), LocaleController.getString(R.string.InviteExpired));
-            } else {
-                showSimpleAlert(fragment, LocaleController.getString(R.string.JoinToGroupErrorNotExist));
-            }
-        } else if (request instanceof TLRPC.TL_messages_getAttachedStickers) {
-            if (fragment != null && fragment.getParentActivity() != null) {
-                Toast.makeText(fragment.getParentActivity(), LocaleController.getString(R.string.ErrorOccurred) + "\n" + error.text, Toast.LENGTH_SHORT).show();
-            }
-        } else if (request instanceof TL_account.confirmPhone || request instanceof TL_account.verifyPhone || request instanceof TL_account.verifyEmail) {
-            if (error.text.contains("PHONE_CODE_EMPTY") || error.text.contains("PHONE_CODE_INVALID") || error.text.contains("CODE_INVALID") || error.text.contains("CODE_EMPTY")) {
-                return showSimpleAlert(fragment, LocaleController.getString(R.string.InvalidCode));
-            } else if (error.text.contains("PHONE_CODE_EXPIRED") || error.text.contains("EMAIL_VERIFY_EXPIRED")) {
-                return showSimpleAlert(fragment, LocaleController.getString(R.string.CodeExpired));
+                fragment.presentFragment(new TooManyCommunitiesActivity(TooManyCommunitiesActivity.TYPE_CREATE));
+                return null;
             } else if (error.text.startsWith("FLOOD_WAIT")) {
                 return showSimpleAlert(fragment, LocaleController.getString(R.string.FloodWait));
             } else {

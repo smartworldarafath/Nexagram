@@ -335,70 +335,113 @@ public class TooManyCommunitiesActivity extends BaseFragment {
         AndroidUtilities.runOnUIThread(showProgressRunnable, 500);
         TLRPC.TL_channels_getInactiveChannels inactiveChannelsRequest = new TLRPC.TL_channels_getInactiveChannels();
         getConnectionsManager().sendRequest(inactiveChannelsRequest, ((response, error) -> {
-            if (error == null) {
+            boolean hasInactive = false;
+            if (error == null && response instanceof TLRPC.TL_messages_inactiveChats) {
                 final TLRPC.TL_messages_inactiveChats chats = (TLRPC.TL_messages_inactiveChats) response;
-                final ArrayList<String> signatures = new ArrayList<>();
-                for (int i = 0; i < chats.chats.size(); i++) {
-                    TLRPC.Chat chat = chats.chats.get(i);
-                    int currentDate = getConnectionsManager().getCurrentTime();
-                    int date = chats.dates.get(i);
-                    int daysDif = (currentDate - date) / 86400;
+                if (!chats.chats.isEmpty()) {
+                    hasInactive = true;
+                    final ArrayList<String> signatures = new ArrayList<>();
+                    for (int i = 0; i < chats.chats.size(); i++) {
+                        TLRPC.Chat chat = chats.chats.get(i);
+                        int currentDate = getConnectionsManager().getCurrentTime();
+                        int date = chats.dates.get(i);
+                        int daysDif = (currentDate - date) / 86400;
 
-                    String dateFormat;
-                    if (daysDif < 30) {
-                        dateFormat = LocaleController.formatPluralString("Days", daysDif);
-                    } else if (daysDif < 365) {
-                        dateFormat = LocaleController.formatPluralString("Months", daysDif / 30);
-                    } else {
-                        dateFormat = LocaleController.formatPluralString("Years", daysDif / 365);
+                        String dateFormat;
+                        if (daysDif < 30) {
+                            dateFormat = LocaleController.formatPluralString("Days", daysDif);
+                        } else if (daysDif < 365) {
+                            dateFormat = LocaleController.formatPluralString("Months", daysDif / 30);
+                        } else {
+                            dateFormat = LocaleController.formatPluralString("Years", daysDif / 365);
+                        }
+                        if (ChatObject.isMegagroup(chat)) {
+                            String members = LocaleController.formatPluralString("Members", chat.participants_count);
+                            signatures.add(LocaleController.formatString("InactiveChatSignature", R.string.InactiveChatSignature, members, dateFormat));
+                        } else if (ChatObject.isChannel(chat)) {
+                            signatures.add(LocaleController.formatString("InactiveChannelSignature", R.string.InactiveChannelSignature, dateFormat));
+                        } else {
+                            String members = LocaleController.formatPluralString("Members", chat.participants_count);
+                            signatures.add(LocaleController.formatString("InactiveChatSignature", R.string.InactiveChatSignature, members, dateFormat));
+                        }
                     }
-                    if (ChatObject.isMegagroup(chat)) {
-                        String members = LocaleController.formatPluralString("Members", chat.participants_count);
-                        signatures.add(LocaleController.formatString("InactiveChatSignature", R.string.InactiveChatSignature, members, dateFormat));
-                    } else if (ChatObject.isChannel(chat)) {
-                        signatures.add(LocaleController.formatString("InactiveChannelSignature", R.string.InactiveChannelSignature, dateFormat));
-                    } else {
-                        String members = LocaleController.formatPluralString("Members", chat.participants_count);
-                        signatures.add(LocaleController.formatString("InactiveChatSignature", R.string.InactiveChatSignature, members, dateFormat));
-                    }
+                    displayLoadedChannels(chats.chats, signatures);
                 }
-                AndroidUtilities.runOnUIThread(() -> {
-                    inactiveChatsSignatures.clear();
-                    inactiveChats.clear();
-                    inactiveChatsSignatures.addAll(signatures);
-                    inactiveChats.addAll(chats.chats);
-                    adapter.notifyDataSetChanged();
-                    if (listView.getMeasuredHeight() > 0) {
-                        enterAnimator = ValueAnimator.ofFloat(0, 1f);
-                        enterAnimator.addUpdateListener(animation -> {
-                            enterProgress = (float) animation.getAnimatedValue();
-                            int n = listView.getChildCount();
-                            for (int i = 0; i < n; i++) {
-                                if (listView.getChildAdapterPosition(listView.getChildAt(i)) >= adapter.headerPosition && adapter.headerPosition > 0) {
-                                    listView.getChildAt(i).setAlpha(enterProgress);
+            }
+
+            if (!hasInactive) {
+                // Fallback: Query all chats from Telegram server so user can see and leave existing channels
+                TLRPC.TL_messages_getAllChats allChatsReq = new TLRPC.TL_messages_getAllChats();
+                getConnectionsManager().sendRequest(allChatsReq, (allRes, allErr) -> {
+                    ArrayList<TLRPC.Chat> chatList = new ArrayList<>();
+                    ArrayList<String> allSignatures = new ArrayList<>();
+                    if (allErr == null && allRes instanceof TLRPC.messages_Chats) {
+                        TLRPC.messages_Chats resChats = (TLRPC.messages_Chats) allRes;
+                        for (TLRPC.Chat chat : resChats.chats) {
+                            if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
+                                chatList.add(chat);
+                                if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
+                                    allSignatures.add(LocaleController.getString(R.string.Channel));
                                 } else {
-                                    listView.getChildAt(i).setAlpha(1f);
+                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
                                 }
                             }
-                        });
-                        enterAnimator.setDuration(100);
-                        enterAnimator.start();
-                    } else {
-                        enterProgress = 1f;
+                        }
                     }
-
-                    AndroidUtilities.cancelRunOnUIThread(showProgressRunnable);
-                    if (progressBar.getVisibility() == View.VISIBLE) {
-                        progressBar.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                progressBar.setVisibility(View.GONE);
+                    if (chatList.isEmpty()) {
+                        for (TLRPC.Chat chat : getMessagesController().getChats().values()) {
+                            if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
+                                chatList.add(chat);
+                                if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
+                                    allSignatures.add(LocaleController.getString(R.string.Channel));
+                                } else {
+                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
+                                }
                             }
-                        }).start();
+                        }
                     }
+                    displayLoadedChannels(chatList, allSignatures);
                 });
             }
         }));
+    }
+
+    private void displayLoadedChannels(ArrayList<TLRPC.Chat> chats, ArrayList<String> signatures) {
+        AndroidUtilities.runOnUIThread(() -> {
+            inactiveChatsSignatures.clear();
+            inactiveChats.clear();
+            inactiveChatsSignatures.addAll(signatures);
+            inactiveChats.addAll(chats);
+            adapter.notifyDataSetChanged();
+            if (listView.getMeasuredHeight() > 0) {
+                enterAnimator = ValueAnimator.ofFloat(0, 1f);
+                enterAnimator.addUpdateListener(animation -> {
+                    enterProgress = (float) animation.getAnimatedValue();
+                    int n = listView.getChildCount();
+                    for (int i = 0; i < n; i++) {
+                        if (listView.getChildAdapterPosition(listView.getChildAt(i)) >= adapter.headerPosition && adapter.headerPosition > 0) {
+                            listView.getChildAt(i).setAlpha(enterProgress);
+                        } else {
+                            listView.getChildAt(i).setAlpha(1f);
+                        }
+                    }
+                });
+                enterAnimator.setDuration(100);
+                enterAnimator.start();
+            } else {
+                enterProgress = 1f;
+            }
+
+            AndroidUtilities.cancelRunOnUIThread(showProgressRunnable);
+            if (progressBar.getVisibility() == View.VISIBLE) {
+                progressBar.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }).start();
+            }
+        });
     }
 
     class Adapter extends RecyclerListView.SelectionAdapter {
