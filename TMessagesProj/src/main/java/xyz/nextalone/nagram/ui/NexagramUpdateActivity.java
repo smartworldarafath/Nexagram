@@ -327,33 +327,44 @@ public class NexagramUpdateActivity extends BaseFragment {
                     reader.close();
 
                     JSONArray releases = new JSONArray(sb.toString());
+                    JSONObject targetRelease = null;
+                    String targetApkUrl = null;
+                    long targetApkSize = 0;
+
                     for (int rIdx = 0; rIdx < releases.length(); rIdx++) {
                         JSONObject release = releases.getJSONObject(rIdx);
                         if (release.optBoolean("draft", false)) continue;
 
-                        String tagName = release.optString("tag_name", "").trim();
-                        String releaseNotes = release.optString("body", "Bug fixes and performance improvements.");
                         JSONArray assets = release.optJSONArray("assets");
-                        String apkUrl = null;
-                        long apkSize = 0;
-
                         if (assets != null) {
                             for (int i = 0; i < assets.length(); i++) {
                                 JSONObject asset = assets.getJSONObject(i);
                                 String name = asset.optString("name", "");
                                 if (name.endsWith(".apk")) {
-                                    apkUrl = asset.optString("browser_download_url", null);
-                                    apkSize = asset.optLong("size", 0);
+                                    targetApkUrl = asset.optString("browser_download_url", null);
+                                    targetApkSize = asset.optLong("size", 0);
                                     if (name.contains("arm64-v8a")) break; // prioritize 64-bit build
                                 }
                             }
                         }
 
-                        if (apkUrl != null && isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
-                            final String foundUrl = apkUrl;
-                            final String foundVersion = tagName.replace("v", "").trim();
+                        if (targetApkUrl != null) {
+                            targetRelease = release;
+                            break; // Stop immediately! First non-draft release with an APK is the latest available APK release
+                        }
+                    }
+
+                    if (targetRelease != null) {
+                        String tagName = targetRelease.optString("tag_name", "").trim();
+                        String releaseName = targetRelease.optString("name", "").trim();
+                        String releaseNotes = targetRelease.optString("body", "Bug fixes and performance improvements.");
+                        String cleanRemoteVer = getCleanVersionString(tagName, releaseName);
+
+                        if (isNewerVersion(cleanRemoteVer, BuildConfig.VERSION_NAME)) {
+                            final String foundUrl = targetApkUrl;
+                            final String foundVersion = cleanRemoteVer;
                             final String foundNotes = releaseNotes;
-                            final long foundSize = apkSize;
+                            final long foundSize = targetApkSize;
 
                             AndroidUtilities.runOnUIThread(() -> {
                                 stopIconPulse();
@@ -391,6 +402,30 @@ public class NexagramUpdateActivity extends BaseFragment {
         }).start();
     }
 
+    public static String getCleanVersionString(String tagName, String releaseName) {
+        String ver = extractSemVerFromText(tagName);
+        if (!TextUtils.isEmpty(ver)) {
+            return ver;
+        }
+        ver = extractSemVerFromText(releaseName);
+        if (!TextUtils.isEmpty(ver)) {
+            return ver;
+        }
+        if (!TextUtils.isEmpty(tagName)) {
+            return tagName.replaceAll("^[vV]", "").trim();
+        }
+        return "0.0.0";
+    }
+
+    private static String extractSemVerFromText(String text) {
+        if (TextUtils.isEmpty(text)) return null;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?:[vV])?(\\d+\\.\\d+(?:\\.\\d+)?(?:[\\s-]*(?:beta|alpha|rc)[\\s-]*[0-9.]+)?)(?:\\b|\\s|\\))").matcher(text);
+        if (m.find()) {
+            return m.group(1).trim();
+        }
+        return null;
+    }
+
     public static boolean isNewerVersion(String remote, String current) {
         if (TextUtils.isEmpty(remote) || TextUtils.isEmpty(current)) return false;
         try {
@@ -406,7 +441,13 @@ public class NexagramUpdateActivity extends BaseFragment {
 
             int[] rBeta = extractBetaVersion(remote);
             int[] cBeta = extractBetaVersion(current);
-            if (rBeta.length > 0 || cBeta.length > 0) {
+            if (rBeta.length == 0 && cBeta.length > 0) {
+                return true;
+            }
+            if (rBeta.length > 0 && cBeta.length == 0) {
+                return false;
+            }
+            if (rBeta.length > 0 && cBeta.length > 0) {
                 int maxBeta = Math.max(rBeta.length, cBeta.length);
                 for (int i = 0; i < maxBeta; i++) {
                     int r = i < rBeta.length ? rBeta[i] : 0;
@@ -422,34 +463,18 @@ public class NexagramUpdateActivity extends BaseFragment {
     }
 
     private static int[] extractMainVersion(String v) {
-        if (TextUtils.isEmpty(v)) return new int[]{0};
-        String s = v.trim();
-        if (s.startsWith("v") || s.startsWith("V")) s = s.substring(1).trim();
-        int cut = s.length();
-        int space = s.indexOf(' ');
-        if (space > 0 && space < cut) cut = space;
-        int paren = s.indexOf('(');
-        if (paren > 0 && paren < cut) cut = paren;
-        int beta = s.toLowerCase().indexOf("beta");
-        if (beta > 0 && beta < cut) cut = beta;
-        int dash = s.indexOf('-');
-        if (dash > 0 && dash < cut) cut = dash;
-        s = s.substring(0, cut).trim();
-
-        String[] parts = s.split("\\.");
-        List<Integer> list = new ArrayList<>();
-        for (String p : parts) {
-            String digits = p.replaceAll("\\D+", "");
-            if (!digits.isEmpty()) {
-                try {
-                    list.add(Integer.parseInt(digits));
-                } catch (Exception ignored) {}
+        if (TextUtils.isEmpty(v)) return new int[]{0, 0, 0};
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)\\.\\d+(?:\\.\\d+)?").matcher(v);
+        if (m.find()) {
+            java.util.regex.Matcher full = java.util.regex.Pattern.compile("(\\d+)\\.((\\d+))(?:\\.(\\d+))?").matcher(v);
+            if (full.find()) {
+                int major = Integer.parseInt(full.group(1));
+                int minor = Integer.parseInt(full.group(2));
+                int patch = full.group(3) != null ? Integer.parseInt(full.group(3)) : 0;
+                return new int[]{major, minor, patch};
             }
         }
-        if (list.isEmpty()) return new int[]{0};
-        int[] res = new int[list.size()];
-        for (int i = 0; i < list.size(); i++) res[i] = list.get(i);
-        return res;
+        return new int[]{0, 0, 0};
     }
 
     private static int[] extractBetaVersion(String v) {
@@ -460,7 +485,7 @@ public class NexagramUpdateActivity extends BaseFragment {
         String sub = lower.substring(betaIdx + 4).trim();
         sub = sub.replace(")", "").replace("(", "").trim();
         String[] parts = sub.split("[.\\s]+");
-        List<Integer> list = new ArrayList<>();
+        java.util.List<Integer> list = new java.util.ArrayList<>();
         for (String p : parts) {
             String digits = p.replaceAll("\\D+", "");
             if (!digits.isEmpty()) {
@@ -469,6 +494,7 @@ public class NexagramUpdateActivity extends BaseFragment {
                 } catch (Exception ignored) {}
             }
         }
+        if (list.isEmpty()) return new int[]{1};
         int[] res = new int[list.size()];
         for (int i = 0; i < list.size(); i++) res[i] = list.get(i);
         return res;
@@ -497,9 +523,25 @@ public class NexagramUpdateActivity extends BaseFragment {
                     for (int i = 0; i < releases.length(); i++) {
                         JSONObject rel = releases.getJSONObject(i);
                         if (rel.optBoolean("draft", false)) continue;
+
+                        boolean hasApk = false;
+                        JSONArray assets = rel.optJSONArray("assets");
+                        if (assets != null) {
+                            for (int a = 0; a < assets.length(); a++) {
+                                if (assets.getJSONObject(a).optString("name", "").endsWith(".apk")) {
+                                    hasApk = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!hasApk) continue;
+
                         String tag = rel.optString("tag_name", "").trim();
-                        if (isNewerVersion(tag, BuildConfig.VERSION_NAME)) {
-                            final String newVer = tag.replace("v", "").trim();
+                        String name = rel.optString("name", "").trim();
+                        String cleanRemoteVer = getCleanVersionString(tag, name);
+
+                        if (isNewerVersion(cleanRemoteVer, BuildConfig.VERSION_NAME)) {
+                            final String newVer = cleanRemoteVer;
                             AndroidUtilities.runOnUIThread(() -> {
                                 if (activity != null && !activity.isFinishing()) {
                                     new AlertDialog.Builder(activity)
@@ -514,8 +556,9 @@ public class NexagramUpdateActivity extends BaseFragment {
                                             .show();
                                 }
                             });
-                            return;
                         }
+                        // Always break immediately after checking the newest available release with an APK
+                        break;
                     }
                 }
             } catch (Exception ignored) {}

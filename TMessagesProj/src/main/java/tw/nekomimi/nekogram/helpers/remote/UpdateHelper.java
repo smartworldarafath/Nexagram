@@ -89,6 +89,7 @@ public class UpdateHelper extends BaseRemoteHelper {
                         if (release.optBoolean("draft", false)) continue;
 
                         String tagName = release.optString("tag_name", "").trim();
+                        String releaseName = release.optString("name", "").trim();
                         String releaseNotes = release.optString("body", "Nexagram update available with performance improvements and bug fixes.");
                         JSONArray assets = release.optJSONArray("assets");
                         String apkUrl = null;
@@ -106,11 +107,15 @@ public class UpdateHelper extends BaseRemoteHelper {
                             }
                         }
 
-                        if (updateAlways || NexagramUpdateActivity.isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
+                        if (apkUrl == null) continue;
+
+                        String cleanRemoteVer = NexagramUpdateActivity.getCleanVersionString(tagName, releaseName);
+
+                        if (updateAlways || NexagramUpdateActivity.isNewerVersion(cleanRemoteVer, BuildConfig.VERSION_NAME)) {
                             final TLRPC.TL_help_appUpdate appUpdate = new TLRPC.TL_help_appUpdate();
-                            appUpdate.version = tagName.replace("v", "").replace("V", "").trim();
+                            appUpdate.version = cleanRemoteVer;
                             appUpdate.can_not_skip = false;
-                            appUpdate.url = (apkUrl != null) ? apkUrl : release.optString("html_url", "https://github.com/smartworldarafath/Nexagram/releases");
+                            appUpdate.url = apkUrl;
                             appUpdate.text = releaseNotes;
                             appUpdate.flags = 4; // url flag
 
@@ -121,6 +126,8 @@ public class UpdateHelper extends BaseRemoteHelper {
                             });
                             return;
                         }
+                        // Stop immediately after checking the newest available release with an APK
+                        break;
                     }
                 }
                 AndroidUtilities.runOnUIThread(() -> {
