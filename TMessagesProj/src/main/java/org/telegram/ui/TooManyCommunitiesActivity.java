@@ -381,9 +381,9 @@ public class TooManyCommunitiesActivity extends BaseFragment {
                             if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
                                 chatList.add(chat);
                                 if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
-                                    allSignatures.add(LocaleController.getString(R.string.Channel));
+                                    allSignatures.add("Channel");
                                 } else {
-                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
+                                    allSignatures.add("Group");
                                 }
                             }
                         }
@@ -393,9 +393,9 @@ public class TooManyCommunitiesActivity extends BaseFragment {
                             if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
                                 chatList.add(chat);
                                 if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
-                                    allSignatures.add(LocaleController.getString(R.string.Channel));
+                                    allSignatures.add("Channel");
                                 } else {
-                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
+                                    allSignatures.add("Group");
                                 }
                             }
                         }
