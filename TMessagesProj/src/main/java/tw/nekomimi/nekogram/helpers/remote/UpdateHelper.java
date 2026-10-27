@@ -1,21 +1,30 @@
 package tw.nekomimi.nekogram.helpers.remote;
 
 import android.os.Build;
+import android.text.TextUtils;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BuildConfig;
-import org.telegram.tgnet.TLObject;
+import org.telegram.messenger.FileLog;
 import org.telegram.tgnet.TLRPC;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import tw.nekomimi.nekogram.NekoXConfig;
+import xyz.nextalone.nagram.ui.NexagramUpdateActivity;
 
 public class UpdateHelper extends BaseRemoteHelper {
+    private static final String GITHUB_RELEASES_API = "https://api.github.com/repos/smartworldarafath/Nexagram/releases";
+
     private static final class InstanceHolder {
         private static final UpdateHelper instance = new UpdateHelper();
     }
@@ -28,148 +37,24 @@ public class UpdateHelper extends BaseRemoteHelper {
 
     @Override
     protected void onError(String text, Delegate delegate) {
-        delegate.onTLResponse(null, text);
+        if (delegate != null) {
+            delegate.onTLResponse(null, text);
+        }
     }
 
     @Override
     protected String getTag() {
-        return NekoXConfig.autoUpdateReleaseChannel >= 2 ? "updatetest" : "updatev2";
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private int getPreferredAbiFile(Map<String, Integer> files) {
-        for (String abi : Build.SUPPORTED_ABIS) {
-            if (files.containsKey(abi)) {
-                return files.get(abi);
-            }
-        }
-        return files.get("arm64-v8a");
-    }
-
-    private Map<String, Integer> jsonToMap(JSONObject obj) {
-        Map<String, Integer> map = new HashMap<>();
-        List<String> abis = new ArrayList<>();
-        abis.add("armeabi-v7a");
-        abis.add("arm64-v8a");
-
-        try {
-            for(var abi: abis) {
-                map.put(abi, obj.getInt(abi));
-            }
-        } catch (JSONException ignored) {}
-        return map;
-    }
-
-    private Update getShouldUpdateVersion(List<JSONObject> responses) {
-        long currentVersion = BuildConfig.VERSION_CODE;
-        long currentTimestamp = BuildConfig.BUILD_TIMESTAMP;
-        Update ref = null;
-        for (var string : responses) {
-            try {
-                int versionCode = string.getInt("version_code");
-                long timestamp = string.getLong("timestamp");
-                if (versionCode > currentVersion
-                        || (versionCode == currentVersion && timestamp > currentTimestamp)
-                        || updateAlways) {
-                    if (updateAlways) {
-                        updateAlways = false;
-                    }
-                    ref = new Update(
-                            string.getBoolean("can_not_skip"),
-                            string.getString("version"),
-                            versionCode,
-                            timestamp,
-                            string.getInt("sticker"),
-                            string.getInt("message"),
-                            jsonToMap(string.getJSONObject("gcm")),
-                            string.getString("url")
-                    );
-                    break;
-                }
-            } catch (JSONException ignored) {}
-        }
-        return ref;
-    }
-
-    private void getNewVersionMessagesCallback(Delegate delegate, Update json,
-                                               HashMap<String, Integer> ids, TLObject response) {
-        var update = new TLRPC.TL_help_appUpdate();
-        update.version = json.version;
-        update.can_not_skip = json.canNotSkip;
-        if (json.url != null) {
-            update.url = json.url;
-            update.flags |= 4;
-        }
-        if (NekoXConfig.autoUpdateReleaseChannel == 0 && !update.can_not_skip) {
-            delegate.onTLResponse(null, null);
-            return;
-        }
-        if (response != null) {
-            var res = (TLRPC.messages_Messages) response;
-            getMessagesController().removeDeletedMessagesFromArray(CHANNEL_METADATA_ID, res.messages);
-            var messages = new HashMap<Integer, TLRPC.Message>();
-            for (var message : res.messages) {
-                messages.put(message.id, message);
-            }
-
-            if (ids.containsKey("file")) {
-                var file = messages.get(ids.get("file"));
-                if (file != null && file.media != null) {
-                    update.document = file.media.document;
-                    update.flags |= 2;
-                }
-            }
-            if (ids.containsKey("message")) {
-                var message = messages.get(ids.get("message"));
-                if (message != null) {
-                    update.text = message.message;
-                    update.entities = message.entities;
-                }
-            }
-            if (ids.containsKey("sticker")) {
-                var sticker = messages.get(ids.get("sticker"));
-                if (sticker != null && sticker.media != null) {
-                    update.sticker = sticker.media.document;
-                    update.flags |= 8;
-                }
-            }
-        }
-        delegate.onTLResponse(update, null);
+        return "nexagram_update";
     }
 
     @Override
-    protected void onLoadSuccess(ArrayList<JSONObject> responses, Delegate delegate) {
-        var update = getShouldUpdateVersion(responses);
-        if (update == null) {
-            delegate.onTLResponse(null, null);
-            return;
-        }
+    public void load() {
+        // Disabled: do not query nagram_remote_metadata channel
+    }
 
-        var ids = new HashMap<String, Integer>();
-        if (update.message != null) {
-            ids.put("message", update.message);
-        }
-        if (update.sticker != null) {
-            ids.put("sticker", update.sticker);
-        }
-        if (update.gcm != null) {
-            ids.put("file", getPreferredAbiFile(update.gcm));
-        }
-
-        if (ids.isEmpty()) {
-            getNewVersionMessagesCallback(delegate, update, null, null);
-        } else {
-            var req = new TLRPC.TL_channels_getMessages();
-            req.channel = getMessagesController().getInputChannel(CHANNEL_METADATA_ID);
-            req.id = new ArrayList<>(ids.values());
-            getConnectionsManager().sendRequest(req, (response1, error1) -> {
-                if (error1 == null) {
-                    getNewVersionMessagesCallback(delegate, update, ids, response1);
-                } else {
-                    delegate.onTLResponse(null, error1.text);
-                }
-            });
-        }
+    @Override
+    public void load(Delegate delegate) {
+        checkNewVersionAvailable(delegate, false);
     }
 
     public void checkNewVersionAvailable(Delegate delegate) {
@@ -178,7 +63,80 @@ public class UpdateHelper extends BaseRemoteHelper {
 
     public void checkNewVersionAvailable(Delegate delegate, boolean updateAlways_) {
         updateAlways = updateAlways_;
-        load(delegate);
+
+        new Thread(() -> {
+            try {
+                URL url = new URL(GITHUB_RELEASES_API);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", "Nexagram-Android");
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);
+
+                int code = conn.getResponseCode();
+                if (code == 200) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    reader.close();
+
+                    JSONArray releases = new JSONArray(sb.toString());
+                    for (int rIdx = 0; rIdx < releases.length(); rIdx++) {
+                        JSONObject release = releases.getJSONObject(rIdx);
+                        if (release.optBoolean("draft", false)) continue;
+
+                        String tagName = release.optString("tag_name", "").trim();
+                        String releaseNotes = release.optString("body", "Nexagram update available with performance improvements and bug fixes.");
+                        JSONArray assets = release.optJSONArray("assets");
+                        String apkUrl = null;
+
+                        if (assets != null) {
+                            for (int i = 0; i < assets.length(); i++) {
+                                JSONObject asset = assets.getJSONObject(i);
+                                String name = asset.optString("name", "");
+                                if (name.endsWith(".apk")) {
+                                    apkUrl = asset.optString("browser_download_url", null);
+                                    if (name.contains("arm64-v8a")) {
+                                        break; // prioritize 64-bit build
+                                    }
+                                }
+                            }
+                        }
+
+                        if (updateAlways || NexagramUpdateActivity.isNewerVersion(tagName, BuildConfig.VERSION_NAME)) {
+                            final TLRPC.TL_help_appUpdate appUpdate = new TLRPC.TL_help_appUpdate();
+                            appUpdate.version = tagName.replace("v", "").replace("V", "").trim();
+                            appUpdate.can_not_skip = false;
+                            appUpdate.url = (apkUrl != null) ? apkUrl : release.optString("html_url", "https://github.com/smartworldarafath/Nexagram/releases");
+                            appUpdate.text = releaseNotes;
+                            appUpdate.flags = 4; // url flag
+
+                            AndroidUtilities.runOnUIThread(() -> {
+                                if (delegate != null) {
+                                    delegate.onTLResponse(appUpdate, null);
+                                }
+                            });
+                            return;
+                        }
+                    }
+                }
+                AndroidUtilities.runOnUIThread(() -> {
+                    if (delegate != null) {
+                        delegate.onTLResponse(null, null);
+                    }
+                });
+            } catch (Exception e) {
+                FileLog.e(e);
+                AndroidUtilities.runOnUIThread(() -> {
+                    if (delegate != null) {
+                        delegate.onTLResponse(null, e.getMessage());
+                    }
+                });
+            }
+        }).start();
     }
 
     public static class Update {

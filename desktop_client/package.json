@@ -1,0 +1,12 @@
+{
+  "name": "nexagram-desktop",
+  "productName": "Nexagram Desktop",
+  "version": "2.3.0",
+  "description": "Nexagram Desktop - Fast, Secure & Elegant Messaging Client with Liquid Glass Optics",
+  "main": "main.js",
+  "author": "SmartWorld / Zero by Arafath",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "electron": "42.3.0"
+  }
+}
