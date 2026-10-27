@@ -39,7 +39,7 @@ function createWindow() {
   mainWindow.setIcon(iconPath);
 
   // Set desktop user agent
-  const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Nexagram/2.3.0';
+  const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Nexagram/2.3.1';
   mainWindow.webContents.setUserAgent(userAgent);
 
   // Load Telegram Web A (Responsive modern UI)
@@ -86,13 +86,13 @@ function createWindow() {
         },
         { type: 'separator' },
         {
-          label: 'About Nexagram Desktop v2.3.0',
+          label: 'About Nexagram Desktop v2.3.1',
           click: () => {
             const { dialog } = require('electron');
             dialog.showMessageBox(mainWindow, {
               type: 'info',
               title: 'About Nexagram Desktop',
-              message: 'Nexagram Desktop v2.3.0\nOfficial Windows 64-bit Edition',
+              message: 'Nexagram Desktop v2.3.1\nOfficial Windows 64-bit Edition',
               detail: 'Crafted with Liquid Glass Optics & Full Android Feature Parity.\nIncludes N-Config, Force Copy, Privacy & Custom Chat Settings.\nDeveloper: Zero by Arafath (SmartWorld).\nRepository: https://github.com/smartworldarafath/Nexagram',
               buttons: ['OK']
             });
@@ -132,7 +132,7 @@ function createWindow() {
       label: 'Help',
       submenu: [
         { label: 'GitHub Repository', click: () => shell.openExternal('https://github.com/smartworldarafath/Nexagram') },
-        { label: 'Release Notes (v2.3.0)', click: () => shell.openExternal('https://github.com/smartworldarafath/Nexagram/releases/tag/v2.3.0') },
+        { label: 'Release Notes (v2.3.1)', click: () => shell.openExternal('https://github.com/smartworldarafath/Nexagram/releases/tag/v2.3.1') },
         { label: 'Report Issue', click: () => shell.openExternal('https://github.com/smartworldarafath/Nexagram/issues') }
       ]
     }

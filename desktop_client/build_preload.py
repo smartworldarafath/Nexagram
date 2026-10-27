@@ -5,7 +5,7 @@ def main():
     with open(icon_path, 'r', encoding='utf-8') as f:
         icon_b64 = f.read().strip()
 
-    template = r'''// Nexagram Desktop Preload Script v2.3.0
+    template = r'''// Nexagram Desktop Preload Script v2.3.1
 // Built by Zero by Arafath (SmartWorld)
 // Clean Native UI + N-Config inside Settings (Android Parity)
 
@@ -276,7 +276,7 @@ function injectSettingsItems() {
             <div style="font-weight: 500; font-size: 15px; color: var(--color-text, #ffffff);">N-Config</div>
             <div style="font-size: 13px; color: var(--color-text-secondary, #8293a1);">Nexagram Settings, Force Copy, Chat Features</div>
           </div>
-          <span style="font-size: 11px; padding: 2px 7px; border-radius: 10px; background: rgba(0,136,204,0.18); color: #38bdf8; font-weight: 600;">v2.3.0</span>
+          <span style="font-size: 11px; padding: 2px 7px; border-radius: 10px; background: rgba(0,136,204,0.18); color: #38bdf8; font-weight: 600;">v2.3.1</span>
         `;
         nConfigEl.onclick = (e) => {
           e.stopPropagation();
@@ -295,7 +295,7 @@ function injectSettingsItems() {
           </div>
           <div style="flex: 1; display: flex; flex-direction: column;">
             <div style="font-weight: 500; font-size: 15px; color: var(--color-text, #ffffff);">Nexagram Updates</div>
-            <div style="font-size: 13px; color: var(--color-text-secondary, #8293a1);">Check for updates (v2.3.0 Latest)</div>
+            <div style="font-size: 13px; color: var(--color-text-secondary, #8293a1);">Check for updates (v2.3.1 Latest)</div>
           </div>
           <span style="font-size: 11px; padding: 2px 7px; border-radius: 10px; background: rgba(16,185,129,0.18); color: #34d399; font-weight: 600;">● Latest</span>
         `;
@@ -446,7 +446,7 @@ function openNConfigModal(activeTab) {
       <div style="display: flex; align-items: center; gap: 12px;">
         <img src="${NEXAGRAM_ICON_DATA}" style="width: 32px; height: 32px; object-fit: contain;">
         <div>
-          <div style="font-size: 17px; font-weight: 600; color: #ffffff;">N-Config <span style="font-size: 12px; font-weight: 500; color: #2f8cc0; background: rgba(47,140,192,0.15); padding: 2px 8px; border-radius: 8px; margin-left: 6px;">v2.3.0</span></div>
+          <div style="font-size: 17px; font-weight: 600; color: #ffffff;">N-Config <span style="font-size: 12px; font-weight: 500; color: #2f8cc0; background: rgba(47,140,192,0.15); padding: 2px 8px; border-radius: 8px; margin-left: 6px;">v2.3.1</span></div>
           <div style="font-size: 12px; color: #7f91a4;">Nexagram Settings & Android Parity</div>
         </div>
       </div>
@@ -615,7 +615,7 @@ function openNConfigModal(activeTab) {
         <div style="background: rgba(47, 140, 192, 0.08); border: 1px solid rgba(47, 140, 192, 0.2); border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 14px;">
           <img src="${NEXAGRAM_ICON_DATA}" style="width: 56px; height: 56px; object-fit: contain; margin-bottom: 8px;">
           <div style="font-size: 17px; font-weight: 600; color: #ffffff;">Nexagram Desktop</div>
-          <div style="font-size: 13px; color: #2f8cc0; font-weight: 500; margin-top: 2px;">Current Installed Version: v2.3.0 (64-bit)</div>
+          <div style="font-size: 13px; color: #2f8cc0; font-weight: 500; margin-top: 2px;">Current Installed Version: v2.3.1 (64-bit)</div>
           <div style="font-size: 12px; color: #7f91a4; margin-top: 4px;">Zero by Arafath (SmartWorld)</div>
           
           <div style="margin-top: 14px;">
@@ -624,12 +624,12 @@ function openNConfigModal(activeTab) {
             </button>
           </div>
           <div id="nex-update-status" style="font-size: 12px; color: #10b981; margin-top: 10px; font-weight: 500;">
-            ● Running official Nexagram v2.3.0 Release
+            ● Running official Nexagram v2.3.1 Release
           </div>
         </div>
 
         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 14px;">
-          <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">v2.3.0 Release Highlights:</div>
+          <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 6px;">v2.3.1 Release Highlights:</div>
           <ul style="font-size: 12px; color: #7f91a4; padding-left: 18px; line-height: 1.6; margin: 0;">
             <li>Full Windows Desktop 64-bit edition.</li>
             <li>N-Config integrated directly inside Settings.</li>
@@ -649,17 +649,17 @@ function openNConfigModal(activeTab) {
             const res = await fetch('https://api.github.com/repos/smartworldarafath/Nexagram/releases/latest');
             if (res.ok) {
               const data = await res.json();
-              const latestTag = data.tag_name || 'v2.3.0';
-              if (latestTag === 'v2.3.0' || latestTag === '2.3.0') {
-                statusDiv.innerHTML = '<span style="color: #10b981;">✓ You have the latest official release (v2.3.0)!</span>';
+              const latestTag = data.tag_name || 'v2.3.1';
+              if (latestTag === 'v2.3.1' || latestTag === '2.3.1') {
+                statusDiv.innerHTML = '<span style="color: #10b981;">✓ You have the latest official release (v2.3.1)!</span>';
               } else {
                 statusDiv.innerHTML = `<span style="color: #f59e0b;">New release ${latestTag} available! <a href="${data.html_url}" target="_blank" style="color: #2f8cc0; text-decoration: underline;">Download Here</a></span>`;
               }
             } else {
-              statusDiv.innerHTML = '<span style="color: #10b981;">✓ You are running the official v2.3.0 release.</span>';
+              statusDiv.innerHTML = '<span style="color: #10b981;">✓ You are running the official v2.3.1 release.</span>';
             }
           } catch (e) {
-            statusDiv.innerHTML = '<span style="color: #10b981;">✓ Version v2.3.0 is up to date.</span>';
+            statusDiv.innerHTML = '<span style="color: #10b981;">✓ Version v2.3.1 is up to date.</span>';
           }
         };
       }
