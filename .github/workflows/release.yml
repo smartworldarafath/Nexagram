@@ -24,9 +24,9 @@ jobs:
       - name: Fetch Status
         run: |
           sed -i 's/\/\///g' settings.gradle
-          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
-          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
-          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status 2>/dev/null || echo 'none' > ffmpeg_status
+          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status 2>/dev/null || echo 'none' > dav1d_status
+          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status 2>/dev/null || echo 'none' > libvpx_status
       - name: FFmpeg Cache
         id: cache
         uses: actions/cache@v4
@@ -72,7 +72,7 @@ jobs:
       - name: Fetch Status
         run: |
           sed -i 's/\/\///g' settings.gradle
-          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+          git submodule status TMessagesProj/jni/boringssl > boringssl_status 2>/dev/null || echo 'none' > boringssl_status
       - name: BoringSSL Cache
         id: cache
         uses: actions/cache@v4
@@ -119,10 +119,10 @@ jobs:
       - name: Fetch Status
         run: |
           sed -i 's/\/\///g' settings.gradle
-          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
-          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status
-          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status
-          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status 2>/dev/null || echo 'none' > ffmpeg_status
+          git submodule status TMessagesProj/jni/third_party/dav1d > dav1d_status 2>/dev/null || echo 'none' > dav1d_status
+          git submodule status TMessagesProj/jni/third_party/libvpx > libvpx_status 2>/dev/null || echo 'none' > libvpx_status
+          git submodule status TMessagesProj/jni/boringssl > boringssl_status 2>/dev/null || echo 'none' > boringssl_status
       - name: Native Cache
         id: cache
         uses: actions/cache@v4
@@ -133,7 +133,7 @@ jobs:
       - name: Checkout Library
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          git submodule update --init
+          git submodule update --init || true
       - name: FFmpeg Cache
         uses: actions/cache@v4
         if: steps.cache.outputs.cache-hit != 'true'
@@ -197,12 +197,12 @@ jobs:
           echo "ndk.dir=${ANDROID_HOME}/ndk/27.2.12479018" >> local.properties
       - name: Checkout Library
         run: |
-          git submodule update --init 'TMessagesProj/lib/*'
+          git submodule update --init 'TMessagesProj/lib/*' || true
       - name: Fetch Status
         run: |
           sed -i 's/\/\///g' settings.gradle
-          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status
-          git submodule status TMessagesProj/jni/boringssl > boringssl_status
+          git submodule status TMessagesProj/jni/third_party/ffmpeg > ffmpeg_status 2>/dev/null || echo 'none' > ffmpeg_status
+          git submodule status TMessagesProj/jni/boringssl > boringssl_status 2>/dev/null || echo 'none' > boringssl_status
       - name: Native Cache (armeabi-v7a)
         uses: actions/cache@v4
         with:
