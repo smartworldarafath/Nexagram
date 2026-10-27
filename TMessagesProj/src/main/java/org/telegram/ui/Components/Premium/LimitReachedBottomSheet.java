@@ -2712,9 +2712,9 @@ public class LimitReachedBottomSheet extends BottomSheetWithRecyclerListView imp
                             if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
                                 chatList.add(chat);
                                 if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
-                                    allSignatures.add(LocaleController.getString(R.string.Channel));
+                                    allSignatures.add("Channel");
                                 } else {
-                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
+                                    allSignatures.add("Group");
                                 }
                             }
                         }
@@ -2724,9 +2724,9 @@ public class LimitReachedBottomSheet extends BottomSheetWithRecyclerListView imp
                             if (chat != null && (ChatObject.isChannel(chat) || ChatObject.isMegagroup(chat)) && !chat.left && !chat.kicked) {
                                 chatList.add(chat);
                                 if (ChatObject.isChannel(chat) && !ChatObject.isMegagroup(chat)) {
-                                    allSignatures.add(LocaleController.getString(R.string.Channel));
+                                    allSignatures.add("Channel");
                                 } else {
-                                    allSignatures.add(LocaleController.getString(R.string.MegaGroup));
+                                    allSignatures.add("Group");
                                 }
                             }
                         }
