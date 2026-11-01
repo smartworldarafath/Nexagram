@@ -31,6 +31,7 @@
 
 Nexagram is a third-party Telegram client based on [NekoX](https://github.com/NekoX-Dev/NekoX) with some modifications.
 
+- 🌐 **Website**: <https://smartworldarafath.github.io/Nexagram/>
 - 📦 **Releases**: <https://github.com/smartworldarafath/Nexagram/releases>
 - 🐛 **Issues here**: <https://github.com/smartworldarafath/Nexagram/issues>
 
