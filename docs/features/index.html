@@ -1,375 +1,1503 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Feature list · Nexagram</title>
-  <meta name="description" content="A comprehensive comparison of the enhancements in Nexagram Android and Nexagram Desktop, grouped by optics, messaging, translation, proxy, and privacy.">
-  <link rel="canonical" href="https://smartworldarafath.github.io/Nexagram/features/">
-  <link rel="icon" type="image/png" href="../favicon.png">
-  <link rel="apple-touch-icon" href="../icons/nexagram.png">
-  <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0f15" media="(prefers-color-scheme: dark)">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nexagram">
-  <meta property="og:title" content="Feature list · Nexagram">
-  <meta property="og:description" content="A comprehensive comparison of the enhancements in Nexagram Android and Nexagram Desktop.">
-  <meta property="og:url" content="https://smartworldarafath.github.io/Nexagram/features/">
-  <meta property="og:image" content="../icons/nexagram.png">
-  <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="light dark" name="color-scheme"/>
+  <title>
+   Feature list · Nexagram
+  </title>
+  <meta content="A comparison of the enhancements in Nexagram Android, Nexagram iOS, Nexagram Desktop and Nexagram Core, grouped by translation, messages, chat list, media, interface, network and accounts." name="description"/>
+  <link href="https://smartworldarafath.github.io/Nexagram/features/" rel="canonical"/>
+  <link href="../favicon.png" rel="icon" type="image/png"/>
+  <link href="../apple-touch-icon.png" rel="apple-touch-icon"/>
+  <meta content="#f6f8fb" media="(prefers-color-scheme: light)" name="theme-color"/>
+  <meta content="#0b0f15" media="(prefers-color-scheme: dark)" name="theme-color"/>
+  <meta content="website" property="og:type"/>
+  <meta content="Nexagram" property="og:site_name"/>
+  <meta content="Feature list · Nexagram" property="og:title"/>
+  <meta content="A comparison of the enhancements in Nexagram Android, Nexagram iOS, Nexagram Desktop and Nexagram Core." property="og:description"/>
+  <meta content="https://smartworldarafath.github.io/Nexagram/features/" property="og:url"/>
+  <meta content="../icons/nexagram.png" property="og:image"/>
+  <meta content="en_US" property="og:locale"/>
+  <meta content="summary" name="twitter:card"/>
+  <meta content="Feature list · Nagram" name="twitter:title"/>
+  <meta content="A comparison of the enhancements in Nagram Android, Nagram iOS, Nagram Desktop and Nnngram, grouped by translation, messages, chat list, media, interface, network and accounts." name="twitter:description"/>
+  <meta content="https://smartworldarafath.github.io/Nexagram/icons/nexagram.png" name="twitter:image"/>
+  <link href="../css/style.css" rel="stylesheet"/>
+ </head>
+ <body>
   <header class="site-header">
-    <a class="brand" href="../">
-      <img src="../icons/nexagram.png" alt="Nexagram Logo" width="28" height="28">
-      <span>Nexagram</span>
+   <a class="brand" href="../">
+    <img alt="" height="28" src="../icons/nexagram.png" width="28"/>
+    <span>
+     Nexagram
+    </span>
+   </a>
+   <nav>
+    <a href="../">
+     Products
     </a>
-    <nav>
-      <a href="../">Products</a>
-      <a href="./" aria-current="page">Features</a>
-      <a href="../screenshots/">Screenshots</a>
-      <a class="lang" href="https://github.com/smartworldarafath/Nexagram" target="_blank" rel="noopener">GitHub</a>
-    </nav>
+    <a aria-current="page" href="./">
+     Features
+    </a>
+    <a href="../screenshots/">
+     Screenshots
+    </a>
+    <a class="lang" href="https://github.com/smartworldarafath/Nexagram" rel="noopener" target="_blank">
+     GitHub
+    </a>
+   </nav>
   </header>
-
   <main class="subpage">
-    <h1>Feature list</h1>
-    <p class="lead">
-      Enhancements Nexagram adds on top of official Telegram applications, folded by category; select a category to expand it. A check mark means the client implements it natively.
+   <h1>
+    Feature list
+   </h1>
+   <p class="lead">
+    Enhancements Nexagram adds on top of official Telegram applications, folded by category; select a category to expand it. A check mark means the client implements it natively.
+   </p>
+   <section class="feature-group">
+    <h2>
+     Shared across platforms
+    </h2>
+    <p class="section-lead">
+     These features are implemented in Nexagram for Android, iOS and desktop. Entry points and details vary slightly by platform.
     </p>
-
-    <!-- Shared Features Section -->
-    <section class="feature-group">
-      <h2>Shared across platforms</h2>
-      <p class="section-lead">These features are implemented across Nexagram Android and Windows Desktop.</p>
-      
-      <ul class="feature-grid">
-        <li>
-          <h3>Liquid Glass Optics</h3>
-          <p>Physics-based acrylic blur, reflective sheen, and smooth responsive elevation curves on modern screens.</p>
-        </li>
-        <li>
-          <h3>Forced Copy</h3>
-          <p>Bypass channel copy restrictions to save text, links, and content directly to your clipboard.</p>
-        </li>
-        <li>
-          <h3>Multi-Provider Translation</h3>
-          <p>Choose Google, Microsoft, Yandex, DeepL, or hook up your custom OpenAI / Claude LLM endpoint.</p>
-        </li>
-        <li>
-          <h3>Message Filters &amp; Formatting</h3>
-          <p>Match messages by keyword or regex to mask, hide, or prioritize; format text with rich typography.</p>
-        </li>
-        <li>
-          <h3>Hide Sponsored Ads</h3>
-          <p>Sponsored messages in channels and recommended channels are automatically hidden.</p>
-        </li>
-        <li>
-          <h3>Hardened Privacy</h3>
-          <p>Zero telemetry, no Google/Firebase analytics pings, and complete offline settings export and import.</p>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Category 1: UI & Optics -->
-    <details class="feature-group" open>
-      <summary>
-        <h2>UI &amp; Visual Optics</h2>
-        <span class="count">6</span>
-      </summary>
-      <table class="feature-table">
-        <thead>
-          <tr>
-            <th scope="col">Feature</th>
-            <th scope="col" title="Nexagram Android">Android</th>
-            <th scope="col" title="Nexagram Desktop">Desktop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Liquid Glass Optics<small>Physics-based blur, specular reflection, and dynamic material</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Material 3 Expressive Theming<small>Dynamic colors, rounded cards, and elevation tokens</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Custom App Icons<small>Carefully crafted launcher icon variants by MaitungTM</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Telegram X Style Menus<small>Quick sheet dialogs for unpinning and dialog management</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Live Speedometer View<small>Analog speedometer dial during APK download &amp; updates</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Compact Chat List Layout<small>Higher density chat overview for compact viewing</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-
-    <!-- Category 2: Messaging -->
-    <details class="feature-group">
-      <summary>
-        <h2>Messaging &amp; Chat Tools</h2>
-        <span class="count">9</span>
-      </summary>
-      <table class="feature-table">
-        <thead>
-          <tr>
-            <th scope="col">Feature</th>
-            <th scope="col" title="Nexagram Android">Android</th>
-            <th scope="col" title="Nexagram Desktop">Desktop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Forced Copy<small>Copy protected text and links even in restricted channels</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Combine Message<small>Merge sequential messages and media into one bubble</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Invert Reply<small>Swap reply quotation orientation for fast chat reading</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Editable Text Style<small>Rich formatting options for bold, italic, monospace, spoiler</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Quick Reply in Long-Click Menu<small>Instant reply popup without opening full message view</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Undo &amp; Redo<small>Easily reverse accidental message actions or deletions</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Scrollable Chat Preview<small>Peep full chat history in preview without sending read receipt</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Forward Without Quote<small>Forward messages anonymously without original sender attribution</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Noise Suppress &amp; Voice Enhance<small>Crisp voice notes with AI background noise filtration</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-
-    <!-- Category 3: Translation & AI -->
-    <details class="feature-group">
-      <summary>
-        <h2>Translation &amp; AI</h2>
-        <span class="count">5</span>
-      </summary>
-      <table class="feature-table">
-        <thead>
-          <tr>
-            <th scope="col">Feature</th>
-            <th scope="col" title="Nexagram Android">Android</th>
-            <th scope="col" title="Nexagram Desktop">Desktop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Multiple Translation Providers<small>Google Cloud, Microsoft Bing, Yandex, DeepL</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Custom LLM Translation<small>Connect OpenAI, Claude, or local Ollama with system prompt</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Auto-Translation per Chat<small>Instantly translate incoming messages in foreign groups</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Input Box Text Translation<small>Translate outgoing text before hitting send</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">InstantView Translation<small>Translate long-form telegraph articles seamlessly</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-
-    <!-- Category 4: Proxy & Network -->
-    <details class="feature-group">
-      <summary>
-        <h2>Universal Proxy &amp; Network</h2>
-        <span class="count">6</span>
-      </summary>
-      <table class="feature-table">
-        <thead>
-          <tr>
-            <th scope="col">Feature</th>
-            <th scope="col" title="Nexagram Android">Android</th>
-            <th scope="col" title="Nexagram Desktop">Desktop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Built-in MTProxy with IPv6<small>Fast native MTProto proxies with zero latency</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">VMess, Shadowsocks, SSR &amp; Trojan<small>Advanced anti-censorship protocol support</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Public WebSocket CDN Relay<small>Built-in proxy relay via Cloudflare infrastructure</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Subscription Format Parser<small>Import SIP008, ssr, v2rayN, clash configs with one click</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Auto-Disable Proxy on VPN<small>Prevent routing conflicts when external VPN is turned on</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">QR Code Proxy Sharing<small>Scan and share proxy servers instantly as QR codes</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-
-    <!-- Category 5: Privacy & Accounts -->
-    <details class="feature-group">
-      <summary>
-        <h2>Privacy, Accounts &amp; Tablets</h2>
-        <span class="count">7</span>
-      </summary>
-      <table class="feature-table">
-        <thead>
-          <tr>
-            <th scope="col">Feature</th>
-            <th scope="col" title="Nexagram Android">Android</th>
-            <th scope="col" title="Nexagram Desktop">Desktop</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Zero Analytics &amp; Telemetry<small>No trackers, Google Firebase analytics removed</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Tablet Channel Limit (500 Limit) Fallback<small>Cloud fetch via getAllChats fixes empty list on tablet join</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Hide Sponsored Messages<small>Block all promoted ads inside public channels</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-          </tr>
-          <tr>
-            <th scope="row">Unlimited Login Accounts<small>Run as many accounts simultaneously as your device allows</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Per-Account Passcode &amp; Biometric Lock<small>Lock sensitive accounts with individual PINs</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">Block Stranger Secret Chats<small>Stop unsolicited secret chat requests automatically</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-          <tr>
-            <th scope="row">OpenKeychain PGP Integration<small>Sign, verify, encrypt, and decrypt messages with PGP keys</small></th>
-            <td class="yes" aria-label="Supported">&#10003;</td>
-            <td class="no" aria-label="Not supported">&ndash;</td>
-          </tr>
-        </tbody>
-      </table>
-    </details>
-
-    <p class="feature-footnote">
-      Compiled directly from the settings and implementation code of the Nexagram repository. Features continue to expand across versions.
-    </p>
+    <ul class="feature-grid">
+     <li>
+      <h3>
+       Multi-provider translation
+      </h3>
+      <p>
+       Choose Google, Microsoft, Yandex and other services, or connect your own LLM endpoint with a custom prompt.
+      </p>
+     </li>
+     <li>
+      <h3>
+       Message filters
+      </h3>
+      <p>
+       Match messages by keyword or regular expression, then mask, collapse or hide them.
+      </p>
+     </li>
+     <li>
+      <h3>
+       Repeat and forward without quote
+      </h3>
+      <p>
+       Repeat a message in one step, or forward it without the source.
+      </p>
+     </li>
+     <li>
+      <h3>
+       Pangu spacing
+      </h3>
+      <p>
+       Insert spaces between CJK and Latin text or digits when sending, editing or reading.
+      </p>
+     </li>
+     <li>
+      <h3>
+       Hide sponsored messages
+      </h3>
+      <p>
+       Sponsored messages in channels are no longer shown.
+      </p>
+     </li>
+     <li>
+      <h3>
+       Settings backup and sync
+      </h3>
+      <p>
+       Export or sync your settings so a new device needs no reconfiguration.
+      </p>
+     </li>
+    </ul>
+   </section>
+   <details class="feature-group" open="">
+    <summary>
+     <h2>
+      Translation and AI
+     </h2>
+     <span class="count">
+      6
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Choice of translation providers
+        <small>
+         Google, Microsoft, Yandex, DeepL, TranSmart and others; the set differs by client
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        LLM translation
+        <small>
+         Custom endpoint, model and prompt
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Automatic translation per chat
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Translate your text before sending
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Custom speech-to-text service
+        <small>
+         OpenAI-compatible API
+        </small>
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Summarize messages with an LLM
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Text and input
+     </h2>
+     <span class="count">
+      6
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Pangu spacing between CJK and Latin text
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Simplified and Traditional Chinese conversion
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Formatting toolbar and Markdown parsing switch
+        <small>
+         iOS has the toolbar only
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Syntax highlighting for code blocks
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Undo and redo in the input field
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Text replacer
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Messages
+     </h2>
+     <span class="count">
+      18
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Repeat a message
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Forward without quote
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Message filters
+        <small>
+         Mask, collapse or hide by keyword or regular expression
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Hide sponsored messages
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Customize message menu items
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Seconds in timestamps and original time of forwards
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Customizable double-tap action
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Show message ID
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Message details
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Media information
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Combine several messages
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Reveal spoilers by default
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Zalgo symbol filter
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Select all messages in between
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Hide reactions
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Quick toggle for anonymous posting
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Delete all of your own messages in a chat
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Message screenshot
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Chat list and folders
+     </h2>
+     <span class="count">
+      7
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Folder tab display options
+        <small>
+         Icons or text, hiding “All chats” and more; options differ by client
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Quick access to recent chats
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Hide stories
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Choose the folder opened on startup
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Compact chat list and preview lines
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Custom chat sort order
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Local pins beyond the server limit
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Media and stickers
+     </h2>
+     <span class="count">
+      5
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Sticker size
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Recent sticker limit
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Export or back up sticker sets
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Voice noise suppression and enhancement
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Custom emoji packs and fonts
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Interface and profiles
+     </h2>
+     <span class="count">
+      8
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Alternative app icons
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Customize main menu or bottom bar items
+        <small>
+         Bottom bar on iOS, main menu elsewhere
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        ID, data center and registration date on profiles
+        <small>
+         Registration date may be an estimate
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Hide your phone number in the interface
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Nexagram Core
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Avatar and bubble shape
+        <small>
+         Square avatars only on Android
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Datacenter status
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Liquid Glass tint strength
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Network and links
+     </h2>
+     <span class="count">
+      4
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Upload and download acceleration
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Link rules and inline bot link rules
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Custom DoH and IP version strategy
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Built-in WebSocket proxy
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <details class="feature-group">
+    <summary>
+     <h2>
+      Accounts and backup
+     </h2>
+     <span class="count">
+      6
+     </span>
+    </summary>
+    <table class="feature-table">
+     <thead>
+      <tr>
+       <th scope="col">
+        Feature
+       </th>
+       <th scope="col" title="Nagram Android">
+        Android
+       </th>
+       <th scope="col" title="Nagram iOS">
+        iOS
+       </th>
+       <th scope="col" title="Nagram Desktop">
+        Desktop
+       </th>
+       <th scope="col" title="Nnngram">
+        Nexagram Core
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <th scope="row">
+        Back up, restore or sync the enhancement settings
+        <small>
+         iCloud sync on iOS, file or cloud backup elsewhere
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        QR code login
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Per-account passcode
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Export and import sessions
+       </th>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        Choice of push service
+        <small>
+         FCM, UnifiedPush, MicroG or in-app
+        </small>
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+      <tr>
+       <th scope="row">
+        OpenKeychain integration
+       </th>
+       <td aria-label="Supported" class="yes">
+        ✓
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+       <td aria-label="Not supported" class="no">
+        –
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </details>
+   <p class="feature-footnote">
+    Compiled from the settings code of each repository. Only enhancements are listed, not features the official Telegram apps already have. The clients keep changing, so the apps themselves are the reference.
+   </p>
   </main>
-
   <footer class="site-footer">
-    <div class="footer-cols">
-      <div>
-        <h2>Community</h2>
-        <ul>
-          <li><a href="https://t.me/nexagram_group" target="_blank" rel="noopener">Nexagram Telegram Group</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/releases" target="_blank" rel="noopener">GitHub Releases</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/issues" target="_blank" rel="noopener">Bug Tracker &amp; Issues</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h2>Source</h2>
-        <ul>
-          <li><a href="https://github.com/smartworldarafath/Nexagram" target="_blank" rel="noopener">smartworldarafath/Nexagram</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/pulls" target="_blank" rel="noopener">Pull Requests Welcome</a></li>
-          <li><a href="https://github.com/NekoX-Dev/NekoX" target="_blank" rel="noopener">Upstream NekoX</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-wide">
-        <h2>License &amp; Credits</h2>
-        <p>
-          Nexagram Android and Nexagram Desktop are released under the GNU General Public License v3.0 (GPL-3.0). Built with love by SmartWorld / Zero by Arafath. Upstream components remain under their respective licenses. Application icon artwork thanks to MaitungTM.
-        </p>
-      </div>
+   <div class="footer-cols">
+    <div>
+     <h2>
+      Community
+     </h2>
+     <ul>
+      <li>
+       <a href="https://t.me/nexagram_official" rel="noopener" target="_blank">
+        Nexagram channel
+       </a>
+      </li>
+      <li>
+       <a href="https://t.me/nexagram_group" rel="noopener" target="_blank">
+        Nexagram group
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/discussions" rel="noopener" target="_blank">
+        Discussions
+       </a>
+      </li>
+     </ul>
     </div>
-
-    <p class="disclaimer">
-      Nexagram is an independent third-party client. It is not affiliated with, sponsored by or endorsed by Telegram (Telegram FZ-LLC and its affiliates). Telegram is a trademark of its respective owner.
-    </p>
+    <div>
+     <h2>
+      Source
+     </h2>
+     <ul>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram" rel="noopener" target="_blank">
+        smartworldarafath/Nexagram
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/releases" rel="noopener" target="_blank">
+        GitHub Releases
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/blob/main/README.md" rel="noopener" target="_blank">
+        Documentation
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/issues" rel="noopener" target="_blank">
+        Issue Tracker
+       </a>
+      </li>
+     </ul>
+    </div>
+    <div class="footer-wide">
+     <h2>
+      License
+     </h2>
+     <p>
+      Nexagram Android and Nexagram Desktop are released under GPL-3.0, Nexagram Core under GPL-2.0. Upstream and third-party components remain under their own licenses. The Nexagram project identity is maintained by smartworldarafath. Tux, the Linux penguin, was created by Larry Ewing using The GIMP.
+     </p>
+    </div>
+   </div>
+   <p class="disclaimer">
+    Nexagram is an independent third-party client. It is not affiliated with, sponsored by or endorsed by Telegram (Telegram FZ-LLC and its affiliates). Telegram is a trademark of its respective owner.
+   </p>
   </footer>
-
-  <script src="../js/main.js"></script>
-</body>
+ </body>
 </html>

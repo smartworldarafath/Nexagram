@@ -1,248 +1,370 @@
+﻿
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Nexagram: Liquid Glass & Material 3 Telegram client for Android & Desktop</title>
-  <meta name="description" content="Nexagram is an open-source third-party Telegram client for Android and Windows Desktop, featuring Liquid Glass physics UI, Material 3 Expressive design, multi-provider translation, combined messages, forced copy, and universal proxies.">
-  <link rel="canonical" href="https://smartworldarafath.github.io/Nexagram/">
-  <link rel="icon" type="image/png" href="./favicon.png">
-  <link rel="apple-touch-icon" href="./icons/nexagram.png">
-  <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0f15" media="(prefers-color-scheme: dark)">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nexagram">
-  <meta property="og:title" content="Nexagram: Liquid Glass & Material 3 Telegram client for Android & Desktop">
-  <meta property="og:description" content="Open-source third-party Telegram client with Liquid Glass optics, Material 3 Expressive theme, translation, message tools, forced copy, and built-in universal proxies.">
-  <meta property="og:url" content="https://smartworldarafath.github.io/Nexagram/">
-  <meta property="og:image" content="./icons/nexagram.png">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Nexagram: Liquid Glass & Material 3 Telegram client">
-  <meta name="twitter:description" content="Open-source third-party Telegram client with Liquid Glass optics, translation, message tools, forced copy, and built-in universal proxies.">
-  <meta name="twitter:image" content="./icons/nexagram.png">
-  <link rel="stylesheet" href="./css/style.css">
-</head>
-<body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <meta content="light dark" name="color-scheme"/>
+  <title>
+   Nexagram: third-party Telegram clients for Android, iOS and desktop
+  </title>
+  <meta content="Nexagram is a family of open-source third-party Telegram clients for Android, iOS, Windows, macOS and Linux, adding multi-provider and LLM translation, message filters, repeat, CJK spacing and more." name="description"/>
+  <link href="https://smartworldarafath.github.io/Nexagram/" rel="canonical"/>
+  <link href="./favicon.png" rel="icon" type="image/png"/>
+  <link href="./apple-touch-icon.png" rel="apple-touch-icon"/>
+  <meta content="#f6f8fb" media="(prefers-color-scheme: light)" name="theme-color"/>
+  <meta content="#0b0f15" media="(prefers-color-scheme: dark)" name="theme-color"/>
+  <meta content="website" property="og:type"/>
+  <meta content="Nexagram" property="og:site_name"/>
+  <meta content="Nexagram: third-party Telegram clients for Android, iOS and desktop" property="og:title"/>
+  <meta content="Nexagram is a family of open-source third-party Telegram clients for Android, iOS, Windows, macOS and Linux, adding multi-provider and LLM translation, message filters, repeat, CJK spacing and more." property="og:description"/>
+  <meta content="https://smartworldarafath.github.io/Nexagram/" property="og:url"/>
+  <meta content="./icons/nexagram.png" property="og:image"/>
+  <meta content="en_US" property="og:locale"/>
+  <meta content="summary" name="twitter:card"/>
+  <meta content="Nagram: third-party Telegram clients for Android, iOS and desktop" name="twitter:title"/>
+  <meta content="Nagram is a family of open-source third-party Telegram clients for Android, iOS, Windows, macOS and Linux, adding multi-provider and LLM translation, message filters, repeat, CJK spacing and more." name="twitter:description"/>
+  <meta content="https://smartworldarafath.github.io/Nexagram/icons/nexagram.png" name="twitter:image"/>
+  <link href="./css/style.css" rel="stylesheet"/>
+ </head>
+ <body>
   <header class="site-header">
-    <a class="brand" href="./">
-      <img src="./icons/nexagram.png" alt="Nexagram Logo" width="28" height="28">
-      <span>Nexagram</span>
+   <a class="brand" href="./">
+    <img alt="" height="28" src="./icons/nexagram.png" width="28"/>
+    <span>
+     Nexagram
+    </span>
+   </a>
+   <nav>
+    <a aria-current="page" href="./">
+     Products
     </a>
-    <nav>
-      <a href="./" aria-current="page">Products</a>
-      <a href="./features/">Features</a>
-      <a href="./screenshots/">Screenshots</a>
-      <a class="lang" href="https://github.com/smartworldarafath/Nexagram" target="_blank" rel="noopener">GitHub</a>
-    </nav>
+    <a href="./features/">
+     Features
+    </a>
+    <a href="./screenshots/">
+     Screenshots
+    </a>
+    <a class="lang" href="https://github.com/smartworldarafath/Nexagram" rel="noopener" target="_blank">
+     GitHub
+    </a>
+   </nav>
   </header>
-
-  <main id="releases-root" data-loading="Fetching version info…" data-unavailable="Version info unavailable" data-no-release="No release yet">
-    <!-- Hero Section -->
-    <section class="hero">
-      <img class="hero-icon" src="./icons/nexagram.png" alt="Nexagram" width="112" height="112">
-      <p class="eyebrow">Open-Source Liquid Glass Telegram Client</p>
-      <h1>
-        <span>The same enhancements,</span>
-        <span>on every screen</span>
-      </h1>
-      <p class="lead">
-        Nexagram builds on Telegram and NekoX, adding Liquid Glass physics UI, Material 3 Expressive design, multi-provider translation, message filters, forced copy, and built-in universal proxies across Android and Windows Desktop.
-      </p>
-
-      <div class="hero-downloads" aria-label="Download">
-        <!-- Android Tile -->
-        <a class="tile" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1.apk" data-dl="android" data-product="nexagram-android" data-fallback="https://github.com/smartworldarafath/Nexagram/releases">
-          <svg class="platform-icon android" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"></path>
-          </svg>
-          <span>Android</span>
-        </a>
-
-        <!-- Windows Tile -->
-        <a class="tile" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-Setup-v2.3.1.exe" data-dl="windows" data-product="nexagram-desktop" data-fallback="https://github.com/smartworldarafath/Nexagram/releases">
-          <svg class="platform-icon windows" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path fill="#f25022" d="M0 0h11.4v11.4H0z"></path>
-            <path fill="#7fba00" d="M12.6 0H24v11.4H12.6z"></path>
-            <path fill="#00a4ef" d="M0 12.6h11.4V24H0z"></path>
-            <path fill="#ffb900" d="M12.6 12.6H24V24H12.6z"></path>
-          </svg>
-          <span>Windows</span>
-        </a>
-
-        <!-- Windows Portable Tile -->
-        <a class="tile" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1-windows-x64.zip" data-dl="windows-zip" data-product="nexagram-desktop" data-fallback="https://github.com/smartworldarafath/Nexagram/releases">
-          <svg class="platform-icon zip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6a2 2 0 0 0-2 2z"></path>
-            <path d="M14 2v6h6"></path>
-            <path d="M10 12h2v2h-2z"></path>
-            <path d="M10 16h2v2h-2z"></path>
-          </svg>
-          <span>Portable Zip</span>
-        </a>
-
-        <!-- GitHub Releases Tile -->
-        <a class="tile" href="https://github.com/smartworldarafath/Nexagram/releases" data-dl="github" data-product="nexagram-github" data-fallback="https://github.com/smartworldarafath/Nexagram/releases">
-          <svg class="platform-icon github" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
-          </svg>
-          <span>All Releases</span>
-        </a>
-      </div>
-
-      <p class="hero-note" id="detected-note" hidden>The platform matching your system is highlighted</p>
-    </section>
-
-    <!-- Products Section -->
-    <section id="products" class="section">
-      <h2>Products</h2>
-      <p class="section-lead">Two complete clients, each tuned natively for its platform. See the feature list for what each one adds.</p>
-
-      <div class="cards">
-        <!-- Nexagram Android Card -->
-        <article class="card" id="nexagram-android">
-          <header>
-            <img src="./icons/nexagram.png" alt="Nexagram Android" width="56" height="56" loading="lazy">
-            <div>
-              <h3>Nexagram Android</h3>
-              <p class="platform">Android 7.0 or later · Universal APK</p>
-            </div>
-          </header>
-          <p class="tagline">
-            The flagship mobile client powered by NekoX with Liquid Glass physics UI, Material 3 Expressive theme, forced copy, combined messages, invert reply, undo/redo, and built-in MTProxy &amp; universal proxies.
-          </p>
-          <p class="version">
-            <span class="version-label">Latest version</span>
-            <span class="version-value" data-version="nexagram-android">v2.3.1</span>
-          </p>
-          <div class="card-actions">
-            <a class="btn btn-small" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1.apk" data-dl="android" data-product="nexagram-android">Download · APK (v2.3.1)</a>
-            <a class="text-link" href="https://github.com/smartworldarafath/Nexagram/releases">Releases page</a>
-            <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">Source Code</a>
-          </div>
-        </article>
-
-        <!-- Nexagram Desktop Card -->
-        <article class="card" id="nexagram-desktop">
-          <header>
-            <img src="./icons/nexagram.png" alt="Nexagram Desktop" width="56" height="56" loading="lazy">
-            <div>
-              <h3>Nexagram Desktop</h3>
-              <p class="platform">Windows 10 / 11 · 64-bit</p>
-            </div>
-          </header>
-          <p class="tagline">
-            Fast, secure and elegant desktop messaging client with native Liquid Glass acrylic styling, integrated N-Config settings modal inside Settings, forced copy, and complete Android feature parity.
-          </p>
-          <p class="version">
-            <span class="version-label">Latest version</span>
-            <span class="version-value" data-version="nexagram-desktop">v2.3.1</span>
-          </p>
-          <div class="card-actions">
-            <a class="btn btn-small" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-Setup-v2.3.1.exe" data-dl="windows" data-product="nexagram-desktop">Download · Installer (.exe)</a>
-            <a class="btn btn-small" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1-windows-x64.zip" data-dl="windows-zip" data-product="nexagram-desktop">Download · Portable (.zip)</a>
-            <a class="text-link" href="https://github.com/smartworldarafath/Nexagram/releases">Releases page</a>
-            <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">Source Code</a>
-          </div>
-        </article>
-
-        <!-- Nexagram Proxy & Security Card -->
-        <article class="card" id="nexagram-security">
-          <header>
-            <img src="./icons/nexagram.png" alt="Nexagram Security" width="56" height="56" loading="lazy">
-            <div>
-              <h3>Universal Proxy &amp; Privacy</h3>
-              <p class="platform">Built-in MTProxy · VMess · Shadowsocks · PGP</p>
-            </div>
-          </header>
-          <p class="tagline">
-            Hardened Telegram client with zero telemetry and analytics tracking. Built-in public WebSocket relay, subscription link parsing, QR code proxy sharing, and OpenKeychain end-to-end encryption.
-          </p>
-          <p class="version">
-            <span class="version-label">Status</span>
-            <span class="version-value">100% Free &amp; Open Source</span>
-          </p>
-          <div class="card-actions">
-            <a class="btn btn-small" href="https://t.me/nexagram_group" target="_blank" rel="noopener">Telegram Community</a>
-            <a class="text-link" href="https://github.com/smartworldarafath/Nexagram/issues">Report Issue</a>
-            <a class="text-link" href="./features/">Full Feature List</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Key Enhancements Grid -->
-    <section class="section">
-      <h2>Key Enhancements</h2>
-      <p class="section-lead">A glance at the extra capabilities Nexagram delivers over the official Telegram application.</p>
-      
-      <ul class="feature-grid">
-        <li>
-          <h3>Liquid Glass Optics &amp; M3E</h3>
-          <p>Physics-based glass material with depth blur, interactive morphing, and Material 3 Expressive styling.</p>
-        </li>
-        <li>
-          <h3>Forced Copy &amp; Invert Reply</h3>
-          <p>Copy protected channel messages with ease, invert replies, and forward messages cleanly without source quotes.</p>
-        </li>
-        <li>
-          <h3>Combine Message &amp; Edit Style</h3>
-          <p>Combine multiple text chunks and media into a single bubble; customize typography and formatting options.</p>
-        </li>
-        <li>
-          <h3>Multi-Provider &amp; LLM Translation</h3>
-          <p>Translate chats with Google, Microsoft, Yandex, DeepL, or connect your private OpenAI/Claude LLM endpoints.</p>
-        </li>
-        <li>
-          <h3>Built-in Universal Proxies</h3>
-          <p>Built-in WebSocket CDN relay, MTProxy with IPv6, Shadowsocks, VMess, and one-tap proxy subscription import.</p>
-        </li>
-        <li>
-          <h3>Hardened Privacy &amp; Zero Tracking</h3>
-          <p>No ads, sponsored channels automatically hidden, block unwanted secret chats, and zero third-party telemetry.</p>
-        </li>
-      </ul>
-      
-      <div style="margin-top: 32px; text-align: center;">
-        <a class="btn" href="./features/">Explore All Features &amp; Comparison &rarr;</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-cols">
-      <div>
-        <h2>Community</h2>
-        <ul>
-          <li><a href="https://t.me/nexagram_group" target="_blank" rel="noopener">Nexagram Telegram Group</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/releases" target="_blank" rel="noopener">GitHub Releases</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/issues" target="_blank" rel="noopener">Bug Tracker &amp; Issues</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <h2>Source</h2>
-        <ul>
-          <li><a href="https://github.com/smartworldarafath/Nexagram" target="_blank" rel="noopener">smartworldarafath/Nexagram</a></li>
-          <li><a href="https://github.com/smartworldarafath/Nexagram/pulls" target="_blank" rel="noopener">Pull Requests Welcome</a></li>
-          <li><a href="https://github.com/NekoX-Dev/NekoX" target="_blank" rel="noopener">Upstream NekoX</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-wide">
-        <h2>License &amp; Credits</h2>
-        <p>
-          Nexagram Android and Nexagram Desktop are released under the GNU General Public License v3.0 (GPL-3.0). Built with love by SmartWorld / Zero by Arafath. Upstream components remain under their respective licenses. Application icon artwork thanks to MaitungTM.
-        </p>
-      </div>
-    </div>
-
-    <p class="disclaimer">
-      Nexagram is an independent third-party client. It is not affiliated with, sponsored by or endorsed by Telegram (Telegram FZ-LLC and its affiliates). Telegram is a trademark of its respective owner.
+  <main data-external="See the Telegram channel" data-loading="Fetching version info…" data-no-release="No release yet" data-unavailable="Version info unavailable" id="releases-root">
+   <section class="hero">
+    <img alt="Nexagram" class="hero-icon" height="112" src="./icons/nexagram.png" width="112"/>
+    <p class="eyebrow">
+     Open-source third-party Telegram clients
     </p>
+    <h1>
+     <span>
+      The same enhancements
+     </span>
+     <span>
+      on every screen
+     </span>
+    </h1>
+    <p class="lead">
+     The Nexagram family builds on the official Telegram clients and adds translation, message filters, repeat and more, on Android, iOS and desktop.
+    </p>
+    <div aria-label="Download" class="hero-downloads">
+     <a class="tile" data-dl="android" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-android" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1.apk">
+      <svg aria-hidden="true" class="platform-icon android" fill="currentColor" viewbox="0 0 24 24">
+       <path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z">
+       </path>
+      </svg>
+      <span>
+       Android
+      </span>
+     </a>
+     <a class="tile" data-dl="ios" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-ios" href="https://github.com/smartworldarafath/Nexagram/releases">
+      <svg aria-hidden="true" class="platform-icon apple" fill="currentColor" viewbox="0 0 24 24">
+       <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701">
+       </path>
+      </svg>
+      <span>
+       iOS
+      </span>
+     </a>
+     <a class="tile" data-dl="windows" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.0/Nexagram-Windows-v2.3.0.zip">
+      <svg aria-hidden="true" class="platform-icon windows" fill="currentColor" viewbox="0 0 24 24">
+       <path d="M0 0h11.4v11.4H0z" fill="#f25022">
+       </path>
+       <path d="M12.6 0H24v11.4H12.6z" fill="#7fba00">
+       </path>
+       <path d="M0 12.6h11.4V24H0z" fill="#00a4ef">
+       </path>
+       <path d="M12.6 12.6H24V24H12.6z" fill="#ffb900">
+       </path>
+      </svg>
+      <span>
+       Windows
+      </span>
+     </a>
+     <a class="tile" data-dl="macos" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases">
+      <svg aria-hidden="true" class="platform-icon mac" fill="currentColor" viewbox="0 0 24 24">
+       <rect fill="none" height="13.5" rx="1.8" stroke="currentColor" stroke-width="1.8" width="18" x="3" y="2.5">
+       </rect>
+       <path d="M1.4 20h21.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8">
+       </path>
+       <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" transform="translate(8.1 5.35) scale(0.325)">
+       </path>
+      </svg>
+      <span>
+       macOS
+      </span>
+     </a>
+     <a class="tile" data-dl="linux" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases">
+      <img alt="" class="platform-icon linux" src="./icons/tux.svg"/>
+      <span>
+       Linux
+      </span>
+     </a>
+    </div>
+    <p class="hero-note" hidden="" id="detected-note">
+     The platform matching your system is highlighted
+    </p>
+   </section>
+   <section class="section" id="products">
+    <h2>
+     Products
+    </h2>
+    <p class="section-lead">
+     Four clients, each tracking the upstream Telegram source for its platform. See the feature list for what each one adds.
+    </p>
+    <div class="cards">
+     <article class="card" id="nagram-android">
+      <header>
+       <img alt="" height="56" loading="lazy" src="./icons/nexagram.png" width="56"/>
+       <div>
+        <h3>
+         Nexagram Android
+        </h3>
+        <p class="platform">
+         Android 5.0 or later
+        </p>
+       </div>
+      </header>
+      <p class="tagline">
+       The flagship client, tracking Telegram Android. Supports rich translation providers, chat and message filters, local premium icons, forced copy, and more.
+      </p>
+      <p class="version">
+       <span class="version-label">
+        Latest version
+       </span>
+       <span class="version-value" data-version="nagram-android">
+        v2.3.1
+       </span>
+       <noscript>
+        Version info unavailable
+       </noscript>
+      </p>
+      <div class="card-actions">
+       <a class="btn btn-small" data-dl="android" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-android" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.1/Nexagram-v2.3.1.apk">
+        Stable · Universal APK
+       </a>
+       <a class="btn btn-small" data-dl="android-armv7" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-android" href="https://github.com/smartworldarafath/Nexagram/releases/tag/v2.3.1">
+        Stable · arm64-v8a
+       </a>
+       <a class="btn btn-small" href="https://t.me/nexagram_official" rel="noopener" target="_blank">
+        Beta · Telegram channel
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Releases page
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">
+        Source
+       </a>
+      </div>
+     </article>
+     <article class="card" id="nagram-ios">
+      <header>
+       <img alt="" height="56" loading="lazy" src="./icons/nexagram.png" width="56"/>
+       <div>
+        <h3>
+         Nexagram iOS
+        </h3>
+        <p class="platform">
+         iOS 15.0 or later
+        </p>
+       </div>
+      </header>
+      <p class="tagline">
+       Based on the official Telegram-iOS source. Releases are published on GitHub Releases and beta updates in the Telegram channel.
+      </p>
+      <p class="version">
+       <span class="version-label">
+        Latest version
+       </span>
+       <span class="version-value" data-version="nagram-ios">
+        v2.3.0
+       </span>
+       <noscript>
+        Version info unavailable
+       </noscript>
+      </p>
+      <div class="card-actions">
+       <a class="btn btn-small" data-dl="ios" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-ios" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Download · GitHub
+       </a>
+       <a class="btn btn-small" href="https://t.me/nexagram_official" rel="noopener" target="_blank">
+        Download · Telegram
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">
+        Source
+       </a>
+      </div>
+     </article>
+     <article class="card" id="nagram-desktop">
+      <header>
+       <img alt="" height="56" loading="lazy" src="./icons/nexagram.png" width="56"/>
+       <div>
+        <h3>
+         Nexagram Desktop
+        </h3>
+        <p class="platform">
+         Windows · macOS · Linux
+        </p>
+       </div>
+      </header>
+      <p class="tagline">
+       Based on Telegram Desktop. Installers are published on GitHub Releases; the download buttons open the latest release page.
+      </p>
+      <p class="version">
+       <span class="version-label">
+        Latest version
+       </span>
+       <span class="version-value" data-version="nagram-desktop">
+        v2.3.0
+       </span>
+       <noscript>
+        Version info unavailable
+       </noscript>
+      </p>
+      <div class="card-actions">
+       <a class="btn btn-small" data-dl="windows" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases/download/v2.3.0/Nexagram-Windows-v2.3.0.zip">
+        Download · Windows
+       </a>
+       <a class="btn btn-small" data-dl="macos" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Download · macOS
+       </a>
+       <a class="btn btn-small" data-dl="linux" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nagram-desktop" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Download · Linux
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Releases page
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">
+        Source
+       </a>
+      </div>
+     </article>
+     <article class="card" id="nnngram">
+      <header>
+       <img alt="" height="56" loading="lazy" src="./icons/nexagram.png" width="56"/>
+       <div>
+        <h3>
+         Nexagram Core
+        </h3>
+        <p class="platform">
+         Android 8.1 or later · arm64-v8a
+        </p>
+       </div>
+      </header>
+      <p class="tagline">
+       A leaner build based on Nullgram with a largely similar feature set. Builds are posted to GitHub Releases and the Telegram channel.
+      </p>
+      <p class="version">
+       <span class="version-label">
+        Latest version
+       </span>
+       <span class="version-value" data-version="nnngram">
+        v2.3.1
+       </span>
+       <noscript>
+        Version info unavailable
+       </noscript>
+      </p>
+      <div class="card-actions">
+       <a class="btn btn-small" data-dl="nnngram" data-fallback="https://github.com/smartworldarafath/Nexagram/releases" data-product="nnngram" href="https://github.com/smartworldarafath/Nexagram/releases">
+        Download · Releases
+       </a>
+       <a class="btn btn-small" href="https://t.me/nexagram_official" rel="noopener" target="_blank">
+        Download · Telegram
+       </a>
+       <a class="text-link" href="https://github.com/smartworldarafath/Nexagram">
+        Source
+       </a>
+      </div>
+     </article>
+    </div>
+   </section>
+  </main>
+  <footer class="site-footer">
+   <div class="footer-cols">
+    <div>
+     <h2>
+      Community
+     </h2>
+     <ul>
+      <li>
+       <a href="https://t.me/nexagram_official" rel="noopener" target="_blank">
+        Nexagram channel
+       </a>
+      </li>
+      <li>
+       <a href="https://t.me/nexagram_group" rel="noopener" target="_blank">
+        Nexagram group
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/discussions" rel="noopener" target="_blank">
+        Discussions
+       </a>
+      </li>
+     </ul>
+    </div>
+    <div>
+     <h2>
+      Source
+     </h2>
+     <ul>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram" rel="noopener" target="_blank">
+        smartworldarafath/Nexagram
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/releases" rel="noopener" target="_blank">
+        GitHub Releases
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/blob/main/README.md" rel="noopener" target="_blank">
+        Documentation
+       </a>
+      </li>
+      <li>
+       <a href="https://github.com/smartworldarafath/Nexagram/issues" rel="noopener" target="_blank">
+        Issue Tracker
+       </a>
+      </li>
+     </ul>
+    </div>
+    <div class="footer-wide">
+     <h2>
+      License
+     </h2>
+     <p>
+      Nexagram Android and Nexagram Desktop are released under GPL-3.0, Nexagram Core under GPL-2.0. Upstream and third-party components remain under their own licenses. The Nexagram project identity is maintained by smartworldarafath. Tux, the Linux penguin, was created by Larry Ewing using The GIMP.
+     </p>
+    </div>
+   </div>
+   <p class="disclaimer">
+    Nexagram is an independent third-party client. It is not affiliated with, sponsored by or endorsed by Telegram (Telegram FZ-LLC and its affiliates). Telegram is a trademark of its respective owner.
+   </p>
   </footer>
-
-  <script src="./js/main.js"></script>
-</body>
+  <script src="./js/main.js">
+  </script>
+ </body>
 </html>
