@@ -7,6 +7,6 @@
   "author": "SmartWorld / Zero by Arafath",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "42.3.0"
+    "electron": "42.11.16"
   }
 }
