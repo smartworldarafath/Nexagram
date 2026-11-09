@@ -1,4 +1,4 @@
-// Nexagram Website JavaScript
+﻿// Nexagram Website JavaScript
 // Platform Detection & Dynamic GitHub Release Info
 
 (function () {
@@ -26,7 +26,7 @@
   }
 
   async function fetchLatestRelease() {
-    const defaultVer = 'v2.3.1';
+    const defaultVer = 'v2.3.2';
     const versionElements = document.querySelectorAll('[data-version]');
     
     // Set fallback version immediately
@@ -66,7 +66,7 @@
         }
       }
     } catch (e) {
-      // Graceful fallback to v2.3.1
+      // Graceful fallback to v2.3.2
       versionElements.forEach(el => {
         el.textContent = defaultVer;
         el.dataset.status = 'ok';

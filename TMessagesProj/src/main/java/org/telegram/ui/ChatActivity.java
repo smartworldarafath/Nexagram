@@ -187,6 +187,7 @@ import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.NotificationsController;
 import org.telegram.messenger.R;
+import org.telegram.messenger.RichMessageLayout;
 import org.telegram.messenger.SecretChatHelper;
 import org.telegram.messenger.SendMessagesHelper;
 import org.telegram.messenger.SharedConfig;
@@ -396,6 +397,7 @@ import tw.nekomimi.nekogram.utils.PGPUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
 import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.MemberAdminActions;
 import xyz.nextalone.nagram.helper.DoubleTap;
 import xyz.nextalone.nagram.helper.MessageHelper;
 import xyz.nextalone.nagram.helper.MessageMenuCompact;
@@ -3790,7 +3792,7 @@ public class ChatActivity extends BaseFragment implements
                 return true;
             }
             return chatActivity == null || !(
-                chatActivity.getDialogId() < 0 && chatActivity.getMessagesController().isPeerNoForwardsWithOverride(chatActivity.getDialogId()) ||
+!DialogObject.isEncryptedDialog(chatActivity.getDialogId()) && chatActivity.isPeerNoForwardsWithOverride() ||
                 selectedView != null && selectedView.getMessageObject() != null && (selectedView.getMessageObject().messageOwner != null && selectedView.getMessageObject().messageOwner.noforwards)
             );
         }
@@ -21137,40 +21139,84 @@ public class ChatActivity extends BaseFragment implements
         if (uri == null) {
             return;
         }
-        String extractUriFrom = uri.toString();
-        if (extractUriFrom.contains("com.google.android.apps.photos.contentprovider")) {
-            try {
-                String firstExtraction = extractUriFrom.split("/1/")[1];
-                int index = firstExtraction.indexOf("/ACTUAL");
-                if (index != -1) {
-                    firstExtraction = firstExtraction.substring(0, index);
-                    String secondExtraction = URLDecoder.decode(firstExtraction, "UTF-8");
-                    uri = Uri.parse(secondExtraction);
-                }
-            } catch (Exception e) {
-                FileLog.e(e);
+        ArrayList<Uri> uris = new ArrayList<>();
+        uris.add(uri);
+        sendUrisAsDocuments(uris, notify, schedule_date);
+    }
+
+    private void sendClipDataAsDocuments(ClipData clipData) {
+        sendClipDataAsDocuments(clipData, true, 0);
+    }
+
+    private void sendClipDataAsDocuments(ClipData clipData, boolean notify, int schedule_date) {
+        if (editingMessageObject != null) {
+            // the first file replaces the edited media, the rest are sent as new messages
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                sendUriAsDocument(clipData.getItemAt(i).getUri(), notify, schedule_date);
+            }
+            return;
+        }
+        ArrayList<Uri> uris = new ArrayList<>();
+        for (int i = 0; i < clipData.getItemCount(); i++) {
+            Uri uri = clipData.getItemAt(i).getUri();
+            if (uri != null) {
+                uris.add(uri);
             }
         }
-        String tempPath = AndroidUtilities.getPath(uri);
-        String originalPath = tempPath;
-        boolean sendAsUri = false;
-        if (!BuildVars.NO_SCOPED_STORAGE) {
-            sendAsUri = true;
-        } else if (tempPath == null) {
-            originalPath = uri.toString();
-            tempPath = MediaController.copyFileToCache(uri, "file");
+        sendUrisAsDocuments(uris, notify, schedule_date);
+    }
 
-            if (tempPath == null) {
-                showAttachmentError();
-                return;
+    private void sendUrisAsDocuments(ArrayList<Uri> uris, boolean notify, int schedule_date) {
+        ArrayList<String> paths = null;
+        ArrayList<String> originalPaths = null;
+        ArrayList<Uri> sendUris = null;
+        for (int a = 0; a < uris.size(); a++) {
+            Uri uri = uris.get(a);
+            String extractUriFrom = uri.toString();
+            if (extractUriFrom.contains("com.google.android.apps.photos.contentprovider")) {
+                try {
+                    String firstExtraction = extractUriFrom.split("/1/")[1];
+                    int index = firstExtraction.indexOf("/ACTUAL");
+                    if (index != -1) {
+                        firstExtraction = firstExtraction.substring(0, index);
+                        String secondExtraction = URLDecoder.decode(firstExtraction, "UTF-8");
+                        uri = Uri.parse(secondExtraction);
+                    }
+                } catch (Exception e) {
+                    FileLog.e(e);
+                }
             }
+            if (!BuildVars.NO_SCOPED_STORAGE) {
+                if (sendUris == null) {
+                    sendUris = new ArrayList<>();
+                }
+                sendUris.add(uri);
+                continue;
+            }
+            String tempPath = AndroidUtilities.getPath(uri);
+            String originalPath = tempPath;
+            if (tempPath == null) {
+                originalPath = uri.toString();
+                tempPath = MediaController.copyFileToCache(uri, "file");
+
+                if (tempPath == null) {
+                    showAttachmentError();
+                    continue;
+                }
+            }
+            if (paths == null) {
+                paths = new ArrayList<>();
+                originalPaths = new ArrayList<>();
+            }
+            paths.add(tempPath);
+            originalPaths.add(originalPath);
+        }
+        if (paths == null && sendUris == null) {
+            return;
         }
         fillEditingMediaWithCaption(null, null);
-        if (sendAsUri) {
-            SendMessagesHelper.prepareSendingDocument(getAccountInstance(), null, null, uri, null, null, dialog_id, replyingMessageObject, getThreadMessage(), null, replyingQuote, editingMessageObject, notify, schedule_date, null, getMessageChatSendParams(), false);
-        } else {
-            SendMessagesHelper.prepareSendingDocument(getAccountInstance(), tempPath, originalPath, null, null, null, dialog_id, replyingMessageObject, getThreadMessage(), null, replyingQuote, editingMessageObject, notify, schedule_date, null, getMessageChatSendParams(), false);
-        }
+        // send all picked files in one call, so that they are grouped into a single album
+        SendMessagesHelper.prepareSendingDocuments(getAccountInstance(), paths, originalPaths, sendUris, null, null, dialog_id, replyingMessageObject, getThreadMessage(), null, replyingQuote, editingMessageObject, notify, schedule_date, null, getMessageChatSendParams(), 0, false, 0);
         hideFieldPanel(false);
     }
 
@@ -21276,10 +21322,7 @@ public class ChatActivity extends BaseFragment implements
                         }
                         AlertsCreator.createScheduleDatePickerDialog(getParentActivity(), dialog_id, (notify, scheduleDate, scheduleRepeatPeriod) -> {
                             fillEditingMediaWithCaption(null, null);
-                            ClipData clipData = data.getClipData();
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                sendUriAsDocument(clipData.getItemAt(i).getUri(), notify, scheduleDate);
-                            }
+                            sendClipDataAsDocuments(data.getClipData(), notify, scheduleDate);
                             afterMessageSend();
                         }, themeDelegate);
                         return;
@@ -21291,10 +21334,7 @@ public class ChatActivity extends BaseFragment implements
                     if (data.getData() != null) {
                         sendUriAsDocument(data.getData());
                     } else if (data.getClipData() != null) {
-                        ClipData clipData = data.getClipData();
-                        for (int i = 0; i < clipData.getItemCount(); i++) {
-                            sendUriAsDocument(clipData.getItemAt(i).getUri());
-                        }
+                        sendClipDataAsDocuments(data.getClipData());
                     } else {
                         showAttachmentError();
                     }
@@ -35754,7 +35794,7 @@ public class ChatActivity extends BaseFragment implements
         } else if (actionBar != null && actionBar.isActionModeShowed()) {
             if (invoked) clearSelectionMode();
             return false;
-        } else if (chatActivityEnterView != null && chatActivityEnterView.isPopupShowing() && chatActivityEnterView.canHidePopup()) {
+        } else if (chatActivityEnterView != null && chatActivityEnterView.canHidePopupByBackButton()) {
             if (invoked) chatActivityEnterView.hidePopup(true);
             return false;
 //        } else if (chatActivityEnterView != null && chatActivityEnterView.hasBotWebView() && chatActivityEnterView.botCommandsMenuIsShowing() && chatActivityEnterView.onBotWebViewBackPressed()) {
@@ -37716,7 +37756,9 @@ public class ChatActivity extends BaseFragment implements
             }
         } else if (url instanceof URLSpanUserMention) {
             TLRPC.User user = getMessagesController().getUser(Utilities.parseLong(((URLSpanUserMention) url).getURL()));
-            if (user != null) {
+            if (longPress && naShowMentionAdminActions(cell, user)) {
+                // na: admin actions on mention long press
+            } else if (user != null) {
                 MessagesController.getInstance(currentAccount).openChatOrProfileWith(user, null, ChatActivity.this, 0, false);
             }
             if (longPress && cell != null) {
@@ -40747,9 +40789,53 @@ public class ChatActivity extends BaseFragment implements
             if (cell == null || document == null || getParentLayout() == null || !canSaveRichDocument(cell)) {
                 return;
             }
-            ItemOptions.makeOptions(ChatActivity.this, cell)
-                .add(R.drawable.msg_download, getString(R.string.SaveToDownloads), () -> saveRichDocument(cell, document))
-                .setDrawScrim(false)
+            File file = FileLoader.getInstance(currentAccount).getPathToAttach(document, true);
+            final File richDocFile = (file != null && file.exists()) ? file : FileLoader.getInstance(currentAccount).getPathToAttach(document, false);
+            final boolean richDocExists = NekoConfig.showDeleteDownloadedFile.Bool() && richDocFile != null && richDocFile.exists();
+            ItemOptions options = ItemOptions.makeOptions(ChatActivity.this, cell)
+                .add(R.drawable.msg_download, getString(R.string.SaveToDownloads), () -> saveRichDocument(cell, document));
+            if (richDocExists) {
+                options.add(R.drawable.msg_clear, getString(R.string.DeleteDownloadedFile), () -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                    builder.setTitle(LocaleController.getString("DeleteDownloadedFile"));
+                    builder.setMessage(LocaleController.getString("DeleteDownloadedFileConfirm"));
+                    builder.setPositiveButton(LocaleController.getString("OK", R.string.OK), (dialogInterface, i) -> {
+                        if (richDocFile.getAbsolutePath().startsWith(EnvUtil.getTelegramPath().getAbsolutePath())) {
+                            try {
+                                richDocFile.delete();
+                            } catch (Exception ignore) {
+                                richDocFile.deleteOnExit();
+                            }
+                            File fallbackRichDocFile = FileLoader.getInstance(currentAccount).getPathToAttach(document, false);
+                            if (fallbackRichDocFile != null && fallbackRichDocFile.exists() && fallbackRichDocFile.getAbsolutePath().startsWith(EnvUtil.getTelegramPath().getAbsolutePath())) {
+                                try {
+                                    fallbackRichDocFile.delete();
+                                } catch (Exception ignore) {
+                                    fallbackRichDocFile.deleteOnExit();
+                                }
+                            }
+                            FileLoader.getInstance(currentAccount).cancelLoadFile(document);
+                            if (cell.getMessageObject() != null && cell.getMessageObject().richLayout != null) {
+                                for (int bi = 0; bi < cell.getMessageObject().richLayout.blocks.size(); bi++) {
+                                    RichMessageLayout.RichBlock richBlock = cell.getMessageObject().richLayout.blocks.get(bi);
+                                    if (richBlock instanceof RichMessageLayout.RichDocumentBlock) {
+                                        RichMessageLayout.RichDocumentBlock docBlock = (RichMessageLayout.RichDocumentBlock) richBlock;
+                                        if (docBlock.block != null && docBlock.block.document_id == document.id) {
+                                            docBlock.updateButtonState(true);
+                                        }
+                                    }
+                                }
+                            }
+                            Toast.makeText(getParentActivity(), LocaleController.getString("DeleteDownloadedFileSucceed"), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getParentActivity(), LocaleController.getString("DeleteDownloadedFileExternal"), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    builder.setNegativeButton(LocaleController.getString("Cancel"), (dialog, which) -> {});
+                    builder.show();
+                });
+            }
+            options.setDrawScrim(false)
                 .show();
         }
 
@@ -40926,7 +41012,11 @@ public class ChatActivity extends BaseFragment implements
             if (isAvatarPreviewerEnabled()) {
                 final boolean enableMention = currentChat != null && (bottomChannelButtonsLayout == null || bottomChannelButtonsLayout.getVisibility() != View.VISIBLE) && (bottomOverlay == null || bottomOverlay.getVisibility() != View.VISIBLE);
                 final boolean enableSearchMessages = currentChat != null && (threadMessageId == 0 || isTopic) && (!ChatObject.isChannel(currentChat) || currentChat.megagroup);
-                final AvatarPreviewer.MenuItem[] menuItems = new AvatarPreviewer.MenuItem[2 + (enableMention ? 1 : 0) + (enableSearchMessages ? 1 : 0)];
+                // na: admin actions on avatar long press
+                final boolean naAvatarAdminActions = NaConfig.INSTANCE.getAdminActionsOnAvatarLongPress().Bool();
+                final boolean naChangePermissions = naAvatarAdminActions && MemberAdminActions.canChangePermissions(currentAccount, currentChat, user);
+                final boolean naBanOrDelete = naAvatarAdminActions && MemberAdminActions.canBanOrDelete(currentAccount, currentChat, user);
+                final AvatarPreviewer.MenuItem[] menuItems = new AvatarPreviewer.MenuItem[2 + (enableMention ? 1 : 0) + (enableSearchMessages ? 1 : 0) + (naChangePermissions ? 1 : 0) + (naBanOrDelete ? 1 : 0)];
                 int a = 0;
                 menuItems[a++] = AvatarPreviewer.MenuItem.OPEN_PROFILE;
                 menuItems[a++] = AvatarPreviewer.MenuItem.SEND_MESSAGE;
@@ -40935,6 +41025,12 @@ public class ChatActivity extends BaseFragment implements
                 }
                 if (enableSearchMessages) {
                     menuItems[a++] = AvatarPreviewer.MenuItem.SEARCH_MESSAGES;
+                }
+                if (naChangePermissions) {
+                    menuItems[a++] = AvatarPreviewer.MenuItem.CHANGE_PERMISSIONS;
+                }
+                if (naBanOrDelete) {
+                    menuItems[a++] = AvatarPreviewer.MenuItem.BAN_OR_DELETE_MESSAGES;
                 }
                 final TLRPC.UserFull userFull = getMessagesController().getUserFull(user.id);
                 AvatarPreviewer.Data data;
@@ -40961,6 +41057,12 @@ public class ChatActivity extends BaseFragment implements
                             case SEARCH_MESSAGES:
                                 openSearchWithUser(user);
                                 break;
+                            case CHANGE_PERMISSIONS:
+                                naOpenChangePermissions(user);
+                                break;
+                            case BAN_OR_DELETE_MESSAGES:
+                                MemberAdminActions.openBanOrDelete(ChatActivity.this, currentChat, user);
+                                break;
                         }
                     });
                     return true;
@@ -40977,6 +41079,12 @@ public class ChatActivity extends BaseFragment implements
                         })
                         .addIf(enableSearchMessages, R.drawable.msg_search, getString(R.string.AvatarPreviewSearchMessages), () -> {
                             openSearchWithUser(user);
+                        })
+                        .addIf(naChangePermissions, R.drawable.msg_permissions, getString(R.string.ChangePermissions), () -> {
+                            naOpenChangePermissions(user);
+                        })
+                        .addIf(naBanOrDelete, R.drawable.msg_block, getString(R.string.BanOrDeleteMessages), () -> {
+                            MemberAdminActions.openBanOrDelete(ChatActivity.this, currentChat, user);
                         })
                         .setDrawScrim(false)
                         .setGravity(Gravity.LEFT)
@@ -44452,6 +44560,47 @@ public class ChatActivity extends BaseFragment implements
             }
         });
         presentFragment(fragment);
+    }
+
+    // na: admin actions on a member without one of their messages; the participant is fetched on
+    // demand because chatInfo.participants is partial for supergroups
+    private void naOpenChangePermissions(TLRPC.User user) {
+        MemberAdminActions.loadParticipant(this, currentChat, user, participant -> {
+            if (!MemberAdminActions.canEditPermissionsOf(participant)) {
+                MemberAdminActions.showCannotEditPermissions(this);
+                return;
+            }
+            selectedParticipant = MemberAdminActions.wrapParticipant(currentAccount, user, participant);
+            doAdminActions(1);
+        });
+    }
+
+    // na: admin actions on mention long press; returns false to keep the upstream behavior
+    private boolean naShowMentionAdminActions(ChatMessageCell cell, TLRPC.User user) {
+        if (cell == null || user == null || !NaConfig.INSTANCE.getAdminActionsOnMentionLongPress().Bool()) {
+            return false;
+        }
+        final boolean changePermissions = MemberAdminActions.canChangePermissions(currentAccount, currentChat, user);
+        final boolean banOrDelete = MemberAdminActions.canBanOrDelete(currentAccount, currentChat, user);
+        if (!changePermissions && !banOrDelete) {
+            return false;
+        }
+        ItemOptions.makeOptions(this, cell)
+            .add(R.drawable.msg_openprofile, getString(R.string.OpenProfile), () -> {
+                getMessagesController().openChatOrProfileWith(user, null, ChatActivity.this, 0, false);
+            })
+            .addIf(changePermissions, R.drawable.msg_permissions, getString(R.string.ChangePermissions), () -> {
+                naOpenChangePermissions(user);
+            })
+            .addIf(banOrDelete, R.drawable.msg_block, getString(R.string.BanOrDeleteMessages), () -> {
+                MemberAdminActions.openBanOrDelete(ChatActivity.this, currentChat, user);
+            })
+            .setDrawScrim(false)
+            .setGravity(Gravity.LEFT)
+            .forceBottom(true)
+            .translate(0, -dp(48))
+            .show();
+        return true;
     }
 
     private void doAdminActions(int action) {

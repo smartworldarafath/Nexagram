@@ -1773,7 +1773,7 @@ public abstract class TextSelectionHelper<Cell extends TextSelectionHelper.Selec
     }
 
     private void copyText() {
-        if (!isInSelectionMode()) {
+        if (!isInSelectionMode() || !canCopy()) {
             return;
         }
         if (!onCopyOverride()) {

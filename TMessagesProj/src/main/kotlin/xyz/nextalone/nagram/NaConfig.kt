@@ -1349,6 +1349,134 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
+    val inputTextAnimations = addConfig("InputTextAnimations", ConfigItem.configTypeBool, false)
+    val inputAnimationStrength = addConfig("InputAnimationStrength", ConfigItem.configTypeInt, 2)
+    val forceVideoNewRewindMethod =
+        addConfig(
+            "ForceVideoNewRewindMethod",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val tabStyleStroke =
+        addConfig(
+            "TabStyleStroke",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val addCommaAfterMention =
+        addConfig(
+            "AddCommaAfterMention",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val useSystemFontInTitle =
+        addConfig(
+            "UseSystemFontInTitle",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val materialDesign3ChatHeader =
+        addConfig(
+            "MaterialDesign3ChatHeader",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val switchStyle =
+        addConfig(
+            "SwitchStyle",
+            ConfigItem.configTypeInt,
+            SwitchStyle.TELEGRAM.value
+        )
+    val disableChatListSwipeGesture =
+        addConfig(
+            "DisableChatListSwipeGesture",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val globalDisableLinkPreviews =
+        addConfig(
+            "GlobalDisableLinkPreviews",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val alwaysSendVideosInHD =
+        addConfig(
+            "AlwaysSendVideosInHD",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val showChannelIcon =
+        addConfig(
+            "ShowChannelIcon",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val hideSideShareButton =
+        addConfig(
+            "HideSideShareButton",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val askBeforeSendingSticker =
+        addConfig(
+            "AskBeforeSendingSticker",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val keepFormatting =
+        addConfig(
+            "KeepFormatting",
+            ConfigItem.configTypeBool,
+            true
+        )
+    val askBeforeSendingGIF =
+        addConfig(
+            "AskBeforeSendingGIF",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val disableCommunityChatGrouping =
+        addConfig(
+            "DisableCommunityChatGrouping",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val communityAvatarTapAction =
+        addConfig(
+            "CommunityAvatarTapAction",
+            ConfigItem.configTypeInt,
+            1
+        )
+    val useSystemNotificationColor =
+        addConfig(
+            "UseSystemNotificationColor",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val adminActionsOnAvatarLongPress =
+        addConfig(
+            "AdminActionsOnAvatarLongPress",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val adminActionsOnMentionLongPress =
+        addConfig(
+            "AdminActionsOnMentionLongPress",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val deleteMessagesWhenRemovingMembers =
+        addConfig(
+            "DeleteMessagesWhenRemovingMembers",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val stickerShape =
+        addConfig(
+            "StickerShape",
+            ConfigItem.configTypeInt,
+            0
+        )
 
     private fun addConfig(
         k: String,

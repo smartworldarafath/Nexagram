@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.ResolveInfo;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.Log;
@@ -49,6 +50,7 @@ import org.telegram.ui.Cells.TextSettingsCell;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.Components.SeekBarView;
+import org.telegram.ui.Components.Switch;
 import org.telegram.ui.Components.UndoView;
 
 import java.util.ArrayList;
@@ -70,6 +72,7 @@ import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.config.CellGroup;
 import tw.nekomimi.nekogram.config.cell.AbstractConfigCell;
 import tw.nekomimi.nekogram.config.cell.*;
+import tw.nekomimi.nekogram.settings.cell.ActionBarPreviewCell;
 import xyz.nextalone.nagram.NaConfig;
 
 @SuppressLint("RtlHardcoded")
@@ -88,8 +91,8 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
     private final AbstractConfigCell headerTranslation = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("Translate")));
     private final AbstractConfigCell translationProviderRow = cellGroup.appendCell(new ConfigCellCustom("TranslationProvider", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell useTelegramTranslateInChatRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.useTelegramTranslateInChat));
-    private final AbstractConfigCell translateToLangRow = cellGroup.appendCell(new ConfigCellCustom("TranslateToLang", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
-    private final AbstractConfigCell translateInputToLangRow = cellGroup.appendCell(new ConfigCellCustom("TranslateInputToLang", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell translateToLangRow = cellGroup.appendCell(new ConfigCellCustom("TransToLang", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell translateInputToLangRow = cellGroup.appendCell(new ConfigCellCustom("TransInputToLang", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell googleCloudTranslateKeyRow = cellGroup.appendCell(new ConfigCellTextDetail(NekoConfig.googleCloudTranslateKey, (view, position) -> {
         customDialog_BottomInputString(position, NekoConfig.googleCloudTranslateKey, LocaleController.getString("GoogleCloudTransKeyNotice"), "Key");
     }, LocaleController.getString("UsernameEmpty", R.string.UsernameEmpty)));
@@ -109,6 +112,7 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
     private final AbstractConfigCell llmSettingsRow = cellGroup.appendCell(new ConfigCellCustom("LLMSettings", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell hideOriginAfterTranslationRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideOriginAfterTranslation()));
     private final AbstractConfigCell autoTranslateRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getAutoTranslate(), LocaleController.getString("AutoTranslateAbout")));
+    private final AbstractConfigCell keepFormattingRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getKeepFormatting()));
     private final AbstractConfigCell dividerTranslation = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell headerAiTools = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.PremiumPreviewAIEditor)));
@@ -157,7 +161,27 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
         }, null));
     private final AbstractConfigCell dividerConnection = cellGroup.appendCell(new ConfigCellDivider());
 
+    private final AbstractConfigCell headerActionBar = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("ActionBar", R.string.ActionBar)));
+    private final AbstractConfigCell actionBarPreviewRow = cellGroup.appendCell(new ConfigCellCustom("ActionBar", ConfigCellCustom.CUSTOM_ITEM_ActionBarPreview, false));
+    private final AbstractConfigCell customTitleRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomTitle(),
+            LocaleController.getString("customTitleHint", R.string.CustomTitleHint), null,
+            (input) -> input.isEmpty() ? (String) NaConfig.INSTANCE.getCustomTitle().defaultValue : input));
+    private final AbstractConfigCell customTitleUserNameRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomTitleUserName()));
+    private final AbstractConfigCell centerActionBarTitleRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getCenterActionBarTitle()));
+    private final AbstractConfigCell useSystemFontInTitleRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getUseSystemFontInTitle()));
+    private final AbstractConfigCell alwaysShowDownloadIconRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getAlwaysShowDownloadIcon()));
+    private final AbstractConfigCell actionBarDecorationRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NekoConfig.actionBarDecoration, new String[]{
+            LocaleController.getString("DependsOnDate", R.string.DependsOnDate),
+            LocaleController.getString("Snowflakes", R.string.Snowflakes),
+            LocaleController.getString("Fireworks", R.string.Fireworks),
+            LocaleController.getString("DecorationNone", R.string.DecorationNone),
+    }, null));
+    private final AbstractConfigCell newYearRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.newYear));
+    private final AbstractConfigCell appBarShadowRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableAppBarShadow));
+    private final AbstractConfigCell dividerActionBar = cellGroup.appendCell(new ConfigCellDivider());
+
     private final AbstractConfigCell headerFolder = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("Folder")));
+    private final AbstractConfigCell filterTabsPreviewRow = cellGroup.appendCell(new ConfigCellCustom("Folder", ConfigCellCustom.CUSTOM_ITEM_FilterTabsPreview, false));
     private final AbstractConfigCell hideAllTabRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hideAllTab, LocaleController.getString("HideAllTabAbout")));
     private final AbstractConfigCell openArchiveOnPullRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.openArchiveOnPull));
     private final AbstractConfigCell disablePullDownSearchRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disablePullDownSearch));
@@ -169,6 +193,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                     LocaleController.getString("TabTitleTypeIcon", R.string.TabTitleTypeIcon),
                     LocaleController.getString("TabTitleTypeMix", R.string.TabTitleTypeMix)
             }, null));
+    private final AbstractConfigCell tabStyleStrokeRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getTabStyleStroke()));
     private final AbstractConfigCell tabStyleRow = cellGroup.appendCell(new ConfigCellSelectBox("TabStyle", NaConfig.INSTANCE.getTabStyle(),
             new String[]{
                     LocaleController.getString(R.string.Default),
@@ -183,7 +208,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private final AbstractConfigCell divider_notification = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell header3 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("OpenKayChain")));
-    private final AbstractConfigCell pgpAppRow = cellGroup.appendCell(new ConfigCellCustom("PgpApp", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
+    private final AbstractConfigCell pgpAppRow = cellGroup.appendCell(new ConfigCellCustom("OpenPGPApp", CellGroup.ITEM_TYPE_TEXT_SETTINGS_CELL, true));
     private final AbstractConfigCell keyRow = cellGroup.appendCell(new ConfigCellTextDetail(NekoConfig.openPGPKeyId, (view, position) -> {
         requestKey(new Intent(OpenPgpApi.ACTION_GET_SIGN_KEY_ID));
     }, "0"));
@@ -201,20 +226,18 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     }));
     private final AbstractConfigCell mediaPreviewRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.mediaPreview));
     private final AbstractConfigCell showUserIconsInChatsListRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowUserIconsInChatsList()));
+    private final AbstractConfigCell disableCommunityChatGroupingRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableCommunityChatGrouping()));
+    private final AbstractConfigCell communityAvatarTapActionRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getCommunityAvatarTapAction(),
+            new String[]{
+                    LocaleController.getString(R.string.CommunityAvatarTapActionChat),
+                    LocaleController.getString(R.string.CommunityAvatarTapActionCommunity),
+                    LocaleController.getString(R.string.CommunityAvatarTapActionArrow),
+            }, null));
     private final AbstractConfigCell divider4 = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell header5 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("Appearance")));
     private final AbstractConfigCell typefaceRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.typeface));
     private final AbstractConfigCell transparentStatusBarRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.transparentStatusBar));
-    private final AbstractConfigCell appBarShadowRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableAppBarShadow));
-    private final AbstractConfigCell newYearRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.newYear));
-    private final AbstractConfigCell alwaysShowDownloadIconRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getAlwaysShowDownloadIcon()));
-    private final AbstractConfigCell actionBarDecorationRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NekoConfig.actionBarDecoration, new String[]{
-            LocaleController.getString("DependsOnDate", R.string.DependsOnDate),
-            LocaleController.getString("Snowflakes", R.string.Snowflakes),
-            LocaleController.getString("Fireworks", R.string.Fireworks),
-            LocaleController.getString("DecorationNone", R.string.DecorationNone),
-    }, null));
     private final AbstractConfigCell iconDecorationRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getIconDecoration(), new String[]{
             LocaleController.getString("DependsOnDate", R.string.DependsOnDate),
             LocaleController.getString("Christmas", R.string.Christmas),
@@ -244,7 +267,6 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private final AbstractConfigCell chatBlurAlphaValueRow = cellGroup.appendCell(new ConfigCellCustom("ChatBlurAlphaValue", ConfigCellCustom.CUSTOM_ITEM_CharBlurAlpha, NekoConfig.forceBlurInChat.Bool()));
 
     private final AbstractConfigCell disableDialogsFloatingButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableDialogsFloatingButton()));
-    private final AbstractConfigCell centerActionBarTitleRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getCenterActionBarTitle()));
     private final AbstractConfigCell disablePredictiveBackAnimationRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisablePredictiveBackAnimation()));
     private final AbstractConfigCell mainTabsStyleRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getMainTabsStyle(),
             new String[]{
@@ -262,12 +284,17 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuNewGroup()));
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuNewMessage()));
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuSavedMessages()));
+            add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuMyProfile()));
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuSettings()));
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuProxy()));
             add(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomDialogsMenuAccount()));
         }}));
     }));
     private final AbstractConfigCell sidebarSettingsActivityRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getSidebarSettingsActivity()));
+    private final AbstractConfigCell switchStyleRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getSwitchStyle(), new String[]{
+            LocaleController.getString(R.string.SwitchStyleTelegram),
+            LocaleController.getString(R.string.SwitchStyleModern)
+    }, null));
     private final AbstractConfigCell divider5 = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell header6 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("PrivacyTitle")));
@@ -279,13 +306,9 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private final AbstractConfigCell divider6 = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell header7 = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString("General")));
-    private final AbstractConfigCell customTitleRow = cellGroup.appendCell(new ConfigCellTextInput(null, NaConfig.INSTANCE.getCustomTitle(),
-            LocaleController.getString("customTitleHint", R.string.CustomTitleHint), null,
-            (input) -> input.isEmpty() ? (String) NaConfig.INSTANCE.getCustomTitle().defaultValue : input));
     private final AbstractConfigCell customSavePathRow = cellGroup.appendCell(new ConfigCellTextInput(null, NekoConfig.customSavePath,
             LocaleController.getString("customSavePathHint", R.string.customSavePathHint), null,
             (input) -> input.matches("^[A-za-z0-9.]{1,255}$") || input.isEmpty() ? input : (String) NekoConfig.customSavePath.defaultValue));
-    private final AbstractConfigCell customTitleUserNameRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getCustomTitleUserName()));
     private final AbstractConfigCell useSystemUnlockRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getUseSystemUnlock()));
     private final AbstractConfigCell disableUndoRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableUndo));
     private final AbstractConfigCell showIdAndDcRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showIdAndDc));
@@ -321,9 +344,12 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private final AbstractConfigCell disableGlareEffectsRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableGlareEffects()));
     private final AbstractConfigCell liquidGlassAngleRow = cellGroup.appendCell(new ConfigCellCustom("LiquidGlassAngle", ConfigCellCustom.CUSTOM_ITEM_LiquidGlassAngle, true));
     private final AbstractConfigCell liquidGlassIntensityRow = cellGroup.appendCell(new ConfigCellCustom("LiquidGlassIntensity", ConfigCellCustom.CUSTOM_ITEM_LiquidGlassIntensity, true));
+    private final AbstractConfigCell materialDesign3ChatHeaderRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getMaterialDesign3ChatHeader(), LocaleController.getString(R.string.MaterialDesign3ChatHeaderDes)));
     private final AbstractConfigCell dividerBlur = cellGroup.appendCell(new ConfigCellDivider());
 
     private ChatBlurAlphaSeekBar chatBlurAlphaSeekbar;
+    private FilterTabsPreviewCell filterTabsPreviewCell;
+    private ActionBarPreviewCell actionBarPreviewCell;
 
     public NekoGeneralSettingsActivity() {
         updateRows();
@@ -349,6 +375,8 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             ((DefaultItemAnimator) listView.getItemAnimator()).setSupportsChangeAnimations(false);
         }
         listView.setAdapter(listAdapter);
+        listView.setItemSelectorColorProvider(position ->
+                position == cellGroup.rows.indexOf(filterTabsPreviewRow) ? Color.TRANSPARENT : null);
 
         // Fragment: Set OnClick Callbacks
         listView.setOnItemClickListener((view, position, x, y) -> {
@@ -368,6 +396,9 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                     }
                 }
             } else if (a instanceof ConfigCellCustom) { // Custom OnClick
+                if (position == cellGroup.rows.indexOf(filterTabsPreviewRow)) {
+                    return;
+                }
                 if (position == cellGroup.rows.indexOf(pgpAppRow)) {
                     PopupBuilder builder = new PopupBuilder(view);
 
@@ -448,7 +479,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
         listView.setOnItemLongClickListener((view, position, x, y) -> {
             var holder = listView.findViewHolderForAdapterPosition(position);
             if (holder != null && listAdapter.isEnabled(holder)) {
-                createLongClickDialog(context, NekoGeneralSettingsActivity.this, "general", position);
+                createLongClickDialog(view, NekoGeneralSettingsActivity.this, "general", position);
                 return true;
             }
             return false;
@@ -463,6 +494,8 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                         ConnectionsManager.native_setIpStrategy(a, ConnectionsManager.getIpStrategy());
                     }
                 }
+            } else if (key.equals(NaConfig.INSTANCE.getSwitchStyle().getKey())) {
+                Switch.invalidateAll();
             } else if (key.equals(NekoConfig.inappCamera.getKey())) {
                 SharedConfig.setInappCamera((boolean) newValue);
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
@@ -477,17 +510,34 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                         MessagesController.getInstance(a).checkPromoInfo(true);
                     }
                 }
+            } else if (key.equals(NaConfig.INSTANCE.getDisableCommunityChatGrouping().getKey())) {
+                for (int a : SharedConfig.activeAccounts) {
+                    if (UserConfig.getInstance(a).isClientActivated()) {
+                        MessagesController.getInstance(a).onCommunityChatGroupingChanged();
+                    }
+                }
             } else if (key.equals(NekoConfig.actionBarDecoration.getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updatePreview();
+                }
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NaConfig.INSTANCE.getNotificationIcon().getKey())) {
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.tabletMode.getKey())) {
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.newYear.getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updatePreview();
+                }
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.usePersianCalendar.getKey())) {
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.displayPersianCalendarByLatin.getKey())) {
+                tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
+            } else if (key.equals(NekoConfig.typeface.getKey()) || key.equals(NaConfig.INSTANCE.getUseSystemFontInTitle().getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateTitle();
+                }
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
             } else if (key.equals(NekoConfig.disableSystemAccount.getKey())) {
                 if ((boolean) newValue) {
@@ -507,6 +557,9 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             } else if (key.equals(NekoConfig.disableAppBarShadow.getKey())) {
                 ActionBarLayout.headerShadowDrawable = (boolean) newValue ? null : parentLayout.getParentActivity().getResources().getDrawable(R.drawable.header_shadow).mutate();
                 parentLayout.rebuildFragments(INavigationLayout.REBUILD_FLAG_REBUILD_LAST | INavigationLayout.REBUILD_FLAG_REBUILD_ONLY_LAST);
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateShadow();
+                }
             } else if (NekoConfig.forceBlurInChat.getKey().equals(key)) {
                 boolean enabled = (Boolean) newValue;
                 if (chatBlurAlphaSeekbar != null)
@@ -545,9 +598,40 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                 boolean enabled = (Boolean) newValue;
                 ((ConfigCellTextInput) customTitleRow).setEnabled(!enabled);
                 listAdapter.notifyItemChanged(cellGroup.rows.indexOf(customTitleRow));
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateTitle();
+                }
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
-            } else if (key.equals(NaConfig.INSTANCE.getSidebarSettingsActivity().getKey())) {
+            } else if (key.equals(NaConfig.INSTANCE.getCenterActionBarTitle().getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateCentered((Boolean) newValue);
+                }
+                parentLayout.rebuildAllFragmentViews(false, false);
+            } else if (key.equals(NaConfig.INSTANCE.getCustomTitle().getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateTitle();
+                }
+            } else if (key.equals(NaConfig.INSTANCE.getAlwaysShowDownloadIcon().getKey())) {
+                if (actionBarPreviewCell != null) {
+                    actionBarPreviewCell.updateDownloadsIcon((Boolean) newValue);
+                }
+            } else if (key.equals(NaConfig.INSTANCE.getSidebarSettingsActivity().getKey())
+                    || key.equals(NaConfig.INSTANCE.getMainTabsStyle().getKey())) {
                 tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
+            } else if (key.equals(NaConfig.INSTANCE.getTabStyleStroke().getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NekoConfig.hideAllTab.getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NekoConfig.tabsTitleType.getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NaConfig.INSTANCE.getTabStyle().getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NaConfig.INSTANCE.getIgnoreFolderCount().getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NekoConfig.ignoreMutedCount.getKey())) {
+                getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
+            } else if (key.equals(NaConfig.INSTANCE.getMaterialDesign3ChatHeader().getKey())) {
+                parentLayout.rebuildAllFragmentViews(false, false);
             }
         };
 
@@ -643,7 +727,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     @Override
     public ArrayList<ThemeDescription> getThemeDescriptions() {
         ArrayList<ThemeDescription> themeDescriptions = new ArrayList<>();
-        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
+        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class, FilterTabsPreviewCell.class, ActionBarPreviewCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
         themeDescriptions.add(new ThemeDescription(fragmentView, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundGray));
 
         themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_avatar_backgroundActionBarBlue));
@@ -742,14 +826,18 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                             textCell.setCanDisable(true);
                             if (NekoConfig.useTelegramTranslateInChat.Bool()) textCell.setEnabled(false);
                         } else if (position == cellGroup.rows.indexOf(pgpAppRow)) {
-                            textCell.setTextAndValue(LocaleController.getString("OpenPGPApp", R.string.OpenPGPApp), NekoXConfig.getOpenPGPAppName(), divider);
+                            textCell.setTextAndValue(LocaleController.getString(R.string.OpenPGPApp), NekoXConfig.getOpenPGPAppName(), divider);
                         } else if (position == cellGroup.rows.indexOf(translateToLangRow)) {
-                            textCell.setTextAndValue(LocaleController.getString("TransToLang", R.string.TransToLang), NekoXConfig.formatLang(NekoConfig.translateToLang.String()), divider);
+                            textCell.setTextAndValue(LocaleController.getString(R.string.TransToLang), NekoXConfig.formatLang(NekoConfig.translateToLang.String()), divider);
                         } else if (position == cellGroup.rows.indexOf(translateInputToLangRow)) {
-                            textCell.setTextAndValue(LocaleController.getString("TransInputToLang", R.string.TransInputToLang), NekoXConfig.formatLang(NekoConfig.translateInputLang.String()), divider);
+                            textCell.setTextAndValue(LocaleController.getString(R.string.TransInputToLang), NekoXConfig.formatLang(NekoConfig.translateInputLang.String()), divider);
                         } else if (position == cellGroup.rows.indexOf(llmSettingsRow)) {
                             textCell.setTextAndValue(LocaleController.getString("LLMTranslatorSettings", R.string.LLMTranslatorSettings), "", divider);
                         }
+                    } else if (holder.itemView instanceof FilterTabsPreviewCell) {
+                        ((FilterTabsPreviewCell) holder.itemView).updateTabs(false);
+                    } else if (holder.itemView instanceof ActionBarPreviewCell) {
+                        ((ActionBarPreviewCell) holder.itemView).updatePreview();
                     }
                 } else {
                     // Default binds
@@ -765,6 +853,12 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             if (viewType == ConfigCellCustom.CUSTOM_ITEM_CharBlurAlpha) {
                 view = chatBlurAlphaSeekbar = new ChatBlurAlphaSeekBar(mContext);
                 chatBlurAlphaSeekbar.setEnabled(NekoConfig.forceBlurInChat.Bool());
+            }
+            if (viewType == ConfigCellCustom.CUSTOM_ITEM_FilterTabsPreview) {
+                view = filterTabsPreviewCell = new FilterTabsPreviewCell(mContext, currentAccount);
+            }
+            if (viewType == ConfigCellCustom.CUSTOM_ITEM_ActionBarPreview) {
+                view = actionBarPreviewCell = new ActionBarPreviewCell(mContext, currentAccount);
             }
             if (viewType == ConfigCellCustom.CUSTOM_ITEM_LiquidGlassAngle) {
                 view = new LiquidGlassSeekBar(mContext, true);

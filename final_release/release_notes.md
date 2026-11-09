@@ -1,3 +1,37 @@
+﻿## Nexagram v2.3.2 Release
+
+### 🚀 Highlights & New Features in v2.3.2
+
+#### 1. 🔄 Complete Upstream Synchronization (Nagram 13.1.1 Engine)
+- Integrated 185+ upstream commits and optimizations from upstream Nagram (Nov 2026 release).
+- Telegram Core 13.1.1 foundation with enhanced stability, faster startup, and reduced memory footprint.
+- Restored stock font size and bubble radius defaults for pixel-perfect balance.
+
+#### 2. 🎨 Live Interactive Settings Previews
+- **Live Action Bar Preview:** Instant interactive preview right inside General Settings (NekoGeneralSettingsActivity) showcasing custom title, centered title, download icon, decorations, and app bar shadow in real-time.
+- **Live Folder Tabs Preview:** Interactive folder tabs preview showing selected tab style, stroke, badge count, and layout options.
+- **Live Double Tap Action Preview:** Visual feedback cell in Chat Settings (NekoChatSettingsActivity) displaying active double-tap behaviors for incoming and outgoing messages.
+- **Sticker Shape Selector:** Choose between dynamic sticker shapes (original, rounded, square) directly from Chat Settings.
+
+#### 3. 🛡️ Advanced Member Admin Actions
+- **Avatar Long-Press Quick Actions:** In supergroups where you have ban permissions, long-pressing any member's avatar immediately presents options to **Change Permissions**, **Ban Member**, or **Delete All Messages** without needing their message on screen.
+- **User Mention Quick Actions:** Long-press any @mention in chat to quickly manage user permissions or ban/delete history.
+- **Member Removal with History Cleanup:** Removing a member from the member list now directly offers to purge all of their historical messages in one action.
+
+#### 4. 📁 Scoped Storage & Multi-File Album Sharing
+- **External App File Sharing:** Fixed Android Scoped Storage EACCES permission errors when sharing multiple files from external file managers or Download folders. Files are properly cached and sent cleanly.
+- **Album Grouping:** Files picked via the system file picker now automatically group into single album messages instead of spamming separate single messages.
+
+#### 5. 🔓 Enhanced Forced Copy & Privacy Controls
+- Enhanced copy protection logic in private chats while fully preserving Nexagram's **Forced Copy** capability. If enabled in N-Config, users can copy text from restricted and protected dialogs without artificial restrictions.
+- Added support for auto-loading self user info when supergroup participants are hidden.
+- Fixed bot forum topic message ID routing and persistent keyboard back navigation.
+
+#### 6. 💻 Full Platform Coverage & Dedicated Update Pipeline
+- **Dedicated Releases Pipeline:** Strictly queries https://api.github.com/repos/smartworldarafath/Nexagram/releases for official releases and updates.
+- **Desktop Client & Website:** Synced version v2.3.2 across desktop_client, installer.iss, and GitHub Pages website (docs/index.html).
+
+---
 ## Nexagram v2.3.0 Release
 
 ### 🚀 Highlights & Bug Fixes in v2.3.0

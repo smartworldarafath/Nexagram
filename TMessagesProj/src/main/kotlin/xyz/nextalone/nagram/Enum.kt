@@ -17,3 +17,14 @@ enum class MainTabsStyle(val value: Int) {
     TEXT_FREE(1),
     DISABLE(2)
 }
+
+enum class SwitchStyle(val value: Int) {
+    TELEGRAM(0),
+    MODERN(1)
+}
+
+enum class StickerShape(val value: Int) {
+    DEFAULT(0),
+    ROUNDED(1),
+    MESSAGE(2)
+}
