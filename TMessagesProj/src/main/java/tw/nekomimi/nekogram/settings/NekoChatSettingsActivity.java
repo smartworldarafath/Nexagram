@@ -95,6 +95,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
     private final AbstractConfigCell showSpoilersDirectlyRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.showSpoilersDirectly));
     private final AbstractConfigCell disableLinkPreviewsRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getGlobalDisableLinkPreviews()));
     private final AbstractConfigCell hideSideShareButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideSideShareButton()));
+    private final AbstractConfigCell removeMessageTailRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getRemoveMessageTail()));
     private final AbstractConfigCell dividerMessages = cellGroup.appendCell(new ConfigCellDivider());
 
     private final AbstractConfigCell headerDoubleTap = cellGroup.appendCell(new ConfigCellHeader(LocaleController.getString(R.string.DoubleTapAction)));
@@ -219,7 +220,13 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
         }}));
     }));
     private final AbstractConfigCell disableSwipeToNextRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableSwipeToNext));
-    private final AbstractConfigCell disableChannelMuteButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableChannelMuteButton()));
+    private final AbstractConfigCell channelBottomButtonRow = cellGroup.appendCell(new ConfigCellSelectBox(null, NaConfig.INSTANCE.getChannelBottomButton(),
+            new String[]{
+                    LocaleController.getString(R.string.ChannelMuteNoCaps),
+                    LocaleController.getString(R.string.Discussion),
+                    LocaleController.getString(R.string.Hide),
+            }, null));
+    private final AbstractConfigCell hideChannelGiftButtonRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getHideChannelGiftButton()));
     private final AbstractConfigCell disablePhotoSideActionRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disablePhotoSideAction));
     private final AbstractConfigCell disableClickProfileGalleryViewRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableClickProfileGalleryView()));
     private final AbstractConfigCell disableRemoteEmojiInteractionsRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.disableRemoteEmojiInteractions));
@@ -452,6 +459,8 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
                 if (doubleTapCell != null) doubleTapCell.updateIcons(1, true);
             } else if (key.equals(NaConfig.INSTANCE.getDoubleTapActionOutgoing().getKey())) {
                 if (doubleTapCell != null) doubleTapCell.updateIcons(2, true);
+            } else if (key.equals(NaConfig.INSTANCE.getRemoveMessageTail().getKey())) {
+                Theme.reloadAllResources(getParentActivity());
             }
         };
 

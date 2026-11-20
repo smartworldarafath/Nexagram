@@ -55,6 +55,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import xyz.nextalone.nagram.NaConfig;
+import xyz.nextalone.nagram.helper.AvatarCornersHelper;
 
 public class ImageReceiver implements NotificationCenter.NotificationCenterDelegate, AnimatedEmojiSpan.InvalidateHolder {
 
@@ -326,6 +327,9 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     private boolean forceCrossfade;
     private boolean useRoundRadius = true;
     private final int[] roundRadius = new int[4];
+    private final int[] requestedRoundRadius = new int[4];
+    private final int[] avatarRoundRadius = new int[4];
+    private boolean circleAvatar;
     private int[] emptyRoundRadius;
     private boolean isRoundRect = true;
     private Object mark;
@@ -592,6 +596,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
         if (ignoreImageSet) {
             return;
         }
+        setCircleAvatar(AvatarCornersHelper.isCircleAvatar(currentAccount, parentObject, thumb, mediaLocation, imageLocation, thumbLocation));
         if (crossfadeWithOldImage && setImageBackup != null && setImageBackup.isWebfileSet()) {
             setBackupImage();
         }
@@ -885,6 +890,7 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
 
     public void setImageBitmap(Drawable bitmap, boolean notify) {
         ImageLoader.getInstance().cancelLoadingForImageReceiver(this, true);
+        setCircleAvatar(AvatarCornersHelper.isCircleAvatar(currentAccount, null, bitmap, null, null, null));
 
         if (crossfadeWithOldImage) {
             if (currentImageDrawable != null) {
@@ -1878,6 +1884,10 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
 
     public boolean draw(Canvas canvas, BackgroundThreadDrawHolder backgroundThreadDrawHolder) {
         boolean result = false;
+        if (circleAvatar && backgroundThreadDrawHolder == null && AvatarCornersHelper.isCustom()) {
+            // The avatar corner cap depends on the image size, which callers may change before every draw.
+            setRoundRadius(requestedRoundRadius);
+        }
         if (gradientBitmap != null && currentImageKey != null) {
             canvas.save();
             canvas.clipRect(imageX, imageY, imageX + imageW, imageY + imageH);
@@ -2541,8 +2551,14 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
     }
 
     public void setRoundRadius(int[] value) {
-        if (NaConfig.INSTANCE.getShowSquareAvatar().Bool()) {
-            java.util.Arrays.fill(value, 0);
+        System.arraycopy(value, 0, requestedRoundRadius, 0, requestedRoundRadius.length);
+        if (circleAvatar && AvatarCornersHelper.isCustom()) {
+            // Capping keeps a getRoundRadius() -> setRoundRadius() round trip stable.
+            final int cap = imageW > 0 && imageH > 0 ? Math.round(AvatarCornersHelper.radius(Math.min(imageW, imageH))) : Integer.MAX_VALUE;
+            for (int a = 0; a < avatarRoundRadius.length; a++) {
+                avatarRoundRadius[a] = Math.min(AvatarCornersHelper.scale(value[a]), cap);
+            }
+            value = avatarRoundRadius;
         }
 
         boolean changed = false;
@@ -2570,6 +2586,13 @@ public class ImageReceiver implements NotificationCenter.NotificationCenterDeleg
             if (staticThumbDrawable != null) {
                 updateDrawableRadius(staticThumbDrawable);
             }
+        }
+    }
+
+    private void setCircleAvatar(boolean value) {
+        if (circleAvatar != value) {
+            circleAvatar = value;
+            setRoundRadius(requestedRoundRadius);
         }
     }
 

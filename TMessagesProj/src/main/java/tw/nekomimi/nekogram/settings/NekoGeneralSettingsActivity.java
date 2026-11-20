@@ -73,6 +73,7 @@ import tw.nekomimi.nekogram.config.CellGroup;
 import tw.nekomimi.nekogram.config.cell.AbstractConfigCell;
 import tw.nekomimi.nekogram.config.cell.*;
 import tw.nekomimi.nekogram.settings.cell.ActionBarPreviewCell;
+import tw.nekomimi.nekogram.settings.cell.AvatarCornersPreviewCell;
 import xyz.nextalone.nagram.NaConfig;
 
 @SuppressLint("RtlHardcoded")
@@ -82,7 +83,7 @@ public class NekoGeneralSettingsActivity extends BaseNekoXSettingsActivity {
 
     private final CellGroup a = cellGroup = new CellGroup(this);
 
-    private final AbstractConfigCell showSquareAvatarRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getShowSquareAvatar()));
+    private final AbstractConfigCell avatarCornersRow = cellGroup.appendCell(new ConfigCellCustom(null, ConfigCellCustom.CUSTOM_ITEM_AvatarCorners, true));
     private final AbstractConfigCell disableProfileAvatarBlurRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableProfileAvatarBlur()));
     private final AbstractConfigCell disableGooeyAvatarAnimationRow = cellGroup.appendCell(new ConfigCellTextCheck(NaConfig.INSTANCE.getDisableGooeyAvatarAnimation()));
     private final AbstractConfigCell hidePhoneRow = cellGroup.appendCell(new ConfigCellTextCheck(NekoConfig.hidePhone));
@@ -350,6 +351,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     private ChatBlurAlphaSeekBar chatBlurAlphaSeekbar;
     private FilterTabsPreviewCell filterTabsPreviewCell;
     private ActionBarPreviewCell actionBarPreviewCell;
+    private AvatarCornersPreviewCell avatarCornersPreviewCell;
 
     public NekoGeneralSettingsActivity() {
         updateRows();
@@ -443,6 +445,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                             LocaleController.getString(R.string.ProviderGoogleTranslate),
                             LocaleController.getString(R.string.ProviderGoogleTranslateCN),
                             LocaleController.getString(R.string.ProviderGoogleTranslate) + " 2",
+                            LocaleController.getString(R.string.ProviderYandexTranslate),
                             LocaleController.getString(R.string.ProviderLingocloud),
                             LocaleController.getString(R.string.ProviderMicrosoftTranslator),
                             LocaleController.getString(R.string.ProviderVolcengineTranslate),
@@ -453,7 +456,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                             LocaleController.getString(R.string.ProviderDeepLTranslate),
                             LocaleController.getString(R.string.ProviderDeepLFreeTranslate),
                     }, (i, __) -> {
-                        NekoConfig.translationProvider.setConfigInt(i + 1);
+                        NekoConfig.translationProvider.setConfigInt(Translator.getProviders()[i]);
                         updateRows();
                         listAdapter.notifyItemChanged(position);
                         return Unit.INSTANCE;
@@ -462,7 +465,11 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                 } else if (position == cellGroup.rows.indexOf(translateToLangRow) || position == cellGroup.rows.indexOf(translateInputToLangRow)) {
                     Translator.showTargetLangSelect(view, position == cellGroup.rows.indexOf(translateInputToLangRow), (locale) -> {
                         if (position == cellGroup.rows.indexOf(translateToLangRow)) {
-                            NekoConfig.translateToLang.setConfigString(TranslatorKt.getLocale2code(locale));
+                            if (locale.equals(LocaleController.getInstance().currentLocale)) {
+                                NekoConfig.translateToLang.setConfigString("");
+                            } else {
+                                NekoConfig.translateToLang.setConfigString(TranslatorKt.getLocale2code(locale));
+                            }
                         } else {
                             NekoConfig.translateInputLang.setConfigString(TranslatorKt.getLocale2code(locale));
                         }
@@ -727,7 +734,7 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
     @Override
     public ArrayList<ThemeDescription> getThemeDescriptions() {
         ArrayList<ThemeDescription> themeDescriptions = new ArrayList<>();
-        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class, FilterTabsPreviewCell.class, ActionBarPreviewCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
+        themeDescriptions.add(new ThemeDescription(listView, ThemeDescription.FLAG_CELLBACKGROUNDCOLOR, new Class[]{EmptyCell.class, TextSettingsCell.class, TextCheckCell.class, HeaderCell.class, TextDetailSettingsCell.class, NotificationsCheckCell.class, FilterTabsPreviewCell.class, ActionBarPreviewCell.class, AvatarCornersPreviewCell.class}, null, null, null, Theme.key_windowBackgroundWhite));
         themeDescriptions.add(new ThemeDescription(fragmentView, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_windowBackgroundGray));
 
         themeDescriptions.add(new ThemeDescription(actionBar, ThemeDescription.FLAG_BACKGROUND, null, null, null, null, Theme.key_avatar_backgroundActionBarBlue));
@@ -792,6 +799,9 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                                 case Translator.providerGoogle2:
                                     value = LocaleController.getString(R.string.ProviderGoogleTranslate) + " 2";
                                     break;
+                                case Translator.providerYandex:
+                                    value = LocaleController.getString(R.string.ProviderYandexTranslate);
+                                    break;
                                 case Translator.providerLingo:
                                     value = LocaleController.getString(R.string.ProviderLingocloud);
                                     break;
@@ -838,6 +848,8 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
                         ((FilterTabsPreviewCell) holder.itemView).updateTabs(false);
                     } else if (holder.itemView instanceof ActionBarPreviewCell) {
                         ((ActionBarPreviewCell) holder.itemView).updatePreview();
+                    } else if (holder.itemView instanceof AvatarCornersPreviewCell) {
+                        ((AvatarCornersPreviewCell) holder.itemView).updatePreview();
                     }
                 } else {
                     // Default binds
@@ -859,6 +871,11 @@ private final AbstractConfigCell defaultHlsVideoQualityRow = cellGroup.appendCel
             }
             if (viewType == ConfigCellCustom.CUSTOM_ITEM_ActionBarPreview) {
                 view = actionBarPreviewCell = new ActionBarPreviewCell(mContext, currentAccount);
+            }
+            if (viewType == ConfigCellCustom.CUSTOM_ITEM_AvatarCorners) {
+                view = avatarCornersPreviewCell = new AvatarCornersPreviewCell(mContext, currentAccount, () -> {
+                    tooltip.showWithAction(0, UndoView.ACTION_NEED_RESATRT, null, null);
+                });
             }
             if (viewType == ConfigCellCustom.CUSTOM_ITEM_LiquidGlassAngle) {
                 view = new LiquidGlassSeekBar(mContext, true);

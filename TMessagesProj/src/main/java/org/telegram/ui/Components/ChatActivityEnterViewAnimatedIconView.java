@@ -1,6 +1,9 @@
-package org.telegram.ui.Components;
+﻿package org.telegram.ui.Components;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.Nullable;
 
@@ -16,6 +19,10 @@ public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
     private TransitState animatingState;
     private final int sizeDp;
 
+    private boolean formatMode;
+    private Drawable formatDrawable;
+    private final AnimatedFloat formatProgress = new AnimatedFloat(this, 0, 320, CubicBezierInterpolator.EASE_OUT_QUINT);
+
     private final Map<TransitState, RLottieDrawable> stateMap = new HashMap<TransitState, RLottieDrawable>() {
         @Nullable
         @Override
@@ -24,7 +31,7 @@ public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
             if (obj == null) {
                 TransitState state = (TransitState) key;
                 int res = state.resource;
-                RLottieDrawable rLottieDrawable = new RLottieDrawable(res, String.valueOf(res), AndroidUtilities.dp(sizeDp), AndroidUtilities.dp(sizeDp));
+                RLottieDrawable rLottieDrawable = new RLottieDrawable(res, AndroidUtilities.dp(sizeDp), AndroidUtilities.dp(sizeDp));
                 put(state, rLottieDrawable);
                 return rLottieDrawable;
             }
@@ -53,6 +60,12 @@ public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
                 stopAnimation();
                 // 设置静态图标
                 setImageResource(R.drawable.ic_ab_other);
+                // setImageResource 替换了 drawable，之前设置的颜色过滤器不会自动应用到新的 drawable 上
+                final ColorFilter colorFilter = getColorFilter();
+                final Drawable iconDrawable = getDrawable();
+                if (colorFilter != null && iconDrawable != null) {
+                    iconDrawable.mutate().setColorFilter(colorFilter);
+                }
             } else {
                 RLottieDrawable drawable = stateMap.get(getAnyState(currentState));
                 drawable.stop();
@@ -91,6 +104,53 @@ public class ChatActivityEnterViewAnimatedIconView extends RLottieImageView {
             case VIDEO:
                 setContentDescription(LocaleController.getString(R.string.AccDescrVideoMessage));
                 break;
+        }
+    }
+
+    public void setFormatMode(boolean format, boolean animated) {
+        if (formatMode == format) {
+            return;
+        }
+        formatMode = format;
+        if (!animated) {
+            formatProgress.set(format, true);
+        }
+        invalidate();
+    }
+
+    public boolean isFormatMode() {
+        return formatMode;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        final float p = formatProgress.set(formatMode);
+        final float cx = getWidth() / 2f, cy = getHeight() / 2f;
+        if (p < 1) {
+            final boolean layer = p > 0;
+            if (layer) {
+                canvas.saveLayerAlpha(0, 0, getWidth(), getHeight(), (int) (0xFF * (1f - p)), Canvas.ALL_SAVE_FLAG);
+            } else {
+                canvas.save();
+            }
+            final float s = 0.4f + 0.6f * (1f - p);
+            canvas.scale(s, s, cx, cy);
+            super.onDraw(canvas);
+            canvas.restore();
+        }
+        if (p > 0) {
+            if (formatDrawable == null) {
+                formatDrawable = getContext().getResources().getDrawable(R.drawable.msg_edit).mutate();
+            }
+            final int w = formatDrawable.getIntrinsicWidth() / 2, h = formatDrawable.getIntrinsicHeight() / 2;
+            formatDrawable.setBounds((int) cx - w, (int) cy - h, (int) cx + w, (int) cy + h);
+            formatDrawable.setColorFilter(getColorFilter());
+            formatDrawable.setAlpha((int) (0xFF * p));
+            canvas.save();
+            final float s = 0.4f + 0.6f * p;
+            canvas.scale(s, s, cx, cy);
+            formatDrawable.draw(canvas);
+            canvas.restore();
         }
     }
 

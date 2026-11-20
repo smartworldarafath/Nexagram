@@ -1,5 +1,5 @@
 #define MyAppName "Nexagram Desktop"
-#define MyAppVersion "2.3.2"
+#define MyAppVersion "2.3.5"
 #define MyAppPublisher "Zero by Arafath (SmartWorld)"
 #define MyAppURL "https://github.com/smartworldarafath/Nexagram"
 #define MyAppExeName "Nexagram.exe"
@@ -21,7 +21,7 @@ DisableDirPage=no
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 OutputDir={#OutputFolder}
-OutputBaseFilename=Nexagram-Setup-v2.3.2
+OutputBaseFilename=Nexagram-Setup-v2.3.5
 SetupIconFile={#IconFile}
 Compression=lzma2/ultra64
 SolidCompression=yes

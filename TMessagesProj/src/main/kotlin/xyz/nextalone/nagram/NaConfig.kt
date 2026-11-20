@@ -7,6 +7,8 @@ import org.telegram.messenger.LocaleController
 import org.telegram.messenger.R
 import tw.nekomimi.nekogram.config.ConfigItem
 import tw.nekomimi.nekogram.config.ConfigItemKeyLinked
+import xyz.nextalone.nagram.helper.AvatarCornersHelper
+import xyz.nextalone.nagram.helper.DoubleTap
 import java.io.ByteArrayInputStream
 import java.io.ObjectInputStream
 import androidx.core.net.toUri
@@ -139,9 +141,15 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
-    val doubleTapAction =
+    val doubleTapActionIncoming =
         addConfig(
-            "DoubleTapAction",
+            "DoubleTapActionIncoming",
+            ConfigItem.configTypeInt,
+            0
+        )
+    val doubleTapActionOutgoing =
+        addConfig(
+            "DoubleTapActionOutgoing",
             ConfigItem.configTypeInt,
             0
         )
@@ -501,11 +509,11 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
-    val showSquareAvatar =
+    val avatarCorners =
         addConfig(
-            "ShowSquareAvatar",
-            ConfigItem.configTypeBool,
-            false
+            "AvatarCorners",
+            ConfigItem.configTypeInt,
+            AvatarCornersHelper.DEFAULT_PERCENT
         )
     val disableCustomWallpaperUser =
         addConfig(
@@ -648,9 +656,21 @@ object NaConfig {
             ConfigItem.configTypeBool,
             false
         )
-    val disableChannelMuteButton =
+    val channelBottomButton =
         addConfig(
-            "DisableChannelMuteButton",
+            "ChannelBottomButton",
+            ConfigItem.configTypeInt,
+            ChannelBottomButton.MUTE.value
+        )
+    val hideChannelGiftButton =
+        addConfig(
+            "HideChannelGiftButton",
+            ConfigItem.configTypeBool,
+            false
+        )
+    val ignoreBlockedReplies =
+        addConfig(
+            "IgnoreBlockedReplies",
             ConfigItem.configTypeBool,
             false
         )
@@ -1477,6 +1497,12 @@ object NaConfig {
             ConfigItem.configTypeInt,
             0
         )
+    val removeMessageTail =
+        addConfig(
+            "RemoveMessageTail",
+            ConfigItem.configTypeBool,
+            false
+        )
 
     private fun addConfig(
         k: String,
@@ -1514,6 +1540,46 @@ object NaConfig {
         return a
     }
 
+    private fun checkMigrate() {
+        // Split the legacy setting once, preserving independently saved choices.
+        if (preferences.contains("DoubleTapAction")) {
+            val legacyAction =
+                preferences.getInt("DoubleTapAction", DoubleTap.DOUBLE_TAP_ACTION_NONE)
+            val editor = preferences.edit()
+            if (!preferences.contains(doubleTapActionIncoming.key)) {
+                editor.putInt(
+                    doubleTapActionIncoming.key,
+                    if (legacyAction == DoubleTap.DOUBLE_TAP_ACTION_EDIT) DoubleTap.DOUBLE_TAP_ACTION_NONE else legacyAction
+                )
+            }
+            if (!preferences.contains(doubleTapActionOutgoing.key)) {
+                editor.putInt(doubleTapActionOutgoing.key, legacyAction)
+            }
+            editor.apply()
+        }
+        // Fold the legacy channel mute switch into the channel bottom button choice.
+        if (preferences.contains("DisableChannelMuteButton")) {
+            val editor = preferences.edit()
+            if (!preferences.contains(channelBottomButton.key) &&
+                preferences.getBoolean("DisableChannelMuteButton", false)
+            ) {
+                editor.putInt(channelBottomButton.key, ChannelBottomButton.HIDDEN.value)
+            }
+            editor.remove("DisableChannelMuteButton")
+            editor.apply()
+        }
+        // The square avatar switch became the 0% end of the avatar corners slider.
+        if (preferences.contains("ShowSquareAvatar")) {
+            val legacySquare = preferences.getBoolean("ShowSquareAvatar", false)
+            val editor = preferences.edit()
+            if (legacySquare && !preferences.contains(avatarCorners.key)) {
+                editor.putInt(avatarCorners.key, 0)
+            }
+            editor.remove("ShowSquareAvatar")
+            editor.apply()
+        }
+    }
+
     fun loadConfig(
         force: Boolean
     ) {
@@ -1523,6 +1589,7 @@ object NaConfig {
             if (configLoaded && !force) {
                 return
             }
+            checkMigrate()
             for (i in configs.indices) {
                 val o =
                     configs[i]

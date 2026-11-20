@@ -414,4 +414,16 @@
     <string name="StickerShape">Sticker Shape</string>
     <string name="StickerShapeRounded">Rounded</string>
     <string name="StickerShapeRoundedMsg">Message</string>
+    <string name="DoubleTapActionIncoming">Received messages</string>
+    <string name="DoubleTapActionOutgoing">Sent messages</string>
+    <string name="ShowForwardCount">Show forward count</string>
+    <string name="AvatarCorners">Avatar corners</string>
+    <string name="ActionBar">Action Bar</string>
+    <string name="UserRestrictedBy">Restricted by %1$s</string>
+    <string name="ChannelBottomButton">Channel bottom button</string>
+    <string name="HideChannelGiftButton">Hide channel gift button</string>
+    <string name="IgnoreBlockedReplies">Also hide replies to blocked users</string>
+    <string name="RemoveMessageTail">Remove message tail</string>
+    <string name="TopicsSidebar">Sidebar</string>
+    <string name="ProviderYandexTranslate">Yandex Translate</string>
 </resources>

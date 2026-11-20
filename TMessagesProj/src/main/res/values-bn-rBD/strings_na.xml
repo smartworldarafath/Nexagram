@@ -363,4 +363,16 @@
     <string name="LiquidGlassAngle">Liquid Glass angle</string>
     <string name="LiquidGlassIntensity">Liquid Glass intensity</string>
     <string name="DisableGooeyAvatarAnimation">Disable \"Gooey\" avatar animation</string>
+    <string name="DoubleTapActionIncoming">আগত মেসেজ</string>
+    <string name="DoubleTapActionOutgoing">প্রেরিত মেসেজ</string>
+    <string name="ShowForwardCount">ফরওয়ার্ড সংখ্যা প্রদর্শন করুন</string>
+    <string name="AvatarCorners">প্রোফাইল ছবির কোণা (Avatar corners)</string>
+    <string name="ActionBar">অ্যাকশন বার</string>
+    <string name="UserRestrictedBy">%1$s দ্বারা সীমাবদ্ধ</string>
+    <string name="ChannelBottomButton">চ্যানেলের নিচের বাটন</string>
+    <string name="HideChannelGiftButton">চ্যানেলের গিফট বাটন লুকান</string>
+    <string name="IgnoreBlockedReplies">ব্লক করা ইউজারদের রিপ্লাইও লুকান</string>
+    <string name="RemoveMessageTail">মেসেজ বাবলের লেজ মুছুন</string>
+    <string name="TopicsSidebar">সাইডবার</string>
+    <string name="ProviderYandexTranslate">Yandex Translate</string>
 </resources>

@@ -155,7 +155,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
 
     private static final int ANIMATOR_ID_TABS_VISIBLE = 0;
     private final BoolAnimator animatorTabsVisible = new BoolAnimator(ANIMATOR_ID_TABS_VISIBLE,
-        this, CubicBezierInterpolator.EASE_OUT_QUINT, 380, true);
+        this, CubicBezierInterpolator.EASE_OUT_QUINT, 380,
+        NaConfig.INSTANCE.getMainTabsStyle().Int() != MainTabsStyle.DISABLE.getValue());
 
 
     private IUpdateLayout updateLayout;
@@ -465,6 +466,8 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
         }
 
         updateLayout();
+        checkUi_tabsPosition();
+        checkUi_fadeView();
         checkUnreadCount(false);
         return contentView;
     }
@@ -1217,6 +1220,11 @@ public class MainTabsActivity extends ViewPagerActivity implements NotificationC
     }
 
     private void checkUi_tabsPosition() {
+        // The tabs animator can fire synchronously while super.createView() is still
+        // creating the dialogs page, before the views below exist.
+        if (tabsViewWrapper == null || tabsView == null || updateLayoutWrapper == null) {
+            return;
+        }
         final boolean isUpdateLayoutVisible = updateLayoutWrapper.isUpdateLayoutVisible();
         final int updateLayoutHeight = isUpdateLayoutVisible ? dp(UpdateLayoutWrapper.HEIGHT) : 0;
         final int normalY = -(updateLayoutHeight);

@@ -32,3 +32,4 @@ apk_inspect/
 desktop_build/
 final_release/*.exe
 final_release/*.zip
+final_release/*.apk

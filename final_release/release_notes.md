@@ -1,4 +1,53 @@
-﻿## Nexagram v2.3.2 Release
+﻿## Nexagram v2.3.5 Release
+
+### 🚀 Highlights & New Features in v2.3.5
+
+#### 1. 🖼️ Dynamic Live Avatar Corners & Preview (N-Config)
+- Replaced static square avatar toggle with a granular, live interactive **Avatar Corners** percentage slider in General Settings.
+- Centralized corner radius calculation in `ImageReceiver` with real-time preview in `AvatarCornersPreviewCell`.
+- Smoothly preserves distinct shapes for forums, monoforums, and communities.
+- Automatic migration from legacy `ShowSquareAvatar` preference to the new avatar corners setting.
+
+#### 2. 📢 Channel Bottom Button & Star Gifts Toggle
+- **Customizable Channel Bottom Action:** Configure the bottom bar in channels to display **Mute/Unmute**, direct **Discussion** group shortcut, or **Hidden**. When Discussion is selected and a channel has a linked chat, it opens the linked discussion group directly; otherwise, it falls back to Mute.
+- **Hide Channel Gift Button:** New toggle in Chat Settings to hide the Star Gift button in channels to keep the reading bar clean.
+- Automatic migration from legacy `DisableChannelMuteButton` preference.
+
+#### 3. 🚫 Smart Reply Filter for Blocked Users
+- Added **Also hide replies to blocked users** (`ignoreBlockedReplies`) under Experimental Settings.
+- When enabled alongside `ignoreBlocked`, incoming replies quoting blocked users are automatically hidden in chats without hiding your own messages.
+- Dynamically re-binds rows when asynchronous reply targets finish loading.
+
+#### 4. 📌 Jump-to-Pinned Return Position
+- Jumping to a pinned message from the top pinned bar or pinned list now stores your current reading position.
+- Tapping the scroll-to-bottom / page-down button navigates smoothly back to where you were reading instead of jumping directly to the newest message.
+
+#### 5. 🔍 View Raw Profile & Chat JSON Details
+- Added JSON inspection directly in Profile: view raw user, chat, and full chat JSON details from the profile menu.
+- Interactive multi-chunk JSON viewer in `MessageDetailsActivity` with one-tap copy and quick inspection.
+
+#### 6. 🌐 Yandex Translation Restored & Target Language Enhancements
+- Restored **Yandex Translate** engine as a native translation provider option in General Settings and in-chat translation alerts.
+- Added default language indicator mark in target language selection.
+
+#### 7. 🎞️ PhotoViewer GIF Improvements & Glass Styling
+- Significantly enhanced GIF-as-video playback logic in `PhotoViewer` with proper time position recovery.
+- Liquid Glass styling applied to time hints (`timeHint.setGlass`).
+- Custom forum tabs style: `TopicsSidebar` (panel sliding in from the right).
+
+#### 8. 🛠️ Comprehensive Stability & Bug Fixes
+- Fixed icon color filter and background selector in `ChatActivityEnterView`.
+- Fixed playback speed icon lag in release builds (`SpeedIconDrawable`).
+- Fixed adaptive dialog crashes when themes have no window animations (`AlertDialogDecor`).
+- Fixed leaked views in `ChatBackgroundDrawable` when folding/unfolding devices.
+- Prevented deleted chat photos from corrupting profile gallery counters in `MessagesController`.
+- Allow in-chat replying to protected messages from the message menu.
+- Fixed monoforum ban/unban label for non-subscribers.
+- Fixed popup notification close button tint visibility.
+- Pure Nexagram update checking pipeline maintained strictly to `smartworldarafath/Nexagram/releases`.
+
+---
+## Nexagram v2.3.2 Release
 
 ### 🚀 Highlights & New Features in v2.3.2
 

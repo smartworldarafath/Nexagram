@@ -396,6 +396,7 @@ import tw.nekomimi.nekogram.utils.EnvUtil;
 import tw.nekomimi.nekogram.utils.PGPUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 import tw.nekomimi.nekogram.utils.TelegramUtil;
+import xyz.nextalone.nagram.ChannelBottomButton;
 import xyz.nextalone.nagram.NaConfig;
 import xyz.nextalone.nagram.helper.MemberAdminActions;
 import xyz.nextalone.nagram.helper.DoubleTap;
@@ -1360,6 +1361,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_COPY_PHOTO_AS_STICKER = 151;
 
     private boolean isChannelBottomMuteView = false;
+    private boolean isChannelBottomDiscussionView = false;
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             NotificationCenter.messagesRead,
@@ -9022,6 +9024,8 @@ public class ChatActivity extends BaseFragment implements
                                 getNotificationCenter().postNotificationName(NotificationCenter.peerSettingsDidLoad, dialog_id);
                             }
                         }
+                    } else if (isChannelBottomDiscussionView && showsChannelDiscussionButton()) {
+                        openChannelDiscussion();
                     } else {
                         toggleMute(true);
                     }
@@ -9580,6 +9584,7 @@ public class ChatActivity extends BaseFragment implements
                 .setMultilineText(true)
                 .setDuration(2000);
 
+        timeHint.setGlass(glassBackgroundDrawableFactory);
         timeHint.setText(MessageHelper.INSTANCE.getTimeHintText(cell.getMessageObject()));
         timeHint.setMaxWidthPx(contentView.getMeasuredWidth());
         contentView.addView(timeHint, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 120, Gravity.TOP | Gravity.FILL_HORIZONTAL, 16, 0, 16, 0));
@@ -10713,11 +10718,32 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private boolean isBottomOverlayHidden() {
-        // na: DisableChannelMuteButton
-        return NaConfig.INSTANCE.getDisableChannelMuteButton().Bool() &&
+        // na: ChannelBottomButton
+        return NaConfig.INSTANCE.getChannelBottomButton().Int() == ChannelBottomButton.HIDDEN.getValue() &&
                 chatMode == MODE_DEFAULT && !isReport() && currentChat != null &&
                 ChatObject.isChannel(currentChat) && ChatObject.isInChat(currentChat) &&
                 currentChat.broadcast && !ChatObject.canWriteToChat(currentChat);
+    }
+
+    // na: ChannelBottomButton - the bottom button opens the linked discussion instead of toggling mute;
+    // channels without a discussion group keep the mute button
+    private boolean showsChannelDiscussionButton() {
+        return NaConfig.INSTANCE.getChannelBottomButton().Int() == ChannelBottomButton.DISCUSSION.getValue() &&
+                chatMode == MODE_DEFAULT && !isReport() && currentChat != null &&
+                ChatObject.isChannelAndNotMegaGroup(currentChat) && ChatObject.isInChat(currentChat) &&
+                chatInfo != null && chatInfo.linked_chat_id != 0;
+    }
+
+    private void openChannelDiscussion() {
+        if (chatInfo == null || chatInfo.linked_chat_id == 0) {
+            return;
+        }
+        Bundle args = new Bundle();
+        args.putLong("chat_id", chatInfo.linked_chat_id);
+        if (!getMessagesController().checkCanOpenChat(args, ChatActivity.this)) {
+            return;
+        }
+        presentFragment(new ChatActivity(args));
     }
 
     @Override
@@ -12019,7 +12045,7 @@ public class ChatActivity extends BaseFragment implements
                 if (!forceScrollToFirst) {
                     forceNextPinnedMessageId = -forceNextPinnedMessageId;
                 }
-                scrollToMessageId(currentPinned, 0, true, 0, true, forceNextPinnedMessageId);
+                scrollToMessageId(currentPinned, getPinnedJumpReturnMessageId(), true, 0, true, forceNextPinnedMessageId);
                 updateMessagesVisiblePart(false);
             }
         });
@@ -12278,6 +12304,34 @@ public class ChatActivity extends BaseFragment implements
         }
     }
 
+    // na: the message at the bottom of the screen, so the page-down button can come back to it
+    // after jumping to a pinned message; 0 when already at the newest messages
+    private int getPinnedJumpReturnMessageId() {
+        if (chatLayoutManager == null || chatAdapter == null || chatAdapter.isFiltered || isSecretChat()) {
+            return 0;
+        }
+        final int first = chatLayoutManager.findFirstVisibleItemPosition();
+        final int last = chatLayoutManager.findLastVisibleItemPosition();
+        if (first == RecyclerView.NO_POSITION || forwardEndReached[0] && first <= chatAdapter.messagesStartRow) {
+            return 0;
+        }
+        final ArrayList<MessageObject> messages = chatAdapter.getMessages();
+        for (int i = first; i <= last; i++) {
+            if (i < chatAdapter.messagesStartRow || i >= chatAdapter.messagesEndRow) {
+                continue;
+            }
+            final int index = i - chatAdapter.messagesStartRow;
+            if (index >= messages.size()) {
+                break;
+            }
+            final MessageObject messageObject = messages.get(index);
+            if (messageObject.getId() > 0 && !messageObject.isSponsored() && messageObject.getDialogId() == dialog_id) {
+                return messageObject.getId();
+            }
+        }
+        return 0;
+    }
+
     private void openPinnedMessagesList(boolean preview) {
         if (getParentActivity() == null || parentLayout == null || parentLayout.getLastFragment() != this || pinnedMessageIds.isEmpty()) {
             return;
@@ -12315,7 +12369,7 @@ public class ChatActivity extends BaseFragment implements
         fragment.chatActivityDelegate = new ChatActivityDelegate() {
             @Override
             public void openReplyMessage(int mid) {
-                scrollToMessageId(mid, 0, true, 0, true, 0);
+                scrollToMessageId(mid, getPinnedJumpReturnMessageId(), true, 0, true, 0);
             }
 
             @Override
@@ -12796,6 +12850,10 @@ public class ChatActivity extends BaseFragment implements
 
     public boolean hasSelectedMessages() {
         return selectedMessagesIds[0].size() > 0 || selectedMessagesIds[1].size() > 0;
+    }
+
+    private boolean canSaveSelectedMessage(MessageObject messageObject) {
+        return !isPeerNoForwardsWithOverride() && !(messageObject.messageOwner != null && messageObject.messageOwner.noforwards && !NaConfig.INSTANCE.getForceCopy().Bool()) && !messageObject.isRoundOnce() && !messageObject.isVoiceOnce();
     }
 
     private boolean hasSelectedNoforwardsMessage() {
@@ -19873,9 +19931,9 @@ public class ChatActivity extends BaseFragment implements
                     } else {
                         canForwardMessagesCount--;
                     }
-                    if (messageObject.isMusic() && !noforwards) {
+                    if (messageObject.isMusic() && canSaveSelectedMessage(messageObject)) {
                         canSaveMusicCount--;
-                    } else if (messageObject.isDocument() && !noforwards) {
+                    } else if (messageObject.isDocument() && canSaveSelectedMessage(messageObject)) {
                         canSaveDocumentsCount--;
                     } else {
                         cantSaveMessagesCount--;
@@ -19910,9 +19968,9 @@ public class ChatActivity extends BaseFragment implements
                     } else {
                         canForwardMessagesCount++;
                     }
-                    if (messageObject.isMusic() && !noforwards) {
+                    if (messageObject.isMusic() && canSaveSelectedMessage(messageObject)) {
                         canSaveMusicCount++;
-                    } else if (messageObject.isDocument() && !messageObject.isRoundOnce() && !messageObject.isVoiceOnce() && !noforwards) {
+                    } else if (messageObject.isDocument() && canSaveSelectedMessage(messageObject)) {
                         canSaveDocumentsCount++;
                     } else {
                         cantSaveMessagesCount++;
@@ -24346,6 +24404,7 @@ public class ChatActivity extends BaseFragment implements
                             }
                         }
                     }
+                    hideLoadedRepliesToBlockedPeers(replyMessageOwners);
                 }
                 updateVisibleRows();
             } else if (waitingForReplies.size() != 0 && ChatObject.isChannel(currentChat) && !currentChat.megagroup && chatInfo != null && did == -chatInfo.linked_chat_id) {
@@ -26213,6 +26272,31 @@ public class ChatActivity extends BaseFragment implements
                     }
                 }
             }, 1000);
+        }
+    }
+
+    // na: a reply target can load after the reply is shown; re-bind those rows so replies to
+    // blocked users switch to the hidden view type
+    private void hideLoadedRepliesToBlockedPeers(LongSparseArray<SparseArray<ArrayList<MessageObject>>> replyMessageOwners) {
+        if (chatAdapter == null || !NekoConfig.ignoreBlocked.Bool() || !NaConfig.INSTANCE.getIgnoreBlockedReplies().Bool()) {
+            return;
+        }
+        final ArrayList<MessageObject> shownMessages = chatAdapter.getMessages();
+        for (int a = 0, N = replyMessageOwners.size(); a < N; a++) {
+            SparseArray<ArrayList<MessageObject>> sparseArray = replyMessageOwners.valueAt(a);
+            for (int c = 0, N3 = sparseArray.size(); c < N3; c++) {
+                ArrayList<MessageObject> owners = sparseArray.valueAt(c);
+                for (int b = 0, N2 = owners.size(); b < N2; b++) {
+                    MessageObject owner = owners.get(b);
+                    if (!MessageHelper.isReplyToBlockedPeer(currentAccount, owner)) {
+                        continue;
+                    }
+                    int index = shownMessages.indexOf(owner);
+                    if (index >= 0) {
+                        chatAdapter.notifyItemChanged(chatAdapter.messagesStartRow + index);
+                    }
+                }
+            }
         }
     }
 
@@ -28659,6 +28743,7 @@ public class ChatActivity extends BaseFragment implements
         boolean forceVisible = false;
         boolean forceNoBottom = false;
         boolean tempMuteView = false;
+        boolean showChannelDiscussionButton = false;
         boolean showGiftButton = false;
         boolean showSuggestButton = false;
         boolean showSearchButton = chatMode == MODE_DEFAULT && ChatObject.isChannelOrGiga(currentChat);
@@ -28778,7 +28863,7 @@ public class ChatActivity extends BaseFragment implements
                         } else {
                             bottomOverlayChatText.setText(LocaleController.getString(ChatObject.isChannelAndNotMegaGroup(currentChat) ? R.string.ChannelJoinNoCaps : R.string.GroupJoinNoCaps));
                             bottomOverlayChatText.setEnabled(true);
-                            showGiftButton = chatInfo != null && chatInfo.stargifts_available;
+                            showGiftButton = chatInfo != null && chatInfo.stargifts_available && !NaConfig.INSTANCE.getHideChannelGiftButton().Bool();
                             showSuggestButton = currentChat.broadcast_messages_allowed && currentChat.linked_monoforum_id != 0;
                             accentTextButton = true;
                         }
@@ -28790,16 +28875,23 @@ public class ChatActivity extends BaseFragment implements
                     bottomOverlayChatText.setTextInfo(LocaleController.getString(R.string.ForumReplyToMessagesInTopic));
                     bottomOverlayChatText.setEnabled(false);
                 } else if (!isThreadChat()) {
-                    tempMuteView = true;
-                    if (!getMessagesController().isDialogMuted(dialog_id, getTopicId())) {
-                        bottomOverlayChatText.setText(LocaleController.getString(R.string.ChannelMuteNoCaps), false);
+                    if (showsChannelDiscussionButton()) {
+                        // na: ChannelBottomButton
+                        showChannelDiscussionButton = true;
+                        bottomOverlayChatText.setText(LocaleController.getString(R.string.Discussion), false);
                         bottomOverlayChatText.setEnabled(true);
                     } else {
-                        bottomOverlayChatText.setText(LocaleController.getString(R.string.ChannelUnmuteNoCaps), true);
-                        bottomOverlayChatText.setEnabled(true);
+                        tempMuteView = true;
+                        if (!getMessagesController().isDialogMuted(dialog_id, getTopicId())) {
+                            bottomOverlayChatText.setText(LocaleController.getString(R.string.ChannelMuteNoCaps), false);
+                            bottomOverlayChatText.setEnabled(true);
+                        } else {
+                            bottomOverlayChatText.setText(LocaleController.getString(R.string.ChannelUnmuteNoCaps), true);
+                            bottomOverlayChatText.setEnabled(true);
+                        }
                     }
                     showBottomOverlayProgress(false, bottomOverlayProgress.getTag() != null);
-                    showGiftButton = chatInfo != null && chatInfo.stargifts_available;
+                    showGiftButton = chatInfo != null && chatInfo.stargifts_available && !NaConfig.INSTANCE.getHideChannelGiftButton().Bool();
                     showSuggestButton = currentChat.broadcast_messages_allowed && currentChat.linked_monoforum_id != 0;
                 } else if (forumTopic != null && forumTopic.closed) {
                     if (!ChatObject.canManageTopic(currentAccount, currentChat, forumTopic)) {
@@ -28874,6 +28966,7 @@ public class ChatActivity extends BaseFragment implements
         }
 
         isChannelBottomMuteView = tempMuteView;
+        isChannelBottomDiscussionView = showChannelDiscussionButton;
 
         if (currentChat != null && currentChat.gigagroup && !isReport() && chatMode == 0) {
             showGigaGroupButton = true;
@@ -34676,10 +34769,10 @@ public class ChatActivity extends BaseFragment implements
                 break;
             }
             case OPTION_REPLY: {
-                if (selectedObject != null && selectedObject.messageOwner != null && selectedObject.messageOwner.noforwards) {
-                    return;
-                }
                 if (selectedObject != null && currentChat != null && (ChatObject.isNotInChat(currentChat) && !ChatObject.isMonoForum(currentChat) && !isThreadChat() || ChatObject.isChannel(currentChat) && !ChatObject.canPost(currentChat) && !currentChat.megagroup || !ChatObject.canSendMessages(currentChat))) {
+                    if (selectedObject.messageOwner != null && selectedObject.messageOwner.noforwards) {
+                        return;
+                    }
                     MessageObject messageObject = selectedObject;
                     if (messageObject.getGroupId() != 0) {
                         MessageObject.GroupedMessages group = getGroup(messageObject.getGroupId());
@@ -39260,6 +39353,9 @@ public class ChatActivity extends BaseFragment implements
                     return -1000;
                 }
                 if (NekoConfig.ignoreBlocked.Bool() && msg != null && MessagesController.getInstance(currentAccount).blockePeers.indexOfKey(msg.getFromChatId()) >= 0) {
+                    return -1000;
+                }
+                if (MessageHelper.isReplyToBlockedPeer(currentAccount, msg)) {
                     return -1000;
                 }
                 // --- NaGram hook
@@ -45871,6 +45967,8 @@ public class ChatActivity extends BaseFragment implements
                 int msgId = messages.get(i).getId();
                 if (NekoConfig.ignoreBlocked.Bool() && getMessagesController().blockePeers.indexOfKey(messages.get(i).getSenderId()) >= 0)
                     continue;
+                if (MessageHelper.isReplyToBlockedPeer(currentAccount, messages.get(i)))
+                    continue;
                 if (NaConfig.INSTANCE.getRegexFiltersEnabled().Bool() && AyuFilter.isFiltered(messages.get(i), null)) {
                     continue;
                 }
@@ -47553,13 +47651,16 @@ public class ChatActivity extends BaseFragment implements
         }
 
         if (chatInfo != null) {
-            final boolean giftUpdate = (chatInfo.stargifts_available)
+            final boolean giftUpdate = (chatInfo.stargifts_available && !NaConfig.INSTANCE.getHideChannelGiftButton().Bool())
                 != (bottomChannelButtonsLayout != null && bottomChannelButtonsLayout.isButtonVisible(ChatActivityChannelButtonsLayout.BUTTON_GIFT));
 
             final boolean suggestUpdate = (currentChat != null && currentChat.broadcast_messages_allowed && currentChat.linked_monoforum_id != 0)
                 != (bottomChannelButtonsLayout != null && bottomChannelButtonsLayout.isButtonVisible(ChatActivityChannelButtonsLayout.BUTTON_DIRECT));
 
-            if (giftUpdate || suggestUpdate) {
+            // na: ChannelBottomButton - the discussion button depends on linked_chat_id from the full chat
+            final boolean discussionUpdate = showsChannelDiscussionButton() != isChannelBottomDiscussionView;
+
+            if (giftUpdate || suggestUpdate || discussionUpdate) {
                 updateBottomOverlay(true);
             }
         }

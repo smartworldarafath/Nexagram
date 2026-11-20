@@ -9970,6 +9970,7 @@
     <string name="TopicsLayoutInfo">Choose how topics appear for all members.</string>
     <string name="TopicsLayoutList">List</string>
     <string name="TopicsLayoutTabs">Tabs</string>
+    <string name="TopicsSidebar">Sidebar</string>
     <string name="SendInStandardQuality">Send in standard quality</string>
     <string name="SendInHighQuality">Send in high quality</string>
     <string name="ShortHighQuality">HD</string>

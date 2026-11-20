@@ -16,6 +16,7 @@ import org.telegram.ui.Components.NumberPicker
 import tw.nekomimi.nekogram.ui.BottomBuilder
 import tw.nekomimi.nekogram.ui.PopupBuilder
 import tw.nekomimi.nekogram.NekoConfig
+import tw.nekomimi.nekogram.transtale.Translator
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 
@@ -235,6 +236,12 @@ object AlertUtil {
             val view = reference.get().getButton(AlertDialog.BUTTON_NEUTRAL)
 
             val popup = PopupBuilder(view, true)
+            popup.setTitle(LocaleController.getString(R.string.ChangeTranslateProvider))
+            val currentProvider = NekoConfig.translationProvider.Int()
+            val selected = Translator.providers.indexOf(currentProvider)
+            if (selected >= 0) {
+                popup.setSelectedItem(selected)
+            }
 
             val items = LinkedList<String>()
 
@@ -243,6 +250,7 @@ object AlertUtil {
                     LocaleController.getString(R.string.ProviderGoogleTranslate),
                     LocaleController.getString(R.string.ProviderGoogleTranslateCN),
                     LocaleController.getString(R.string.ProviderGoogleTranslate) + " 2",
+                    LocaleController.getString(R.string.ProviderYandexTranslate),
                     LocaleController.getString(R.string.ProviderLingocloud),
                     LocaleController.getString(R.string.ProviderMicrosoftTranslator),
                     LocaleController.getString(R.string.ProviderVolcengineTranslate),
@@ -259,7 +267,7 @@ object AlertUtil {
 
                 reference.get().dismiss()
 
-                NekoConfig.translationProvider.setConfigInt(item + 1)
+                NekoConfig.translationProvider.setConfigInt(Translator.providers[item])
 
                 retryRunnable.run()
 
